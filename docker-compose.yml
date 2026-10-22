@@ -4,33 +4,43 @@ services:
     container_name: arqon_postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: arqon_user
-      POSTGRES_PASSWORD: arqon_secret_password
-      POSTGRES_DB: arqon_db
+      POSTGRES_USER: ${POSTGRES_USER:-arqon_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no .env}
+      POSTGRES_DB: ${POSTGRES_DB:-arqon_db}
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - arqon_pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U arqon_user -d arqon_db"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
 
   redis:
     image: redis:7-alpine
     container_name: arqon_redis
     restart: unless-stopped
-    command: ["redis-server", "--requirepass", "arqon_redis_pass", "--save", "60", "1", "--loglevel", "warning"]
+    command:
+      - redis-server
+      - --requirepass
+      - ${REDIS_PASSWORD:?defina REDIS_PASSWORD no .env}
+      - --save
+      - "60"
+      - "1"
+      - --loglevel
+      - warning
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"
     volumes:
       - arqon_redisdata:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "-a", "arqon_redis_pass", "ping"]
+      test: ["CMD-SHELL", "redis-cli -a $${REDIS_PASSWORD} ping | grep PONG"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
 
 volumes:
   arqon_pgdata:
