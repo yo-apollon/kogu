@@ -1,0 +1,38 @@
+{
+  "common": {
+    "loading": "🌀 Channeling dimensional energies...",
+    "error": "❌ A dimensional anomaly occurred while executing the command.",
+    "no_permission": "⛔ You do not have dimensional authorization to use this command.",
+    "cooldown": "⏳ Please wait {seconds} seconds before summoning again."
+  },
+  "summon": {
+    "title": "🌌 Dimensional Rift Opened!",
+    "claimed_by": "Bound to {user}",
+    "unclaimed": "Entity free for Pact!",
+    "rolls_left": "⚠️ {count} summons left this hour!",
+    "variant_standard": "Standard",
+    "variant_foil": "✨ Foil Silver (+25% Aether)",
+    "variant_holo": "🌟 Holo Golden (+75% Aether)",
+    "variant_astral": "🔮 Astral Abyssal (+300% Aether)",
+    "pact_button": "Forge Pact",
+    "pact_success": "✨ **{user}** forged a sacred Pact with **{entity}**!",
+    "pact_failed_taken": "⚡ Too late! Another summoner has already bound this entity.",
+    "pact_no_charges": "❌ You don't have any Pact charges available right now!"
+  },
+  "pantheon": {
+    "title": "🏛️ Dimensional Pantheon of {user}",
+    "empty": "Your Pantheon is still empty. Use `$w` or `$h` to summon entities!",
+    "champion": "👑 Champion: **{name}**",
+    "total_entities": "Total Entities: {count}",
+    "total_aether": "Aether Value: {value} 💠"
+  },
+  "relics": {
+    "title": "🔮 Ancestral Relic Sanctuary",
+    "bronze": "Bronze (Level {lvl}/4)",
+    "silver": "Silver (Level {lvl}/4)",
+    "gold": "Gold (Level {lvl}/4)",
+    "sapphire": "Sapphire (Level {lvl}/4)",
+    "ruby": "Ruby (Level {lvl}/4)",
+    "emerald": "Emerald (Level {lvl}/4)"
+  }
+}

@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.cache/
+coverage/
+
+# segredos e dados locais
+.env
+.env.*
+!.env.example
+*.db
+*.db-shm
+*.db-wal
+
+# artefatos de teste
+test-card.png

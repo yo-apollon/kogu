@@ -1,0 +1,16 @@
+node_modules
+dist
+.cache
+coverage
+.git
+.github
+.claude
+
+.env
+.env.*
+!.env.example
+*.db
+*.db-shm
+*.db-wal
+test-card.png
+tests

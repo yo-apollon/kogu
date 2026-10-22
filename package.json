@@ -1,0 +1,38 @@
+{
+  "name": "arqon-bot",
+  "version": "1.0.0",
+  "description": "Arqon - RPG Dimensional de Gacha e Colecionismo para Discord",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "seed": "tsx src/scripts/seed.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@discordjs/rest": "^2.4.0",
+    "@napi-rs/canvas": "^0.1.58",
+    "better-sqlite3": "^13.0.3",
+    "discord-api-types": "^0.37.104",
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.33.0",
+    "ioredis": "^5.4.1",
+    "pino": "^9.4.0",
+    "pino-pretty": "^11.2.2",
+    "postgres": "^3.4.4",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/node": "^22.5.5",
+    "drizzle-kit": "^0.24.2",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "common": {
+    "loading": "🌀 Canalizando energias dimensionais...",
+    "error": "❌ Ocorreu uma anomalia dimensional ao executar o comando.",
+    "no_permission": "⛔ Você não possui autorização dimensional para usar este comando.",
+    "cooldown": "⏳ Aguarde {seconds} segundos antes de invocar novamente."
+  },
+  "summon": {
+    "title": "🌌 Fenda Dimensional Aberta!",
+    "claimed_by": "Vínculo firmado com {user}",
+    "unclaimed": "Entidade livre para Pacto!",
+    "rolls_left": "⚠️ Restam {count} invocações nesta hora!",
+    "variant_standard": "Padrão",
+    "variant_foil": "✨ Foil Prateada (+25% Éter)",
+    "variant_holo": "🌟 Holográfica Dourada (+75% Éter)",
+    "variant_astral": "🔮 Astral Abissal (+300% Éter)",
+    "pact_button": "Firmar Pacto",
+    "pact_success": "✨ **{user}** firmou um Pacto sagrado com **{entity}**!",
+    "pact_failed_taken": "⚡ Tarde demais! Outro invocador já selou o pacto.",
+    "pact_no_charges": "❌ Você não tem cargas de Pacto disponíveis no momento!"
+  },
+  "pantheon": {
+    "title": "🏛️ Panteão Dimensional de {user}",
+    "empty": "Seu Panteão ainda está vazio. Use `$w` ou `$h` para invocar entidades!",
+    "champion": "👑 Campeão Líder: **{name}**",
+    "total_entities": "Total de Entidades: {count}",
+    "total_aether": "Valor em Éter: {value} 💠"
+  },
+  "relics": {
+    "title": "🔮 Santuário das Relíquias Ancestrais",
+    "bronze": "Bronze (Nível {lvl}/4)",
+    "silver": "Prata (Nível {lvl}/4)",
+    "gold": "Ouro (Nível {lvl}/4)",
+    "sapphire": "Safira (Nível {lvl}/4)",
+    "ruby": "Rubi (Nível {lvl}/4)",
+    "emerald": "Esmeralda (Nível {lvl}/4)"
+  }
+}

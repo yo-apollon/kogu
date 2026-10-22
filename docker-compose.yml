@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: arqon_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: arqon_user
+      POSTGRES_PASSWORD: arqon_secret_password
+      POSTGRES_DB: arqon_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - arqon_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U arqon_user -d arqon_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: arqon_redis
+    restart: unless-stopped
+    command: ["redis-server", "--requirepass", "arqon_redis_pass", "--save", "60", "1", "--loglevel", "warning"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - arqon_redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "arqon_redis_pass", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  arqon_pgdata:
+  arqon_redisdata:
