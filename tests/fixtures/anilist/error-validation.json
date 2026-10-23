@@ -1,0 +1,10 @@
+{
+  "errors": [
+    {
+      "message": "Variable \"$type\" got invalid value \"BOOK\"; Expected type \"MediaType\".",
+      "status": 400,
+      "locations": [{ "line": 1, "column": 22 }]
+    }
+  ],
+  "data": null
+}

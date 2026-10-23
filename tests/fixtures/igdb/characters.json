@@ -1,0 +1,37 @@
+[
+  {
+    "id": 5001,
+    "name": "Aria Valen",
+    "slug": "aria-valen",
+    "url": "https://www.igdb.com/characters/aria-valen",
+    "gender": 1,
+    "description": "A starship pilot with a mysterious past.",
+    "akas": ["Captain Valen", "The Falcon"],
+    "mug_shot": { "id": 77001, "image_id": "mug001" },
+    "games": [1001]
+  },
+  {
+    "id": 5002,
+    "name": "Borin Ironhand",
+    "slug": "borin-ironhand",
+    "url": "https://www.igdb.com/characters/borin-ironhand",
+    "gender": 0,
+    "mug_shot": { "id": 77002, "image_id": "mug002" },
+    "games": [1001]
+  },
+  {
+    "id": 5003,
+    "name": "UNIT-7",
+    "slug": "unit-7",
+    "gender": 2,
+    "mug_shot": { "id": 77003, "image_id": "mug003" },
+    "games": [1001, 1002]
+  },
+  {
+    "id": 5004,
+    "name": "The Wanderer",
+    "slug": "the-wanderer",
+    "description": "   ",
+    "games": [1001]
+  }
+]

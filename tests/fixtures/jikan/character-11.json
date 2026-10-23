@@ -1,0 +1,18 @@
+{
+  "data": {
+    "mal_id": 11,
+    "url": "https://myanimelist.net/character/11/Edward_Elric",
+    "images": {
+      "jpg": { "image_url": "https://cdn.myanimelist.net/images/characters/9/72533.jpg" },
+      "webp": {
+        "image_url": "https://cdn.myanimelist.net/images/characters/9/72533.webp",
+        "small_image_url": "https://cdn.myanimelist.net/images/characters/9/72533t.webp"
+      }
+    },
+    "name": "Edward Elric",
+    "name_kanji": "エドワード・エルリック",
+    "nicknames": ["Fullmetal Alchemist", "Ed", "Edward Elric"],
+    "favorites": 175000,
+    "about": "Birthdate: Feb 3, 1899\nHeight: 165 cm"
+  }
+}

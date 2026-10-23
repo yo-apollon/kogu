@@ -1,0 +1,159 @@
+{
+  "pagination": {
+    "last_visible_page": 2,
+    "has_next_page": true,
+    "current_page": 1,
+    "items": { "count": 3, "total": 5, "per_page": 3 }
+  },
+  "data": [
+    {
+      "mal_id": 52991,
+      "url": "https://myanimelist.net/anime/52991/Sousou_no_Frieren",
+      "images": {
+        "jpg": {
+          "image_url": "https://cdn.myanimelist.net/images/anime/1015/138006.jpg",
+          "small_image_url": "https://cdn.myanimelist.net/images/anime/1015/138006t.jpg",
+          "large_image_url": "https://cdn.myanimelist.net/images/anime/1015/138006l.jpg"
+        },
+        "webp": {
+          "image_url": "https://cdn.myanimelist.net/images/anime/1015/138006.webp",
+          "small_image_url": "https://cdn.myanimelist.net/images/anime/1015/138006t.webp",
+          "large_image_url": "https://cdn.myanimelist.net/images/anime/1015/138006l.webp"
+        }
+      },
+      "approved": true,
+      "titles": [
+        { "type": "Default", "title": "Sousou no Frieren" },
+        { "type": "English", "title": "Frieren: Beyond Journey's End" },
+        { "type": "Japanese", "title": "葬送のフリーレン" }
+      ],
+      "title": "Sousou no Frieren",
+      "title_english": "Frieren: Beyond Journey's End",
+      "title_japanese": "葬送のフリーレン",
+      "title_synonyms": [],
+      "type": "TV",
+      "source": "Manga",
+      "episodes": 28,
+      "status": "Currently Airing",
+      "airing": true,
+      "aired": {
+        "from": "2023-09-29T00:00:00+00:00",
+        "to": null,
+        "prop": { "from": { "day": 29, "month": 9, "year": 2023 }, "to": { "day": null, "month": null, "year": null } },
+        "string": "Sep 29, 2023 to ?"
+      },
+      "duration": "24 min per ep",
+      "rating": "PG-13 - Teens 13 or older",
+      "score": 9.3,
+      "scored_by": 530000,
+      "rank": 1,
+      "popularity": 120,
+      "members": 1100000,
+      "favorites": 90000,
+      "synopsis": "The adventure is over but life goes on for an elf mage.",
+      "season": "fall",
+      "year": 2023,
+      "genres": [
+        { "mal_id": 2, "type": "anime", "name": "Adventure", "url": "https://myanimelist.net/anime/genre/2/Adventure" },
+        { "mal_id": 10, "type": "anime", "name": "Fantasy", "url": "https://myanimelist.net/anime/genre/10/Fantasy" }
+      ],
+      "explicit_genres": [],
+      "themes": [],
+      "demographics": []
+    },
+    {
+      "mal_id": 61002,
+      "url": "https://myanimelist.net/anime/61002/Yoru_no_Himitsu",
+      "images": {
+        "jpg": {
+          "image_url": "https://cdn.myanimelist.net/images/anime/1900/150001.jpg",
+          "small_image_url": "https://cdn.myanimelist.net/images/anime/1900/150001t.jpg",
+          "large_image_url": "https://cdn.myanimelist.net/images/anime/1900/150001l.jpg"
+        },
+        "webp": {
+          "image_url": "https://cdn.myanimelist.net/images/anime/1900/150001.webp",
+          "small_image_url": "https://cdn.myanimelist.net/images/anime/1900/150001t.webp",
+          "large_image_url": "https://cdn.myanimelist.net/images/anime/1900/150001l.webp"
+        }
+      },
+      "approved": true,
+      "title": "Yoru no Himitsu",
+      "title_english": null,
+      "title_japanese": "夜の秘密",
+      "title_synonyms": [],
+      "type": "OVA",
+      "source": "Original",
+      "episodes": 2,
+      "status": "Currently Airing",
+      "airing": true,
+      "aired": {
+        "from": "2026-10-09T00:00:00+00:00",
+        "to": null,
+        "prop": { "from": { "day": 9, "month": 10, "year": 2026 }, "to": { "day": null, "month": null, "year": null } },
+        "string": "Oct 9, 2026 to ?"
+      },
+      "duration": "30 min per ep",
+      "rating": "Rx - Hentai",
+      "score": null,
+      "scored_by": null,
+      "rank": null,
+      "popularity": 9100,
+      "members": 880,
+      "favorites": 12,
+      "synopsis": null,
+      "season": "fall",
+      "year": 2026,
+      "genres": [],
+      "explicit_genres": [{ "mal_id": 12, "type": "anime", "name": "Hentai", "url": "https://myanimelist.net/anime/genre/12/Hentai" }],
+      "themes": [],
+      "demographics": []
+    },
+    {
+      "mal_id": 62345,
+      "url": "https://myanimelist.net/anime/62345/Tsuki_no_Kakera",
+      "images": {
+        "jpg": {
+          "image_url": "https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256.png",
+          "small_image_url": "https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256.png",
+          "large_image_url": "https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256.png"
+        },
+        "webp": {
+          "image_url": "https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256.png",
+          "small_image_url": "https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256.png",
+          "large_image_url": "https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256.png"
+        }
+      },
+      "approved": true,
+      "title": "Tsuki no Kakera",
+      "title_english": "Fragments of the Moon",
+      "title_japanese": null,
+      "title_synonyms": [],
+      "type": null,
+      "source": "Unknown",
+      "episodes": null,
+      "status": "Not yet aired",
+      "airing": false,
+      "aired": {
+        "from": null,
+        "to": null,
+        "prop": { "from": { "day": null, "month": null, "year": null }, "to": { "day": null, "month": null, "year": null } },
+        "string": "Not available"
+      },
+      "duration": "Unknown",
+      "rating": null,
+      "score": null,
+      "scored_by": null,
+      "rank": null,
+      "popularity": 0,
+      "members": null,
+      "favorites": 3,
+      "synopsis": null,
+      "season": null,
+      "year": null,
+      "genres": [],
+      "explicit_genres": [],
+      "themes": [],
+      "demographics": []
+    }
+  ]
+}

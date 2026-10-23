@@ -1,0 +1,8 @@
+{
+  "id": 9002,
+  "title": "Iron Verdict",
+  "genres": [
+    { "id": 28, "name": "Action" },
+    { "id": 53, "name": "Thriller" }
+  ]
+}

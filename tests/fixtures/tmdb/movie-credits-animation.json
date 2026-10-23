@@ -1,0 +1,41 @@
+{
+  "id": 9001,
+  "cast": [
+    {
+      "id": 32001,
+      "name": "Haruka Mori",
+      "gender": 1,
+      "profile_path": "/harukaProfile.jpg",
+      "character": "Mio (voice)",
+      "order": 0,
+      "popularity": 20.5
+    },
+    {
+      "id": 32002,
+      "name": "Kenji Aoki",
+      "gender": 2,
+      "profile_path": "/kenjiProfile.jpg",
+      "character": "King Tamon",
+      "order": 1,
+      "popularity": 15
+    },
+    {
+      "id": 32003,
+      "name": "Ren Ito",
+      "gender": 0,
+      "profile_path": null,
+      "character": "Narrator",
+      "order": 2
+    },
+    {
+      "id": 32004,
+      "name": "Yui Sakai",
+      "gender": 3,
+      "profile_path": "/yuiProfile.jpg",
+      "character": "雲のしもべ",
+      "order": 7,
+      "popularity": 2.2
+    }
+  ],
+  "crew": []
+}

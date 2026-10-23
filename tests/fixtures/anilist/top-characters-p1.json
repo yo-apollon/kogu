@@ -1,0 +1,61 @@
+{
+  "data": {
+    "Page": {
+      "pageInfo": { "currentPage": 1, "hasNextPage": true, "lastPage": 100, "perPage": 50, "total": 5000 },
+      "characters": [
+        {
+          "id": 417,
+          "name": { "full": "Lelouch Lamperouge", "native": "ルルーシュ・ランペルージ", "alternative": ["Lelouch vi Britannia", "Zero"] },
+          "gender": "Male",
+          "description": "The exiled prince who leads the Black Knights.",
+          "image": { "large": "https://s4.anilist.co/file/anilistcdn/character/large/b417-BB1ZQIVXqNsl.png" },
+          "favourites": 125000,
+          "siteUrl": "https://anilist.co/character/417",
+          "media": {
+            "edges": [
+              { "characterRole": "MAIN", "node": { "id": 1575, "isAdult": false } }
+            ]
+          }
+        },
+        {
+          "id": 45627,
+          "name": { "full": "Levi", "native": "リヴァイ", "alternative": ["Levi Ackerman"] },
+          "gender": "Male",
+          "description": null,
+          "image": { "large": "https://s4.anilist.co/file/anilistcdn/character/large/b45627-rZ1u0bGx4QIc.png" },
+          "favourites": 118000,
+          "siteUrl": "https://anilist.co/character/45627",
+          "media": {
+            "edges": [
+              { "characterRole": "SUPPORTING", "node": { "id": 16498, "isAdult": false } }
+            ]
+          }
+        },
+        {
+          "id": 99999,
+          "name": { "full": "Orphan Character", "native": null, "alternative": [] },
+          "gender": "Female",
+          "description": null,
+          "image": { "large": "https://s4.anilist.co/file/anilistcdn/character/large/default.jpg" },
+          "favourites": 90000,
+          "siteUrl": "https://anilist.co/character/99999",
+          "media": { "edges": [] }
+        },
+        {
+          "id": 88888,
+          "name": { "full": "Adult Heroine", "native": null, "alternative": [] },
+          "gender": "Female",
+          "description": null,
+          "image": { "large": "https://s4.anilist.co/file/anilistcdn/character/large/b88888-adult.png" },
+          "favourites": 70000,
+          "siteUrl": "https://anilist.co/character/88888",
+          "media": {
+            "edges": [
+              { "characterRole": "BACKGROUND", "node": { "id": 190442, "isAdult": true } }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

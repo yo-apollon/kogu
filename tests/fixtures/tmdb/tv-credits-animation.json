@@ -1,0 +1,23 @@
+{
+  "id": 8001,
+  "cast": [
+    {
+      "id": 33001,
+      "name": "Akira Tanabe",
+      "gender": 2,
+      "profile_path": "/akiraProfile.jpg",
+      "character": "Detective Tsukishiro",
+      "order": 0,
+      "popularity": 12.3
+    },
+    {
+      "id": 33002,
+      "name": "Miyu Kaneko",
+      "gender": 1,
+      "profile_path": "/miyuProfile.jpg",
+      "character": "Assistant Hina",
+      "order": 1,
+      "popularity": 9.9
+    }
+  ]
+}

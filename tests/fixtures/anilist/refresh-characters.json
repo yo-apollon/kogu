@@ -1,0 +1,46 @@
+{
+  "data": {
+    "Page": {
+      "characters": [
+        {
+          "id": 184947,
+          "name": { "full": "Frieren", "native": "フリーレン", "alternative": ["Frieren the Slayer"] },
+          "gender": "Female",
+          "description": "An elf mage.",
+          "image": { "large": "https://s4.anilist.co/file/anilistcdn/character/large/b184947-ySl2VqTbHwGp.png" },
+          "favourites": 9100,
+          "siteUrl": "https://anilist.co/character/184947",
+          "media": {
+            "edges": [
+              { "characterRole": "MAIN", "node": { "id": 154587, "isAdult": false } }
+            ]
+          }
+        },
+        {
+          "id": 184950,
+          "name": { "full": "Stark", "native": "シュタルク", "alternative": [] },
+          "gender": "Male",
+          "description": null,
+          "image": { "large": "https://s4.anilist.co/file/anilistcdn/character/large/default.jpg" },
+          "favourites": 3050,
+          "siteUrl": "https://anilist.co/character/184950",
+          "media": {
+            "edges": [
+              { "characterRole": "SUPPORTING", "node": { "id": 154587, "isAdult": false } }
+            ]
+          }
+        },
+        {
+          "id": 77777,
+          "name": { "full": "No Media Person", "native": null, "alternative": [] },
+          "gender": null,
+          "description": null,
+          "image": null,
+          "favourites": 10,
+          "siteUrl": "https://anilist.co/character/77777",
+          "media": { "edges": [] }
+        }
+      ]
+    }
+  }
+}

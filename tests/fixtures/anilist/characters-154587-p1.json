@@ -1,0 +1,57 @@
+{
+  "data": {
+    "Media": {
+      "id": 154587,
+      "isAdult": false,
+      "characters": {
+        "pageInfo": { "currentPage": 1, "hasNextPage": true },
+        "edges": [
+          {
+            "role": "MAIN",
+            "node": {
+              "id": 184947,
+              "name": {
+                "full": "Frieren",
+                "native": "フリーレン",
+                "alternative": ["Frieren the Slayer", "", null, "Frieren"]
+              },
+              "gender": "Female",
+              "description": "__Birthday:__ Unknown<br>An elf mage who outlived her companions. ~!She later learns to value the time she spent with Himmel.!~<br><br>She collects <i>trivial</i> spells &amp; hoards grimoires. Long after the hero party disbanded she continues to travel across the continent, retracing the old journey while slowly learning what the short lives of humans meant to her. Her calm demeanor hides a stubborn curiosity about everything she once ignored, and she keeps returning to the places they visited together.",
+              "image": {
+                "large": "https://s4.anilist.co/file/anilistcdn/character/large/b184947-ySl2VqTbHwGp.png"
+              },
+              "favourites": 8421,
+              "siteUrl": "https://anilist.co/character/184947"
+            }
+          },
+          {
+            "role": "MAIN",
+            "node": {
+              "id": 184948,
+              "name": { "full": "Fern", "native": "フェルン", "alternative": [] },
+              "gender": "Female",
+              "description": null,
+              "image": {
+                "large": "https://s4.anilist.co/file/anilistcdn/character/large/b184948-AaBbCcDdEeFf.png"
+              },
+              "favourites": 5300,
+              "siteUrl": "https://anilist.co/character/184948"
+            }
+          },
+          {
+            "role": "SUPPORTING",
+            "node": {
+              "id": 184950,
+              "name": { "full": "Stark", "native": "シュタルク", "alternative": ["Eisen's apprentice"] },
+              "gender": "Male",
+              "description": "A young warrior.",
+              "image": { "large": "https://s4.anilist.co/file/anilistcdn/character/large/default.jpg" },
+              "favourites": 2900,
+              "siteUrl": "https://anilist.co/character/184950"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1001,
+    "name": "Starfall Chronicles",
+    "slug": "starfall-chronicles",
+    "url": "https://www.igdb.com/games/starfall-chronicles",
+    "first_release_date": 1792238400,
+    "cover": { "id": 880001, "image_id": "co1abc" },
+    "follows": 900,
+    "hypes": 120,
+    "total_rating_count": 14,
+    "themes": [1, 31],
+    "age_ratings": [{ "id": 1, "category": 2, "rating": 5 }]
+  },
+  {
+    "id": 1002,
+    "name": "Midnight Garden",
+    "slug": "midnight-garden",
+    "url": "https://www.igdb.com/games/midnight-garden",
+    "first_release_date": 1792929600,
+    "cover": { "id": 880002, "image_id": "co2def" },
+    "follows": 300,
+    "hypes": 40,
+    "themes": [42, 17]
+  },
+  {
+    "id": 1003,
+    "name": "Old Fort Defense",
+    "slug": "old-fort-defense",
+    "first_release_date": 1790942400,
+    "cover": { "id": 880003, "image_id": "co3ghi" },
+    "follows": 75,
+    "total_rating_count": 220,
+    "themes": [1],
+    "age_ratings": [{ "id": 2, "category": 1, "rating": 12 }]
+  },
+  {
+    "id": 1004,
+    "name": "Quiet Harbor",
+    "slug": "quiet-harbor",
+    "first_release_date": 1792238400,
+    "hypes": 15
+  },
+  {
+    "id": 1005,
+    "slug": "entry-without-name",
+    "first_release_date": 1792238400,
+    "hypes": 500
+  }
+]

@@ -1,0 +1,50 @@
+{
+  "pagination": {
+    "last_visible_page": 2,
+    "has_next_page": false,
+    "current_page": 2,
+    "items": { "count": 2, "total": 5, "per_page": 3 }
+  },
+  "data": [
+    {
+      "mal_id": 52991,
+      "url": "https://myanimelist.net/anime/52991/Sousou_no_Frieren",
+      "images": {
+        "jpg": {
+          "image_url": "https://cdn.myanimelist.net/images/anime/1015/138006.jpg",
+          "small_image_url": "https://cdn.myanimelist.net/images/anime/1015/138006t.jpg",
+          "large_image_url": "https://cdn.myanimelist.net/images/anime/1015/138006l.jpg"
+        }
+      },
+      "title": "Sousou no Frieren",
+      "title_english": "Frieren: Beyond Journey's End",
+      "title_japanese": "葬送のフリーレン",
+      "type": "TV",
+      "status": "Currently Airing",
+      "aired": { "from": "2023-09-29T00:00:00+00:00", "to": null },
+      "rating": "PG-13 - Teens 13 or older",
+      "members": 1100000,
+      "favorites": 90000
+    },
+    {
+      "mal_id": 63100,
+      "url": "https://myanimelist.net/anime/63100/Eiga_Hoshizora_no_Tabi",
+      "images": {
+        "jpg": {
+          "image_url": "https://cdn.myanimelist.net/images/anime/1700/160100.jpg",
+          "small_image_url": "https://cdn.myanimelist.net/images/anime/1700/160100t.jpg",
+          "large_image_url": "https://cdn.myanimelist.net/images/anime/1700/160100l.jpg"
+        }
+      },
+      "title": "Eiga Hoshizora no Tabi",
+      "title_english": null,
+      "title_japanese": "映画 星空の旅",
+      "type": "Movie",
+      "status": "Finished Airing",
+      "aired": { "from": "2026-10-03T00:00:00+00:00", "to": "2026-10-03T00:00:00+00:00" },
+      "rating": "R+ - Mild Nudity",
+      "members": 5120,
+      "favorites": 310
+    }
+  ]
+}

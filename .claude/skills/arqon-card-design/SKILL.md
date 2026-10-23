@@ -8,11 +8,21 @@ description: Criar ou editar skins de carta, efeitos (foil, holo, astral), token
 Modulo de arte em `src/canvas/`. Uma carta e um WebP 480x700 (qualidade 88), desenhado por camadas de uma `CardSkin`.
 O contrato fica em `src/canvas/skins/types.ts` (nao alterar sem combinar: `CardSkin`, `CardLayer`, `CardRenderContext`, `ThemeTokens`, `AssetBag`).
 
+## PADRAO: skin `mudae` (arte limpa + informacao no embed)
+
+Regra de ouro: **a imagem da carta e SO a arte; toda informacao vai no embed.** A skin `mudae` (`src/canvas/skins/mudae.ts`, 480x750, proporcao ~0,64) e o padrao de invocacao e o fallback (`FALLBACK_SKIN_ID`). Ela pontua 20: vence skins de universo (10) e `classic` (1); perde para evento (50) e skin preferida do dono (100). As demais skins seguem como opcao cosmetica.
+
+- Camadas: `background` (transparente), `portrait` (cover-fit, `roundRect` raio 4% da largura), `effects` (variante sutil, buraco no rosto), `frame` (borda branca fina de 2 px; FOIL prata, HOLO iridescente, ASTRAL com glow).
+- Proibido na arte: texto, pills, stats, molduras decorativas. Unica excecao: iniciais do fallback sem retrato. Teste: `tests/unit/canvas/mudae.test.ts` (sem `fillText`).
+- Embed: `src/ui/summonEmbed.ts` (`buildSummonEmbed(view, opts)` -> `{ embed, attachmentName }`, imagem em `attachment://<name>`; `buildSummonButtons(offerId, { orb })` com botoes so-emoji `sm:pact|like|orb:<offerId>`). Linhas: serie + genero; roleta em italico + Eter em negrito + chaves; ranks; tipo+poder; nota do dono; divisor; frase; `(Custom Pic N)`. Footer: `Belongs to X ~~ keys / limite [pos]` com avatar do dono; sem dono: cor neutra + `free_for_pact`.
+- Poder (+N): `floor(eter / 20) + 5 por degrau de tier` (COMMON +0 ... MYTHIC +20); o "tipo" vem de `summon.power_<tier>`.
+- Previa: `npx tsx src/scripts/testCanvas.ts --skin mudae` grava tambem `.cache/test-cards/embed/mudae-embed__*.png` (embed imitando o Discord).
+
 ## Mapa
 
 | Caminho | Papel |
 | --- | --- |
-| `src/canvas/skins/*.ts` | `classic`, `anime-neon`, `game-hud`, `cinema-noir`; `registry.ts` (`registerSkin`, `getSkin`, `selectSkin`) |
+| `src/canvas/skins/*.ts` | `mudae` (padrao), `classic`, `anime-neon`, `game-hud`, `cinema-noir`; `registry.ts` (`registerSkin`, `getSkin`, `selectSkin`) |
 | `src/canvas/theme/tokens.ts` | `resolveTheme(tier, variant)`, `COLORS`, `SKIN_COLORS`, `rgba()`, `mix()`, `lighten()` |
 | `src/canvas/theme/tiers.ts` | modulacao numerica por tier (borda, brilho, clareamento) |
 | `src/canvas/effects/*.ts` | `foil`, `holo`, `astral`, `particles`, `noise` (PRNG `mulberry32`, `hashSeed`, granulado) |

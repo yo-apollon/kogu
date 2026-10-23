@@ -1,0 +1,26 @@
+{
+  "data": {
+    "Page": {
+      "pageInfo": { "currentPage": 2, "hasNextPage": false, "lastPage": 2, "perPage": 50, "total": 4 },
+      "media": [
+        {
+          "id": 185660,
+          "idMal": 58811,
+          "type": "ANIME",
+          "format": null,
+          "status": "HIATUS",
+          "title": { "romaji": "Tsuki no Kakera", "english": "Fragments of the Moon", "native": "月のかけら" },
+          "startDate": { "year": 2025, "month": 4, "day": 6 },
+          "endDate": { "year": null, "month": null, "day": null },
+          "popularity": 23001,
+          "favourites": 1500,
+          "coverImage": {
+            "large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx185660-zzTop99aaBBc.jpg"
+          },
+          "isAdult": false,
+          "siteUrl": "https://anilist.co/anime/185660"
+        }
+      ]
+    }
+  }
+}

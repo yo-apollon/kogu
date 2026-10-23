@@ -1,0 +1,49 @@
+{
+  "data": {
+    "Media": {
+      "id": 154587,
+      "isAdult": false,
+      "characters": {
+        "pageInfo": { "currentPage": 2, "hasNextPage": false },
+        "edges": [
+          {
+            "role": "SUPPORTING",
+            "node": {
+              "id": 185001,
+              "name": { "full": "Mystery Wanderer", "native": null, "alternative": null },
+              "gender": "Non-binary",
+              "description": "   ",
+              "image": { "large": "" },
+              "favourites": null,
+              "siteUrl": "https://anilist.co/character/185001"
+            }
+          },
+          {
+            "role": "BACKGROUND",
+            "node": {
+              "id": 185002,
+              "name": { "full": "Village Elder", "native": "村の長老", "alternative": [] },
+              "gender": "Genderfluid",
+              "description": null,
+              "image": null,
+              "favourites": 15,
+              "siteUrl": "https://anilist.co/character/185002"
+            }
+          },
+          {
+            "role": "SUPPORTING",
+            "node": {
+              "id": 185003,
+              "name": { "full": "Merchant", "native": null, "alternative": [] },
+              "gender": null,
+              "description": null,
+              "image": { "large": "http://s4.anilist.co/file/anilistcdn/character/large/b185003-insecure.png" },
+              "favourites": 3,
+              "siteUrl": "https://anilist.co/character/185003"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

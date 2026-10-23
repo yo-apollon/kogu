@@ -1,0 +1,58 @@
+{
+  "data": {
+    "Page": {
+      "pageInfo": { "currentPage": 1, "hasNextPage": false, "lastPage": 1, "perPage": 50, "total": 3 },
+      "media": [
+        {
+          "id": 105778,
+          "idMal": 116778,
+          "type": "MANGA",
+          "format": "MANGA",
+          "status": "RELEASING",
+          "title": { "romaji": "Chainsaw Man", "english": "Chainsaw Man", "native": "チェンソーマン" },
+          "startDate": { "year": 2018, "month": 12, "day": 3 },
+          "endDate": { "year": null, "month": null, "day": null },
+          "popularity": 280000,
+          "favourites": 70500,
+          "coverImage": {
+            "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx105778-1AVwLSRKP1Fp.jpg"
+          },
+          "isAdult": false,
+          "siteUrl": "https://anilist.co/manga/105778"
+        },
+        {
+          "id": 120001,
+          "idMal": 130001,
+          "type": "MANGA",
+          "format": "ONE_SHOT",
+          "status": "FINISHED",
+          "title": { "romaji": "Ichigeki no Natsu", "english": null, "native": "一撃の夏" },
+          "startDate": { "year": 2026, "month": 10, "day": 12 },
+          "endDate": { "year": 2026, "month": 10, "day": 12 },
+          "popularity": 900,
+          "favourites": 12,
+          "coverImage": { "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/default.jpg" },
+          "isAdult": false,
+          "siteUrl": "https://anilist.co/manga/120001"
+        },
+        {
+          "id": 132222,
+          "idMal": 140222,
+          "type": "MANGA",
+          "format": "NOVEL",
+          "status": "CANCELLED",
+          "title": { "romaji": "Mayoi no Tou", "english": "Tower of the Lost", "native": "迷いの塔" },
+          "startDate": { "year": 2022, "month": null, "day": null },
+          "endDate": { "year": 2023, "month": 2, "day": 14 },
+          "popularity": 4100,
+          "favourites": 220,
+          "coverImage": {
+            "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx132222-Qq1w2e3r4t5y.jpg"
+          },
+          "isAdult": false,
+          "siteUrl": "https://anilist.co/manga/132222"
+        }
+      ]
+    }
+  }
+}

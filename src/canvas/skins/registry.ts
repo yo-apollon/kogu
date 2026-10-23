@@ -3,9 +3,10 @@ import { animeNeonSkin } from "./anime-neon.js";
 import { cinemaNoirSkin } from "./cinema-noir.js";
 import { classicSkin } from "./classic.js";
 import { gameHudSkin } from "./game-hud.js";
+import { mudaeSkin } from "./mudae.js";
 
 /** Skin usada quando nenhuma outra pontua (e quando o registro esta vazio de matches). */
-export const FALLBACK_SKIN_ID = "classic";
+export const FALLBACK_SKIN_ID = "mudae";
 
 const skins = new Map<string, CardSkin>();
 
@@ -23,8 +24,8 @@ export function listSkins(): CardSkin[] {
 }
 
 /**
- * Escolhe a skin de maior pontuacao: preferida do dono (100) > evento (50) > universo (10) > classic (1).
- * Empates: vence a primeira registrada. Cai em `classic` se nada pontuar.
+ * Escolhe a skin de maior pontuacao: preferida do dono (100) > evento (50) > mudae (20, padrao) > universo (10) > classic (1).
+ * Empates: vence a primeira registrada. Cai em `mudae` se nada pontuar.
  */
 export function selectSkin(ctx: SkinMatchContext): CardSkin {
   let best: CardSkin | undefined;
@@ -41,5 +42,5 @@ export function selectSkin(ctx: SkinMatchContext): CardSkin {
   return chosen;
 }
 
-// skins embutidas: classic primeiro (fallback), depois as tematicas
-for (const skin of [classicSkin, animeNeonSkin, gameHudSkin, cinemaNoirSkin]) registerSkin(skin);
+// skins embutidas: classic, depois as tematicas e por fim mudae (padrao; ver MUDAE_BASE_SCORE)
+for (const skin of [classicSkin, animeNeonSkin, gameHudSkin, cinemaNoirSkin, mudaeSkin]) registerSkin(skin);

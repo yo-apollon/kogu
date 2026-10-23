@@ -1,0 +1,25 @@
+{
+  "data": {
+    "Media": {
+      "id": 190442,
+      "isAdult": true,
+      "characters": {
+        "pageInfo": { "currentPage": 1, "hasNextPage": false },
+        "edges": [
+          {
+            "role": "MAIN",
+            "node": {
+              "id": 300001,
+              "name": { "full": "Kaguya Mizuno", "native": "水野かぐや", "alternative": [] },
+              "gender": "Female",
+              "description": null,
+              "image": { "large": "https://s4.anilist.co/file/anilistcdn/character/large/b300001-x.png" },
+              "favourites": 77,
+              "siteUrl": "https://anilist.co/character/300001"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "status": 429,
+  "type": "RateLimitException",
+  "message": "You are being rate limited. Please slow down.",
+  "error": "Too Many Requests"
+}

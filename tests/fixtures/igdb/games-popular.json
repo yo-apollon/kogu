@@ -1,0 +1,35 @@
+[
+  {
+    "id": 2001,
+    "name": "Eternal Odyssey",
+    "slug": "eternal-odyssey",
+    "url": "https://www.igdb.com/games/eternal-odyssey",
+    "first_release_date": 1619870400,
+    "cover": { "id": 990001, "image_id": "co9aaa" },
+    "follows": 15400,
+    "hypes": 800,
+    "total_rating_count": 9800,
+    "themes": [1, 17, 38],
+    "age_ratings": [{ "id": 11, "category": 1, "rating": 11 }]
+  },
+  {
+    "id": 2002,
+    "name": "Pixel Tavern",
+    "slug": "pixel-tavern",
+    "url": "https://www.igdb.com/games/pixel-tavern",
+    "first_release_date": 1732190400,
+    "cover": { "id": 990002, "image_id": "co9bbb" },
+    "follows": 2100,
+    "total_rating_count": 4200,
+    "themes": [27]
+  },
+  {
+    "id": 2003,
+    "name": "Unannounced Project",
+    "slug": "unannounced-project",
+    "cover": { "id": 990003, "image_id": "co9ccc" },
+    "follows": 5000,
+    "hypes": 3000,
+    "total_rating_count": 3100
+  }
+]

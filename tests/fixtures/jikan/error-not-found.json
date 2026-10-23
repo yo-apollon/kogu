@@ -1,0 +1,6 @@
+{
+  "status": 404,
+  "type": "BadResponseException",
+  "message": "Resource does not exist",
+  "error": "404 Not Found on https://api.jikan.moe/v4/characters/999999999"
+}

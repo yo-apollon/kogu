@@ -7,6 +7,7 @@ export { registerFonts, FONT_FAMILIES } from "./engine/fonts.js";
 export { ImageLoader, createSafeImageFetcher, getImageLoader, setImageLoader } from "./engine/imageLoader.js";
 export type { ImageFetcher } from "./engine/imageLoader.js";
 export { CardCache, getCardCache } from "./engine/cache.js";
-export { registerSkin, getSkin, listSkins, selectSkin } from "./skins/registry.js";
+export { registerSkin, getSkin, listSkins, selectSkin, FALLBACK_SKIN_ID } from "./skins/registry.js";
+export { mudaeSkin } from "./skins/mudae.js";
 export { resolveTheme } from "./theme/tokens.js";
 export type { CardSkin, CardLayer, CardRenderContext, ThemeTokens, SkinMatchContext, UniverseKey } from "./skins/types.js";

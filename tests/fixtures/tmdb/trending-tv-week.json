@@ -1,0 +1,41 @@
+{
+  "page": 1,
+  "total_pages": 2,
+  "total_results": 40,
+  "results": [
+    {
+      "id": 8001,
+      "media_type": "tv",
+      "name": "Moonlit Detective",
+      "original_name": "月夜の探偵",
+      "original_language": "ja",
+      "poster_path": "/moonlitPoster.jpg",
+      "genre_ids": [16, 9648],
+      "first_air_date": "2026-07-15",
+      "origin_country": ["JP"],
+      "popularity": 300.8
+    },
+    {
+      "id": 8002,
+      "media_type": "tv",
+      "name": "The Long Winter",
+      "original_name": "The Long Winter",
+      "original_language": "en",
+      "poster_path": "/longWinterPoster.jpg",
+      "genre_ids": [18],
+      "first_air_date": "2019-04-14",
+      "origin_country": ["US"],
+      "popularity": 120
+    },
+    {
+      "id": 8003,
+      "media_type": "tv",
+      "name": "Garden Wars",
+      "original_name": "Garden Wars",
+      "original_language": "en",
+      "genre_ids": [10759, 16],
+      "first_air_date": "2026-11-05",
+      "popularity": 55.25
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "data": {
+    "mal_id": 40001,
+    "url": "https://myanimelist.net/character/40001/Soldier",
+    "images": {
+      "jpg": { "image_url": "https://cdn.myanimelist.net/images/questionmark_23.gif?s=f7dcbc4a4603d18356d3dfef8abd655c" },
+      "webp": {
+        "image_url": "https://cdn.myanimelist.net/images/questionmark_23.gif?s=f7dcbc4a4603d18356d3dfef8abd655c",
+        "small_image_url": "https://cdn.myanimelist.net/images/questionmark_23.gif?s=f7dcbc4a4603d18356d3dfef8abd655c"
+      }
+    },
+    "name": "Soldier",
+    "name_kanji": null,
+    "nicknames": [],
+    "favorites": 9,
+    "about": null
+  }
+}

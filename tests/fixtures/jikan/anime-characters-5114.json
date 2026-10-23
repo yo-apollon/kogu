@@ -1,0 +1,81 @@
+{
+  "data": [
+    {
+      "character": {
+        "mal_id": 67,
+        "url": "https://myanimelist.net/character/67/Alphonse_Elric",
+        "images": {
+          "jpg": { "image_url": "https://cdn.myanimelist.net/images/characters/6/66203.jpg?s=0e2df5a9" },
+          "webp": {
+            "image_url": "https://cdn.myanimelist.net/images/characters/6/66203.webp?s=0e2df5a9",
+            "small_image_url": "https://cdn.myanimelist.net/images/characters/6/66203t.webp?s=0e2df5a9"
+          }
+        },
+        "name": "Elric, Alphonse"
+      },
+      "role": "Main",
+      "favorites": 45000,
+      "voice_actors": [
+        { "person": { "mal_id": 1, "url": "https://myanimelist.net/people/1/Rie_Kugimiya", "images": { "jpg": { "image_url": "https://cdn.myanimelist.net/images/voiceactors/1/1.jpg" } }, "name": "Kugimiya, Rie" }, "language": "Japanese" }
+      ]
+    },
+    {
+      "character": {
+        "mal_id": 11,
+        "url": "https://myanimelist.net/character/11/Edward_Elric",
+        "images": {
+          "jpg": { "image_url": "https://cdn.myanimelist.net/images/characters/9/72533.jpg?s=1f3e0a" },
+          "webp": {
+            "image_url": "https://cdn.myanimelist.net/images/characters/9/72533.webp?s=1f3e0a",
+            "small_image_url": "https://cdn.myanimelist.net/images/characters/9/72533t.webp?s=1f3e0a"
+          }
+        },
+        "name": "Elric, Edward"
+      },
+      "role": "Main",
+      "favorites": 172000,
+      "voice_actors": []
+    },
+    {
+      "character": {
+        "mal_id": 68,
+        "url": "https://myanimelist.net/character/68/Roy_Mustang",
+        "images": {
+          "jpg": { "image_url": "https://cdn.myanimelist.net/images/characters/7/82739.jpg?s=88aa21" }
+        },
+        "name": "Mustang, Roy"
+      },
+      "role": "Supporting",
+      "favorites": 120000,
+      "voice_actors": []
+    },
+    {
+      "character": {
+        "mal_id": 40001,
+        "url": "https://myanimelist.net/character/40001/Soldier",
+        "images": {
+          "jpg": { "image_url": "https://cdn.myanimelist.net/images/questionmark_23.gif?s=f7dcbc4a4603d18356d3dfef8abd655c" },
+          "webp": {
+            "image_url": "https://cdn.myanimelist.net/images/questionmark_23.gif?s=f7dcbc4a4603d18356d3dfef8abd655c",
+            "small_image_url": "https://cdn.myanimelist.net/images/questionmark_23.gif?s=f7dcbc4a4603d18356d3dfef8abd655c"
+          }
+        },
+        "name": "Soldier"
+      },
+      "role": "Supporting",
+      "favorites": 7,
+      "voice_actors": []
+    },
+    {
+      "character": {
+        "mal_id": 40002,
+        "url": "https://myanimelist.net/character/40002/Crowd",
+        "images": { "jpg": { "image_url": "https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256.png" } },
+        "name": "Crowd"
+      },
+      "role": "Background",
+      "favorites": 1,
+      "voice_actors": []
+    }
+  ]
+}

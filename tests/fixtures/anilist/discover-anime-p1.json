@@ -1,0 +1,62 @@
+{
+  "data": {
+    "Page": {
+      "pageInfo": { "currentPage": 1, "hasNextPage": true, "lastPage": 2, "perPage": 50, "total": 4 },
+      "media": [
+        {
+          "id": 154587,
+          "idMal": 52991,
+          "type": "ANIME",
+          "format": "TV",
+          "status": "RELEASING",
+          "title": {
+            "romaji": "Sousou no Frieren",
+            "english": "Frieren: Beyond Journey's End",
+            "native": "葬送のフリーレン"
+          },
+          "startDate": { "year": 2023, "month": 9, "day": 29 },
+          "endDate": { "year": null, "month": null, "day": null },
+          "popularity": 412345,
+          "favourites": 61234,
+          "coverImage": {
+            "large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx154587-gHSraOSa0nBG.jpg"
+          },
+          "isAdult": false,
+          "siteUrl": "https://anilist.co/anime/154587"
+        },
+        {
+          "id": 178005,
+          "idMal": null,
+          "type": "ANIME",
+          "format": "MOVIE",
+          "status": "FINISHED",
+          "title": { "romaji": "Eiga Hoshizora no Tabi", "english": null, "native": "映画 星空の旅" },
+          "startDate": { "year": 2026, "month": 10, "day": 3 },
+          "endDate": { "year": 2026, "month": 10, "day": 3 },
+          "popularity": 5120,
+          "favourites": 310,
+          "coverImage": {
+            "large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx178005-a1b2c3d4e5f6.jpg"
+          },
+          "isAdult": false,
+          "siteUrl": "https://anilist.co/anime/178005"
+        },
+        {
+          "id": 190442,
+          "idMal": 61002,
+          "type": "ANIME",
+          "format": "ONA",
+          "status": "NOT_YET_RELEASED",
+          "title": { "romaji": "Yoru no Himitsu", "english": "Secrets of the Night", "native": null },
+          "startDate": { "year": 2026, "month": 12, "day": null },
+          "endDate": { "year": null, "month": null, "day": null },
+          "popularity": 880,
+          "favourites": 42,
+          "coverImage": { "large": null },
+          "isAdult": true,
+          "siteUrl": "https://anilist.co/anime/190442"
+        }
+      ]
+    }
+  }
+}
