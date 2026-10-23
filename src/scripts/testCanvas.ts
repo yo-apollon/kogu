@@ -12,7 +12,10 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
-import { createCanvas, loadImage } from "@napi-rs/canvas";
+import { createCanvas, loadImage, type SKRSContext2D } from "@napi-rs/canvas";
+import { drawAetherCrystal } from "../canvas/engine/draw/shapes.js";
+import { setFont } from "../canvas/engine/draw/text.js";
+import { buildSummonEmbed, type SummonView } from "../ui/summonEmbed.js";
 import { CARD_VARIANTS, ENTITY_TIERS, type CardVariant, type EntityTier } from "../config/gacha.js";
 import { CardCache, getCardCache } from "../canvas/engine/cache.js";
 import { registerFonts } from "../canvas/engine/fonts.js";
@@ -154,13 +157,180 @@ export function buildSampleInput(skinId: string, variant: CardVariant, index: nu
   };
 }
 
-/** PNG reduzido (golden): decodifica o WebP e reamostra para 240x350. */
+/** PNG reduzido (golden): decodifica o WebP e reamostra para 240 de largura (altura proporcional: 350 ou 375). */
 export async function toGoldenPng(webp: Buffer): Promise<Buffer> {
   const img = await loadImage(webp);
-  const canvas = createCanvas(240, 350);
+  const h = Math.round((240 * img.height) / img.width);
+  const canvas = createCanvas(240, h);
   const g = canvas.getContext("2d");
   g.imageSmoothingQuality = "high";
-  g.drawImage(img, 0, 0, 240, 350);
+  g.drawImage(img, 0, 0, 240, h);
+  return canvas.encode("png");
+}
+
+/* ------------------------------------------------------------------ */
+/* Previa do embed (so para conferencia visual; imita o Discord)       */
+/* ------------------------------------------------------------------ */
+
+/** Caso completo, replicando o exemplo do Mudae. */
+export const MUDAE_SAMPLE_VIEW: SummonView = {
+  name: "Ryuji Sakamoto",
+  franchise: "Persona 5",
+  gender: "MALE",
+  universe: "GAME",
+  aetherValue: 380,
+  awakeningKeys: 8,
+  claimRank: 855,
+  likeRank: 587,
+  tier: "COMMON",
+  variant: "STANDARD",
+  ownerNote: "art by askziye",
+  ownerPhrase: "For real ?!",
+  hasCustomPic: true,
+  customPicIndex: 1,
+  ownerName: "hrtadorii",
+  ownerKeys: 40,
+  ownerPosition: 1,
+};
+
+const PREVIEW = {
+  page: "#313338",
+  embedBg: "#1e1f22",
+  text: "#dbdee1",
+  muted: "#b5bac1",
+  blue: "#3b9bff",
+  pink: "#ff6fb1",
+  keyGold: "#e5b53b",
+  crystal: "#8fa8ff",
+  dot: "#6d6f78",
+} as const;
+
+function hex(n: number): string {
+  return `#${n.toString(16).padStart(6, "0")}`;
+}
+
+type Seg = { text: string; bold: boolean; italic: boolean };
+
+function parseMarkdown(line: string): Seg[] {
+  const out: Seg[] = [];
+  const re = /\*\*\*(.+?)\*\*\*|\*\*(.+?)\*\*|\*(.+?)\*/g;
+  let last = 0;
+  for (const m of line.matchAll(re)) {
+    if (m.index! > last) out.push({ text: line.slice(last, m.index), bold: false, italic: false });
+    if (m[1] !== undefined) out.push({ text: m[1], bold: true, italic: true });
+    else if (m[2] !== undefined) out.push({ text: m[2], bold: true, italic: false });
+    else out.push({ text: m[3]!, bold: false, italic: true });
+    last = m.index! + m[0].length;
+  }
+  if (last < line.length) out.push({ text: line.slice(last), bold: false, italic: false });
+  return out.map((s) => ({ ...s, text: s.text.replace(/\\([\\*_~`|>[\]()#-])/g, "$1") }));
+}
+
+/** Desenha um segmento; emojis viram icones vetoriais simples (canvas nao renderiza emoji). Devolve o novo x. */
+function drawSegment(g: SKRSContext2D, seg: Seg, x: number, y: number, size: number): number {
+  setFont(g, seg.bold ? 700 : 400, size);
+  let cx = x;
+  for (const part of seg.text.split(/(\p{Extended_Pictographic}️?)/u)) {
+    if (!part) continue;
+    if (/^\p{Extended_Pictographic}/u.test(part)) {
+      const r = size * 0.42;
+      if (part.startsWith("💠")) {
+        drawAetherCrystal(g, cx + r, y - size * 0.34, r, PREVIEW.crystal);
+      } else if (part.startsWith("🗝")) {
+        g.save();
+        g.strokeStyle = PREVIEW.keyGold;
+        g.lineWidth = 2;
+        g.beginPath();
+        g.arc(cx + r * 0.6, y - size * 0.45, r * 0.5, 0, Math.PI * 2);
+        g.moveTo(cx + r * 1.1, y - size * 0.3);
+        g.lineTo(cx + r * 2.2, y - size * 0.05);
+        g.stroke();
+        g.restore();
+      } else if (part.startsWith("♂") || part.startsWith("♀")) {
+        g.fillStyle = part.startsWith("♂") ? PREVIEW.blue : PREVIEW.pink;
+        g.beginPath();
+        g.arc(cx + r, y - size * 0.34, r * 0.8, 0, Math.PI * 2);
+        g.fill();
+      } else {
+        g.fillStyle = PREVIEW.dot;
+        g.beginPath();
+        g.arc(cx + r, y - size * 0.34, r * 0.8, 0, Math.PI * 2);
+        g.fill();
+      }
+      cx += r * 2.4;
+      continue;
+    }
+    g.fillStyle = PREVIEW.text;
+    g.save();
+    if (seg.italic) {
+      g.translate(cx, y);
+      g.transform(1, 0, -0.2, 1, 0, 0);
+      g.fillText(part, 0, 0);
+    } else g.fillText(part, cx, y);
+    g.restore();
+    setFont(g, seg.bold ? 700 : 400, size);
+    cx += g.measureText(part).width;
+  }
+  return cx;
+}
+
+/** Previa do embed completo: fundo do Discord, barra lateral, author, linhas, imagem e footer. */
+export async function renderEmbedPreview(view: SummonView, art: Buffer | Uint8Array, locale = "pt-BR"): Promise<Buffer> {
+  registerFonts();
+  const { embed } = buildSummonEmbed(view, { locale });
+  const data = embed.toJSON();
+  const lines = (data.description ?? "").split("\n");
+
+  const pad = 16;
+  const artW = 400;
+  const img = await loadImage(Buffer.from(art));
+  const artH = Math.round((artW * img.height) / img.width);
+  const lineH = 24;
+  const W = artW + pad * 2 + 4 + 36;
+  const headerH = 34;
+  const H = 20 + pad + headerH + lines.length * lineH + 14 + artH + 14 + 28 + pad + 20;
+
+  const canvas = createCanvas(W, H);
+  const g = canvas.getContext("2d");
+  g.fillStyle = PREVIEW.page;
+  g.fillRect(0, 0, W, H);
+
+  const bx = 18;
+  const by = 20;
+  const bw = W - 36;
+  const bh = H - 40;
+  g.fillStyle = PREVIEW.embedBg;
+  g.beginPath();
+  g.roundRect(bx, by, bw, bh, 6);
+  g.fill();
+  g.fillStyle = hex(data.color ?? 0);
+  g.beginPath();
+  g.roundRect(bx, by, 4, bh, [6, 0, 0, 6]);
+  g.fill();
+
+  const x0 = bx + 4 + pad;
+  let y = by + pad + 16;
+  setFont(g, 700, 16);
+  g.fillStyle = "#ffffff";
+  g.fillText(data.author?.name ?? "", x0, y);
+  y += headerH - 6;
+  for (const line of lines) {
+    let x = x0;
+    for (const seg of parseMarkdown(line)) x = drawSegment(g, seg, x, y, 16);
+    y += lineH;
+  }
+  y += 2;
+  g.drawImage(img, x0, y, artW, artH);
+  y += artH + 14;
+
+  // footer: icone circular + texto
+  g.fillStyle = PREVIEW.dot;
+  g.beginPath();
+  g.arc(x0 + 10, y + 4, 10, 0, Math.PI * 2);
+  g.fill();
+  setFont(g, 600, 13);
+  g.fillStyle = PREVIEW.muted;
+  g.fillText(data.footer?.text ?? "", x0 + (data.footer?.icon_url !== undefined || view.ownerName ? 30 : 0), y + 9);
   return canvas.encode("png");
 }
 
@@ -270,6 +440,24 @@ async function main(): Promise<void> {
     console.log(`pool: ${JSON.stringify(canvasPoolStats())} (tempo inclui ida/volta de mensagem; retratos vem do cache em disco semeado)`);
   }
   if (values.golden) console.log(`Goldens gravados em ${goldenDir}`);
+
+  // previas do embed da skin mudae (arte limpa + embed imitando o Discord)
+  if (skinIds.includes("mudae")) {
+    const embedDir = path.join(outDir, "embed");
+    await fs.mkdir(embedDir, { recursive: true });
+    for (const variant of variants) {
+      const input = { ...buildSampleInput("mudae", variant, 0), skinId: "mudae" };
+      if (values.tier) input.tier = values.tier as EntityTier;
+      const art = await renderCard(input, { loader, cache: false });
+      const full = { ...MUDAE_SAMPLE_VIEW, variant, tier: input.tier ?? "COMMON" };
+      await fs.writeFile(path.join(embedDir, `mudae-embed__${variant}.png`), await renderEmbedPreview(full, art));
+      if (variant === variants[0]) {
+        const free: SummonView = { ...full, ownerName: undefined, ownerNote: undefined, ownerPhrase: undefined, hasCustomPic: false };
+        await fs.writeFile(path.join(embedDir, `mudae-embed-free__${variant}.png`), await renderEmbedPreview(free, art));
+      }
+    }
+    console.log(`Previas do embed: ${embedDir}`);
+  }
 
   // sanidade: cache usa a mesma chave => segunda chamada e hit
   const cache = new CardCache();

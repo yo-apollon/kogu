@@ -1,4 +1,4 @@
-import { mkdtemp, rm } from "node:fs/promises";
+﻿import { mkdtemp, rm } from "node:fs/promises";
 import net from "node:net";
 import os from "node:os";
 import path from "node:path";
@@ -40,11 +40,11 @@ async function canConnect(url: string): Promise<boolean> {
 /** Sobe um Postgres descartavel (embedded, ou o de DATABASE_URL se responder), migra e prepara o ambiente. */
 export async function setupTestDb(): Promise<TestDb> {
   const saved = {
-    DATABASE_URL: process.env.DATABASE_URL,
+    DATABASE_URL: process.env.TEST_DATABASE_URL,
     REDIS_URL: process.env.REDIS_URL,
     LOG_LEVEL: process.env.LOG_LEVEL,
   };
-  let external = process.env.DATABASE_URL?.trim();
+  let external = process.env.TEST_DATABASE_URL?.trim();
   if (external && !(await canConnect(external))) external = undefined;
 
   let embedded: EmbeddedPostgres | undefined;

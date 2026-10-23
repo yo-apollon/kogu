@@ -1,4 +1,4 @@
-import { mkdtemp, rm } from "node:fs/promises";
+﻿import { mkdtemp, rm } from "node:fs/promises";
 import net from "node:net";
 import os from "node:os";
 import path from "node:path";
@@ -10,7 +10,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 // Lido antes de qualquer import de src/ (config/env.ts chama dotenv e preencheria DATABASE_URL do .env local).
 const externalUrl = vi.hoisted(() => {
-  const url = process.env.DATABASE_URL?.trim();
+  const url = process.env.TEST_DATABASE_URL?.trim();
   process.env.LOG_LEVEL = "silent";
   process.env.DEFAULT_PREFIX = "$";
   return url;

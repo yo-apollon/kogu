@@ -1,4 +1,4 @@
-name: CI
+﻿name: CI
 
 on:
   push:
@@ -41,7 +41,9 @@ jobs:
           --health-interval 5s --health-timeout 5s --health-retries 10
     env:
       DATABASE_URL: postgresql://arqon_user:ci_password@localhost:5432/arqon_test
+      TEST_DATABASE_URL: postgresql://arqon_user:ci_password@localhost:5432/arqon_test
       REDIS_URL: redis://localhost:6379
+      TEST_REDIS_URL: redis://localhost:6379
       NODE_ENV: test
     steps:
       - uses: actions/checkout@v4

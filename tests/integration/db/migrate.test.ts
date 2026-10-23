@@ -1,4 +1,4 @@
-import { mkdtemp, rm } from "node:fs/promises";
+﻿import { mkdtemp, rm } from "node:fs/promises";
 import net from "node:net";
 import os from "node:os";
 import path from "node:path";
@@ -7,7 +7,7 @@ import postgres from "postgres";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 // Lido antes de qualquer import de src/: config/env.ts chama dotenv e preencheria DATABASE_URL com o .env local.
-const externalUrl = process.env.DATABASE_URL?.trim();
+const externalUrl = process.env.TEST_DATABASE_URL?.trim();
 const migrations = () => import("../../../src/infra/db/migrate.js");
 
 // Com DATABASE_URL (ex.: servico postgres do CI) usa esse servidor; sem ele sobe um embedded-postgres.
@@ -355,6 +355,7 @@ describe("regras de integridade", () => {
 
 describe("client.ts", () => {
   it("conecta via DATABASE_URL e fecha o pool", async () => {
+    const previousUrl = process.env.DATABASE_URL;
     process.env.DATABASE_URL = testUrl;
     const { db, closeDb } = await import("../../../src/infra/db/client.js");
     const { guilds } = await import("../../../src/infra/db/schema/index.js");
@@ -362,5 +363,8 @@ describe("client.ts", () => {
     const rows = await db.select({ id: guilds.id, prefix: guilds.prefix }).from(guilds);
     expect(rows.find((r) => r.id === "g-client")?.prefix).toBe("$");
     await closeDb();
+    // process.env e compartilhado entre arquivos de teste: nao deixar a URL do servidor efemero vazar.
+    if (previousUrl === undefined) delete process.env.DATABASE_URL;
+    else process.env.DATABASE_URL = previousUrl;
   });
 });

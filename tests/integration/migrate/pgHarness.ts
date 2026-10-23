@@ -1,4 +1,4 @@
-import { mkdtemp, rm } from "node:fs/promises";
+﻿import { mkdtemp, rm } from "node:fs/promises";
 import net from "node:net";
 import os from "node:os";
 import path from "node:path";
@@ -32,7 +32,7 @@ function withDatabase(url: string, dbName: string): string {
 }
 
 export async function startPostgres(): Promise<PgHarness> {
-  const externalUrl = process.env.DATABASE_URL?.trim();
+  const externalUrl = process.env.TEST_DATABASE_URL?.trim();
   let embedded: EmbeddedPostgres | undefined;
   let dataDir: string | undefined;
   let adminUrl: string;
