@@ -13,6 +13,7 @@
     "start:worker": "node dist/worker.js",
     "dev": "tsx watch src/index.ts",
     "dev:bot": "tsx watch src/index.ts",
+    "dev:local": "tsx src/scripts/devLocal.ts",
     "dev:worker": "tsx watch src/worker.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/infra/db/migrate.ts",
