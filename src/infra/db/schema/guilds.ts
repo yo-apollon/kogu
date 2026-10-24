@@ -21,6 +21,12 @@ export const guilds = pgTable("guilds", {
   serverAetherScrap: integer("server_aether_scrap").notNull().default(0),
   releaseBoostEnabled: boolean("release_boost_enabled").notNull().default(true),
   allowAdult: boolean("allow_adult").notNull().default(false),
+  // Metadados do Discord (sincronizados pelo bot) e controle de versao da config para a dashboard.
+  name: text("name"),
+  icon: text("icon"),
+  botPresent: boolean("bot_present").notNull().default(true),
+  // Incrementado a cada escrita de configuracao (bot ou dashboard): invalida caches fora do processo.
+  configVersion: integer("config_version").notNull().default(0),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()

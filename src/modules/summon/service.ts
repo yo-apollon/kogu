@@ -5,7 +5,8 @@ import { guildMembers, rollLog, type Guild, type RollOffer } from "../../infra/d
 import { getKV } from "../../infra/redis/client.js";
 import { UserError } from "../../lib/errors.js";
 import { childLogger } from "../../lib/logger.js";
-import { currentWindow, discordRelative, nextWindowStart } from "../../lib/time.js";
+import { discordRelative } from "../../lib/time.js";
+import { currentWindow, nextWindowStart, usedInWindow } from "../../shared/time.js";
 import { dailyKey, ensureMember } from "../economy/service.js";
 import { createOffer, incrementAwakening } from "./offers.js";
 import type { RollFilter } from "./pool.js";
@@ -39,14 +40,8 @@ export interface RollConsumption {
   nextResetAt: number;
 }
 
-/**
- * Quantos itens da janela `window` ja foram usados dado o par gravado (storedWindow, storedUsed).
- * Janela gravada anterior a atual = contador vencido (0); igual ou posterior = vale o gravado.
- * Espelha a regra do UPDATE de consumeRoll/claimPact e e usada em getTimers.
- */
-export function usedInWindow(storedWindow: number, storedUsed: number, window: number): number {
-  return storedWindow >= window ? storedUsed : 0;
-}
+// Regra da janela em src/shared/time.ts (reexportada por compatibilidade).
+export { usedInWindow };
 
 /**
  * Consome 1 roll em UM UPDATE atomico. Janela nova (rolls_window < atual) reinicia o contador em 1;

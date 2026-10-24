@@ -44,20 +44,45 @@ function assertAmount(amount: number): void {
   }
 }
 
+/** Perfil opcional do Discord (a dashboard exibe o avatar); `undefined` = nao sabe, nao altera. */
+export interface UserProfile {
+  /** Hash do avatar (`user.avatar`); `null` = sem avatar customizado. */
+  avatar?: string | null;
+  globalName?: string | null;
+}
+
 export async function ensureUser(
   exec: Executor,
   userId: string,
-  username?: string
+  username?: string,
+  profile: UserProfile = {}
 ): Promise<void> {
   if (username) {
+    const extra: { avatar?: string | null; globalName?: string | null } = {};
+    if (profile.avatar !== undefined) extra.avatar = profile.avatar;
+    if (profile.globalName !== undefined) extra.globalName = profile.globalName;
+    const changed = [sql`${users.username} IS DISTINCT FROM ${username}`];
+    if ("avatar" in extra) changed.push(sql`${users.avatar} IS DISTINCT FROM ${extra.avatar}`);
+    if ("globalName" in extra) {
+      changed.push(sql`${users.globalName} IS DISTINCT FROM ${extra.globalName}`);
+    }
     await exec
       .insert(users)
-      .values({ id: userId, username })
+      .values({ id: userId, username, ...extra })
       .onConflictDoUpdate({
         target: users.id,
-        set: { username },
-        setWhere: sql`${users.username} IS DISTINCT FROM ${username}`,
+        set: { username, ...extra },
+        setWhere: sql.join(changed, sql` OR `),
       });
+  } else if (profile.avatar !== undefined || profile.globalName !== undefined) {
+    // Sem nome atual: usuario novo entra com o id como nome provisorio; o perfil e atualizado.
+    const extra: { avatar?: string | null; globalName?: string | null } = {};
+    if (profile.avatar !== undefined) extra.avatar = profile.avatar;
+    if (profile.globalName !== undefined) extra.globalName = profile.globalName;
+    await exec
+      .insert(users)
+      .values({ id: userId, username: userId, ...extra })
+      .onConflictDoUpdate({ target: users.id, set: extra });
   } else {
     await exec.insert(users).values({ id: userId, username: userId }).onConflictDoNothing();
   }
@@ -68,6 +93,8 @@ export interface MemberRef {
   userId: string;
   /** Nome atual no Discord; sem ele o usuario novo entra com o proprio id como nome provisorio. */
   username?: string;
+  /** Avatar e nome de exibicao global, quando disponiveis (opcionais). */
+  profile?: UserProfile;
 }
 
 /**
@@ -79,7 +106,7 @@ export async function ensureMember(
   ref: MemberRef
 ): Promise<{ created: boolean }> {
   await exec.insert(guilds).values({ id: ref.guildId }).onConflictDoNothing();
-  await ensureUser(exec, ref.userId, ref.username);
+  await ensureUser(exec, ref.userId, ref.username, ref.profile);
   const rows = await exec
     .insert(guildMembers)
     .values({ guildId: ref.guildId, userId: ref.userId, aetherBalance: WELCOME_AETHER })
@@ -173,6 +200,7 @@ export interface DailyResult {
 
 export interface DailyOptions {
   username?: string;
+  profile?: UserProfile;
   rng?: Rng;
 }
 
@@ -201,7 +229,7 @@ export async function claimDaily(
   const reward = DAILY_AETHER_MIN + Math.floor(rng() * DAILY_AETHER_SPAN);
   try {
     const row = await db.transaction(async (tx) => {
-      await ensureMember(tx, { guildId, userId, username: opts.username });
+      await ensureMember(tx, { guildId, userId, username: opts.username, profile: opts.profile });
       const [updated] = await tx
         .update(guildMembers)
         .set({
@@ -209,6 +237,7 @@ export async function claimDaily(
           stackedRolls: sql`${guildMembers.stackedRolls} + ${DAILY_STACKED_ROLLS}`,
           rollsUsed: 0,
           pactsUsed: 0,
+          lastDailyAt: new Date(now),
         })
         .where(and(eq(guildMembers.guildId, guildId), eq(guildMembers.userId, userId)))
         .returning({ balance: guildMembers.aetherBalance, stacked: guildMembers.stackedRolls });

@@ -84,7 +84,8 @@ describe("skin mudae", () => {
     expect(hashes.size).toBe(CARD_VARIANTS.length);
   });
 
-  it("orcamento de tempo: p95 < 80 ms apos warm-up", async () => {
+  // Mede tempo: só roda isolado (`npm run test:perf`); em paralelo com a suíte inteira oscila.
+  it.skipIf(process.env.CANVAS_PERF !== "1")("orcamento de tempo: p95 < 80 ms apos warm-up", async () => {
     const budget = Number(process.env.CANVAS_P95_BUDGET_MS ?? (process.env.CI ? 200 : 80));
     const times: number[] = [];
     for (let round = 0; round < 3; round++) {

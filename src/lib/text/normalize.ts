@@ -1,29 +1,7 @@
-/** Marcas combinantes de diacriticos latinos/gregos/cirilicos (nao inclui dakuten/handakuten do kana). */
-// eslint-disable-next-line no-misleading-character-class
-const DIACRITICS =/[̀-ͯ᪰-᫿᷀-᷿⃐-⃿︠-︯]/g;
+import { APOSTROPHES, DIACRITICS, escapeLike, nameTokens, normalizeName } from "../../shared/text.js";
 
-/**
- * Normaliza um nome para comparacao: NFKD, remove diacriticos e pontuacao,
- * minusculas, colapsa espacos. Letras CJK/Hangul sao preservadas
- * (a composicao NFC apos remover diacriticos restaura kana com dakuten).
- */
-export function normalizeName(s: string): string {
-  return s
-    .normalize("NFKD")
-    .replace(DIACRITICS, "")
-    .normalize("NFC")
-    .toLowerCase()
-    .replace(/['’‘`´]/g, "") // apostrofos colam: o'brien -> obrien
-    .replace(/[^\p{L}\p{N}\p{M}\s]/gu, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-/** Tokens do nome normalizado, ordenados ("Gojo Satoru" == "Satoru Gojo"). */
-export function nameTokens(s: string): string[] {
-  const n = normalizeName(s);
-  return n === "" ? [] : n.split(" ").sort();
-}
+// Fonte unica em src/shared/text.ts (copiada para a dashboard); reexportada aqui por compatibilidade.
+export { escapeLike, nameTokens, normalizeName };
 
 function fnv1a(input: string): string {
   let h = 0x811c9dc5;
@@ -43,7 +21,7 @@ export function slugify(s: string, maxLength = 80): string {
     .normalize("NFKD")
     .replace(DIACRITICS, "")
     .toLowerCase()
-    .replace(/['’‘`´]/g, "")
+    .replace(APOSTROPHES, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, maxLength)

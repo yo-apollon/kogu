@@ -123,6 +123,8 @@ const EXPECTED_TABLES = [
   "moderation_queue",
   "character_suggestions",
   "catalog_moderators",
+  "dashboard_audit_log",
+  "dashboard_rate_limit",
 ];
 
 describe("migrations do zero", () => {
@@ -131,7 +133,7 @@ describe("migrations do zero", () => {
     await runMigrations(testUrl);
     await runMigrations(testUrl); // segunda execucao nao faz nada
     const [{ n }] = await sql`SELECT count(*)::int AS n FROM drizzle.__drizzle_migrations`;
-    expect(n).toBe(3);
+    expect(n).toBe(4);
   });
 
   it("cria extensoes pg_trgm e unaccent", async () => {
@@ -182,6 +184,60 @@ describe("migrations do zero", () => {
     ]) {
       expect(def(name), name).toMatch(/USING gin .*gin_trgm_ops/);
     }
+  });
+});
+
+describe("migration 0003_dashboard", () => {
+  it("adiciona as colunas novas com os padroes esperados", async () => {
+    const cols = await sql`
+      SELECT table_name, column_name, is_nullable, column_default, data_type
+      FROM information_schema.columns
+      WHERE table_schema = 'public'
+        AND (table_name, column_name) IN (
+          ('guilds', 'name'), ('guilds', 'icon'), ('guilds', 'bot_present'), ('guilds', 'config_version'),
+          ('users', 'avatar'), ('users', 'global_name'), ('guild_members', 'last_daily_at'))`;
+    const col = (t: string, c: string) => cols.find((r) => r.table_name === t && r.column_name === c);
+    expect(cols).toHaveLength(7);
+    expect(col("guilds", "bot_present")).toMatchObject({ is_nullable: "NO", column_default: "true" });
+    expect(col("guilds", "config_version")).toMatchObject({ is_nullable: "NO", column_default: "0" });
+    expect(col("guilds", "name")?.is_nullable).toBe("YES");
+    expect(col("guild_members", "last_daily_at")?.data_type).toBe("timestamp with time zone");
+    const [g] = await sql`INSERT INTO guilds (id) VALUES ('g-0003') RETURNING bot_present, config_version`;
+    expect(g).toEqual({ bot_present: true, config_version: 0 });
+  });
+
+  it("indices de historico (parciais onde indicado) existem", async () => {
+    const rows = await sql`SELECT indexname, indexdef FROM pg_indexes WHERE schemaname = 'public'`;
+    const def = (name: string) => rows.find((r) => r.indexname === name)?.indexdef as string | undefined;
+    expect(def("idx_roll_log_guild_user_recent")).toMatch(/\(guild_id, user_id, rolled_at DESC/);
+    expect(def("idx_roll_offers_claimed")).toMatch(/\(guild_id, claimed_by, claimed_at DESC.*WHERE .*status.* = 'CLAIMED'/);
+    expect(def("idx_roll_offers_guild_claimed")).toMatch(/\(guild_id, claimed_at\).*WHERE .*status.* = 'CLAIMED'/);
+    expect(def("idx_dashboard_audit_guild_created")).toMatch(/\(guild_id, created_at DESC/);
+  });
+
+  it("dashboard_audit_log: FK cascade, source restrito e identity", async () => {
+    await sql`INSERT INTO guilds (id) VALUES ('g-audit')`;
+    await sql`INSERT INTO dashboard_audit_log (guild_id, actor_user_id, action, before, after)
+      VALUES ('g-audit', 'u1', 'settings.update', '{"a":1}', '{"a":2}')`;
+    const [row] = await sql`SELECT source, before, after FROM dashboard_audit_log WHERE guild_id = 'g-audit'`;
+    expect(row).toEqual({ source: "dashboard", before: { a: 1 }, after: { a: 2 } });
+    expect(
+      await pgError(sql`INSERT INTO dashboard_audit_log (guild_id, actor_user_id, source, action)
+        VALUES ('g-audit', 'u1', 'hacker', 'x')`)
+    ).toBe("23514");
+    expect(
+      await pgError(sql`INSERT INTO dashboard_audit_log (guild_id, actor_user_id, action)
+        VALUES ('g-inexistente', 'u1', 'x')`)
+    ).toBe("23503");
+    await sql`DELETE FROM guilds WHERE id = 'g-audit'`;
+    const [{ n }] = await sql`SELECT count(*)::int AS n FROM dashboard_audit_log WHERE guild_id = 'g-audit'`;
+    expect(n).toBe(0);
+  });
+
+  it("dashboard_rate_limit: chave primaria e contador nao negativo", async () => {
+    await sql`INSERT INTO dashboard_rate_limit (key, count) VALUES ('k1', 1)`;
+    expect(await pgError(sql`INSERT INTO dashboard_rate_limit (key, count) VALUES ('k1', 1)`)).toBe("23505");
+    expect(await pgError(sql`INSERT INTO dashboard_rate_limit (key, count) VALUES ('k2', -1)`)).toBe("23514");
   });
 });
 

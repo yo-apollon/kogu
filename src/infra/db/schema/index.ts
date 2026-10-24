@@ -7,3 +7,4 @@ export * from "./collection.js";
 export * from "./offers.js";
 export * from "./sync.js";
 export * from "./moderation.js";
+export * from "./dashboard.js";

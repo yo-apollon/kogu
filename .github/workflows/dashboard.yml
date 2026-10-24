@@ -1,0 +1,43 @@
+name: dashboard
+
+on:
+  push:
+    paths:
+      - "dashboard/**"
+      - "src/infra/db/schema/**"
+      - "src/shared/**"
+      - ".github/workflows/dashboard.yml"
+  pull_request:
+    paths:
+      - "dashboard/**"
+      - "src/infra/db/schema/**"
+      - "src/shared/**"
+      - ".github/workflows/dashboard.yml"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dashboard
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: dashboard/package-lock.json
+      - run: npm ci
+      - run: npm run sync:shared -- --check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+        env:
+          AUTH_SECRET: dummy-secret-dummy-secret-dummy
+          AUTH_DISCORD_ID: "000000000000000000"
+          AUTH_DISCORD_SECRET: dummy
+          DATABASE_URL_RO: postgres://ro:ro@localhost:5432/arqon
+          DATABASE_URL_RW: postgres://rw:rw@localhost:5432/arqon
+          OWNER_IDS: "1"
+          NEXT_PUBLIC_APP_URL: http://localhost:3000

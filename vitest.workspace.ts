@@ -9,7 +9,8 @@ export default defineWorkspace([
       // Os testes de canvas sao CPU-bound e medem tempo; com todos os nucleos ocupados por ~60
       // arquivos eles oscilam. Menos workers e mais timeout deixam a suite estavel.
       pool: "threads",
-      poolOptions: { threads: { maxThreads: 4, minThreads: 1 } },
+      // O tipo de projeto do vitest 2 não declara maxThreads/minThreads, mas o runner os aplica.
+      poolOptions: { threads: { maxThreads: 4, minThreads: 1 } as { singleThread?: boolean } },
       testTimeout: 20_000,
       // Os testes de tempo do canvas rodam junto com ~40 arquivos em paralelo; a medida
       // isolada (npx tsx src/scripts/testCanvas.ts --all) segue valendo o orcamento de 80 ms.

@@ -25,6 +25,7 @@ import type { KV } from "../../infra/redis/kv.js";
 import { UserError } from "../../lib/errors.js";
 import { childLogger } from "../../lib/logger.js";
 import { nameTokens, normalizeName, trigramSimilarity } from "../../lib/text/normalize.js";
+import { trigramMatch, trigramScore } from "../../shared/search.js";
 import { ensureMember, type Executor, type MemberRef } from "../economy/service.js";
 
 const log = childLogger("wishlist:service");
@@ -135,11 +136,9 @@ export async function searchEntities(
   }
   if (tokens.length === 0) return [];
 
-  // `%` (similaridade do texto todo) e `<%` (similaridade com um trecho do nome) cobrem erros de
-  // digitacao; os `LIKE` por token cobrem digitacao parcial. Os tres usam o indice GIN trigram.
-  const tokenMatches = tokens.map((tok) => sql`${entities.nameNormalized} LIKE ${`%${tok}%`}`);
-  const textMatch = sql`(${entities.nameNormalized} % ${key} OR ${key} <% ${entities.nameNormalized} OR (${sql.join(tokenMatches, sql` AND `)}))`;
-  const score = sql`GREATEST(similarity(${entities.nameNormalized}, ${key}), word_similarity(${key}, ${entities.nameNormalized}))`;
+  // Ver `trigramMatch` em src/shared/search.ts: `%`, `<%` e `LIKE` por token, todos com o GIN trigram.
+  const textMatch = trigramMatch(entities.nameNormalized, key, tokens);
+  const score = trigramScore(entities.nameNormalized, key);
 
   return base()
     .where(and(...filters, textMatch))

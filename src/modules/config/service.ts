@@ -14,8 +14,7 @@
  */
 import { PermissionFlagsBits } from "discord.js";
 import { and, asc, eq, sql, type SQL } from "drizzle-orm";
-import { z } from "zod";
-import { SUPPORTED_LOCALES, type Locale } from "../../config/constants.js";
+import type { Locale } from "../../config/constants.js";
 import { getEnv } from "../../config/env.js";
 import { guildConfigKey } from "../../core/middleware/guildConfig.js";
 import { getLocale } from "../../i18n/index.js";
@@ -27,7 +26,18 @@ import type { KV } from "../../infra/redis/kv.js";
 import { publishEvent } from "../../infra/redis/pubsub.js";
 import { UserError } from "../../lib/errors.js";
 import { childLogger } from "../../lib/logger.js";
-import { normalizeName } from "../../lib/text/normalize.js";
+import {
+  RESETS_WINDOWS,
+  SETTING_LIMITS,
+  SETTING_KEYS,
+  limitsOf,
+  patchFor,
+  settingSchemas,
+  type SettingKey,
+  type SettingValues,
+} from "../../shared/guildSettings.js";
+import { trigramMatch, trigramScore } from "../../shared/search.js";
+import { normalizeName } from "../../shared/text.js";
 import { ensureUser, type Executor } from "../economy/service.js";
 import { invalidateDisabledCache } from "../summon/rollEngine.js";
 import { resetGuildWindows } from "../summon/service.js";
@@ -38,57 +48,9 @@ const log = childLogger("config:service");
 // Configuracao do servidor
 // ---------------------------------------------------------------------------
 
-export const SETTING_KEYS = ["rolls", "timer", "claim", "gamemode", "prefix", "lang"] as const;
-export type SettingKey = (typeof SETTING_KEYS)[number];
-
-/** Faixas aceitas (as do bot antigo, com `rolls` a partir de 1). */
-export const SETTING_LIMITS = {
-  rolls: { min: 1, max: 50 },
-  /** Recarga do Pacto, em minutos (`claim_cooldown_minutes`). */
-  timer: { min: 30, max: 360 },
-  /** Janela para firmar o Pacto, em segundos (`claim_window_seconds`). */
-  claim: { min: 10, max: 120 },
-  gamemode: { min: 1, max: 2 },
-  prefix: { min: 1, max: 5 },
-} as const;
-
-/** Numero inteiro dentro da faixa; aceita numero ou texto "15". Negativos/decimais/vazio falham. */
-function intInRange(min: number, max: number) {
-  return z.preprocess(
-    (v) => (typeof v === "string" && /^\s*\d{1,9}\s*$/.test(v) ? Number(v) : v),
-    z.number().int().min(min).max(max)
-  );
-}
-
-const LANG_ALIASES = new Map<string, Locale>([
-  ["pt-br", "pt-BR"],
-  ["pt_br", "pt-BR"],
-  ["ptbr", "pt-BR"],
-  ["pt", "pt-BR"],
-  ["en", "en-US"],
-  ["en-us", "en-US"],
-  ["en_us", "en-US"],
-  ["enus", "en-US"],
-]);
-
-export const settingSchemas = {
-  rolls: intInRange(SETTING_LIMITS.rolls.min, SETTING_LIMITS.rolls.max),
-  timer: intInRange(SETTING_LIMITS.timer.min, SETTING_LIMITS.timer.max),
-  claim: intInRange(SETTING_LIMITS.claim.min, SETTING_LIMITS.claim.max),
-  gamemode: intInRange(SETTING_LIMITS.gamemode.min, SETTING_LIMITS.gamemode.max),
-  prefix: z
-    .string()
-    .min(SETTING_LIMITS.prefix.min)
-    .max(SETTING_LIMITS.prefix.max)
-    // Sem espacos nem crase (a confirmacao exibe o prefixo dentro de codigo inline).
-    .regex(/^[^\s`]+$/u),
-  lang: z
-    .string()
-    .transform((v) => LANG_ALIASES.get(v.trim().toLowerCase()))
-    .pipe(z.enum(SUPPORTED_LOCALES)),
-} as const;
-
-export type SettingValues = { [K in SettingKey]: z.output<(typeof settingSchemas)[K]> };
+// Validadores e limites em src/shared/guildSettings.ts (copiado para a dashboard).
+export { SETTING_KEYS, SETTING_LIMITS, settingSchemas };
+export type { SettingKey, SettingValues };
 
 /** Chave i18n da mensagem de uso invalido de cada configuracao. */
 const INVALID_KEY: Record<SettingKey, string> = {
@@ -99,11 +61,6 @@ const INVALID_KEY: Record<SettingKey, string> = {
   prefix: "config.prefix_invalid",
   lang: "config.lang_usage",
 };
-
-function limitsOf(key: SettingKey): { min: number; max: number } {
-  if (key === "lang") return { min: 0, max: 0 };
-  return SETTING_LIMITS[key];
-}
 
 /**
  * Valida `raw` para a configuracao `key`. Valor invalido lanca `UserError` com a mensagem de uso
@@ -134,26 +91,6 @@ export interface AppliedSetting<K extends SettingKey = SettingKey> {
   windowsReset: boolean;
 }
 
-function patchFor(key: SettingKey, value: SettingValues[SettingKey]): Partial<typeof guilds.$inferInsert> {
-  switch (key) {
-    case "rolls":
-      return { baseRolls: value as number };
-    case "timer":
-      return { claimCooldownMinutes: value as number };
-    case "claim":
-      return { claimWindowSeconds: value as number };
-    case "gamemode":
-      return { gamemode: value as number };
-    case "prefix":
-      return { prefix: value as string };
-    case "lang":
-      return { language: value as Locale };
-  }
-}
-
-/** Mudar a recarga do Pacto muda a escala da janela de pactos: zerar as janelas dos membros. */
-const RESETS_WINDOWS: ReadonlySet<SettingKey> = new Set(["timer"]);
-
 /**
  * Valida, grava e propaga uma configuracao do servidor. Permissao (Manage Guild) e conferida antes,
  * pelo middleware `permissions` do comando.
@@ -169,8 +106,12 @@ export async function applyGuildSetting<K extends SettingKey>(
 
   await db
     .insert(guilds)
-    .values({ id: guildId, prefix: getEnv().DEFAULT_PREFIX, ...patch })
-    .onConflictDoUpdate({ target: guilds.id, set: { ...patch, updatedAt: new Date() } });
+    .values({ id: guildId, prefix: getEnv().DEFAULT_PREFIX, ...patch, configVersion: 1 })
+    .onConflictDoUpdate({
+      target: guilds.id,
+      // config_version na mesma escrita: processos fora do bot (dashboard) detectam a mudanca por ele.
+      set: { ...patch, updatedAt: new Date(), configVersion: sql`${guilds.configVersion} + 1` },
+    });
 
   await invalidateGuildConfig(guildId);
   const windowsReset = RESETS_WINDOWS.has(key);
@@ -312,12 +253,8 @@ export async function searchTargets(
   // `%` e `<%` (similaridade com um trecho do titulo) cobrem erros de digitacao; os `ILIKE` por token
   // cobrem digitacao parcial. Os tres usam o indice GIN trigram.
   const match = (column: typeof series.title | typeof franchises.name) =>
-    sql`(${column} % ${q} OR ${q} <% ${column} OR (${sql.join(
-      tokens.map((tok) => sql`${column} ILIKE ${`%${tok}%`}`),
-      sql` AND `
-    )}))`;
-  const score = (column: typeof series.title | typeof franchises.name) =>
-    sql<number>`GREATEST(similarity(${column}, ${q}), word_similarity(${q}, ${column}))`;
+    trigramMatch(column, q, tokens, true);
+  const score = (column: typeof series.title | typeof franchises.name) => trigramScore(column, q);
 
   const [seriesRows, franchiseRows] = await Promise.all([
     exec

@@ -20,6 +20,8 @@ export const guildMembers = pgTable(
     stackedRolls: integer("stacked_rolls").notNull().default(0),
     pactsUsed: integer("pacts_used").notNull().default(0),
     pactWindow: integer("pact_window").notNull().default(-1),
+    // Ultimo $daily resgatado (espelho do cooldown que vive no KV; a dashboard so le).
+    lastDailyAt: timestamp("last_daily_at", { withTimezone: true }),
     embedColor: text("embed_color").default("#5865F2"),
     relicBronze: integer("relic_bronze").notNull().default(0),
     relicSilver: integer("relic_silver").notNull().default(0),

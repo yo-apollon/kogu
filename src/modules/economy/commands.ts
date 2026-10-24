@@ -182,7 +182,10 @@ export const dailyCommand: AnyCommand = {
   slash: () => slashBase("daily", "help.commands.daily"),
   async execute(ctx) {
     // O cooldown do daily (UserError `economy.daily_cooldown` com horario) vem do service.
-    const result = await claimDaily(ctx.guild.id, ctx.user.id, { username: ctx.user.username });
+    const result = await claimDaily(ctx.guild.id, ctx.user.id, {
+      username: ctx.user.username,
+      profile: { avatar: ctx.user.avatar, globalName: ctx.user.globalName },
+    });
     await ctx.reply({
       embeds: [dailyEmbed({ result, baseRolls: ctx.guildConfig.baseRolls, locale: ctx.locale })],
     });

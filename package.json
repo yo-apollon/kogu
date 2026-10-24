@@ -27,7 +27,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "test": "vitest run --project unit --passWithNoTests",
-    "test:int": "vitest run --project integration --passWithNoTests"
+    "test:perf": "node scripts/test-perf.mjs",
+    "test:int":"vitest run --project integration --passWithNoTests"
   },
   "dependencies": {
     "@discordjs/rest": "^2.4.0",

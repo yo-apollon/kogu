@@ -3,6 +3,8 @@ import { boolean, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core"
 export const users = pgTable("users", {
   id: text("id").primaryKey(), // Discord user ID
   username: text("username").notNull(),
+  avatar: text("avatar"),
+  globalName: text("global_name"),
   preferredLanguage: text("preferred_language").notNull().default("pt-BR"),
   rollResets: integer("roll_resets").notNull().default(0),
   isVip: boolean("is_vip").notNull().default(false),

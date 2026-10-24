@@ -3,13 +3,9 @@
  * dissolucao. Somente banco (sem discord.js). Hot path: selects por coluna, ordenacao e contagem no
  * SQL, buscas por indice (pg_trgm), nunca a tabela inteira em memoria.
  */
-import { and, asc, desc, eq, inArray, like, not, or, sql, type SQL } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, or, sql, type SQL } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import {
-  AWAKENING_BONUS_AFTER_10,
-  AWAKENING_BONUS_AT,
-  AWAKENING_BONUS_STEP,
-  VARIANT_MULTIPLIER,
   type CardVariant,
   type EntityTier,
 } from "../../config/gacha.js";
@@ -27,9 +23,16 @@ import {
 import { cacheGetOrSet, cacheKey } from "../../infra/redis/cache.js";
 import type { KV } from "../../infra/redis/kv.js";
 import { UserError } from "../../lib/errors.js";
-import { nameTokens } from "../../lib/text/normalize.js";
+import {
+  pactValueSql,
+  pantheonConditions,
+  pantheonOrder,
+  SOULMATE_KEYS,
+  tokensMatch,
+} from "../../shared/pantheon.js";
+import { escapeLike, nameTokens } from "../../shared/text.js";
 import { dissolvePact, ensureMember, type DissolveResult } from "../economy/service.js";
-import type { PantheonQuery, PantheonSort } from "./flags.js";
+import type { PantheonQuery } from "./flags.js";
 
 // ---------------------------------------------------------------------------
 // Constantes e helpers
@@ -39,16 +42,11 @@ export const PAGE_SIZE = 10;
 /** Limite do Discord para choices de autocomplete. */
 export const AUTOCOMPLETE_LIMIT = 25;
 export const AUTOCOMPLETE_TTL_MS = 60_000;
+// Fonte unica em src/shared (copiada para a dashboard); reexportado por compatibilidade.
+export { escapeLike, pactValueSql, SOULMATE_KEYS };
+
 export const NOTE_MAX_LENGTH = 200;
 export const ALIAS_MAX_LENGTH = 40;
-/** Pacto com este numero de selos (ou mais) conta como alma gemea. */
-export const SOULMATE_KEYS = 10;
-
-/** Escapa `\`, `%` e `_` para uso em LIKE/ILIKE. */
-export function escapeLike(value: string): string {
-  return value.replace(/[\\%_]/g, "\\$&");
-}
-
 export type EntityRef =
   { kind: "id"; id: number } | { kind: "pact"; id: number } | { kind: "name"; text: string };
 
@@ -61,42 +59,6 @@ export function parseRef(raw: string): EntityRef {
   const m = /^(id|pact):(\d{1,15})$/i.exec(text);
   if (m) return { kind: m[1].toLowerCase() === "id" ? "id" : "pact", id: Number(m[2]) };
   return { kind: "name", text };
-}
-
-function tokensMatch(tokens: readonly string[]): SQL {
-  // Cada token precisa aparecer em name_normalized (GIN trigram ajuda para tokens >= 3 letras).
-  return and(...tokens.map((tk) => like(entities.nameNormalized, `%${escapeLike(tk)}%`)))!;
-}
-
-// ---------------------------------------------------------------------------
-// Valor atual de um pacto (espelha pactAetherValue, em SQL)
-// ---------------------------------------------------------------------------
-
-const f8 = (n: number) => sql.raw(`${n}::float8`);
-
-/**
- * Expressao SQL igual a `pactAetherValue(base_aether, variant, awakening_keys, aether_at_bind)`.
- * Mesma ordem de somas em ponto flutuante (somar 0 e exato) e arredondamento `floor(x + 0.5)`
- * (= Math.round para positivos), entao ordenar/somar no SQL concorda com o valor exibido.
- * Exige as tabelas `pacts` e `entities` no FROM.
- */
-export function pactValueSql(): SQL<number> {
-  const variantCase = sql`CASE ${pacts.variant} ${sql.join(
-    (Object.entries(VARIANT_MULTIPLIER) as Array<[CardVariant, number]>).map(
-      ([variant, multiplier]) => sql`WHEN ${sql.raw(`'${variant}'`)} THEN ${f8(multiplier)}`
-    ),
-    sql` `
-  )} ELSE 1::float8 END`;
-  const steps = AWAKENING_BONUS_AT.map(
-    (at) =>
-      sql`CASE WHEN ${pacts.awakeningKeys} >= ${sql.raw(String(at))} THEN ${f8(AWAKENING_BONUS_STEP)} ELSE 0::float8 END`
-  );
-  const after10 = sql`CASE WHEN ${pacts.awakeningKeys} >= 11 THEN (${pacts.awakeningKeys} - 10)::float8 * ${f8(AWAKENING_BONUS_AFTER_10)} ELSE 0::float8 END`;
-  const base = sql`COALESCE(NULLIF(${entities.baseAether}, 0), 150)::float8`;
-  const multiplier = sql`(${variantCase} + ${sql.join(steps, sql` + `)} + ${after10})`;
-  return sql<number>`GREATEST(floor(${base} * ${multiplier} + 0.5::float8)::bigint, ${pacts.aetherAtBind}::bigint)`.mapWith(
-    Number
-  );
 }
 
 // ---------------------------------------------------------------------------
@@ -130,65 +92,6 @@ export interface PantheonPage {
   totalAether: number;
   /** Primeiro pacto na ordem padrao (lider), independente dos filtros. */
   leaderName: string | null;
-}
-
-function termCondition(term: string): SQL {
-  const tokens = nameTokens(term);
-  const needle = `%${escapeLike(term.trim())}%`;
-  // coalesce: series/franquia vem de LEFT JOIN; NULL aqui faria `NOT (...)` excluir tudo.
-  const parts: SQL[] = [
-    sql`coalesce(${series.title} ILIKE ${needle}, false)`,
-    sql`coalesce(${franchises.name} ILIKE ${needle}, false)`,
-  ];
-  if (tokens.length > 0) parts.push(tokensMatch(tokens));
-  return or(...parts)!;
-}
-
-function pantheonConditions(guildId: string, userId: string, q: PantheonQuery): SQL {
-  const conds: Array<SQL | undefined> = [eq(pacts.guildId, guildId), eq(pacts.userId, userId)];
-  if (q.gender) conds.push(eq(entities.gender, q.gender));
-  if (q.universe) conds.push(eq(entities.universe, q.universe));
-  if (q.keys === "any") conds.push(sql`${pacts.awakeningKeys} > 0`);
-  else if (q.keys === "none") conds.push(sql`${pacts.awakeningKeys} = 0`);
-  else if (q.keys === "soulmates") {
-    conds.push(sql`${pacts.awakeningKeys} >= ${sql.raw(String(SOULMATE_KEYS))}`);
-  }
-  if (q.terms.length > 0) conds.push(or(...q.terms.map(termCondition)));
-  for (const term of q.excluded) conds.push(not(termCondition(term)));
-  return and(...conds)!;
-}
-
-function pantheonOrder(sort: PantheonSort, value: SQL<number>, seriesName: SQL): SQL[] {
-  const byName = sql`lower(${entities.name}) ASC`;
-  const tail = [byName, asc(pacts.id)];
-  switch (sort) {
-    case "aether":
-      return [desc(value), ...tail];
-    case "keys":
-      return [desc(pacts.awakeningKeys), desc(value), ...tail];
-    case "soulmates":
-      return [
-        sql`(${pacts.awakeningKeys} >= ${sql.raw(String(SOULMATE_KEYS))}) DESC`,
-        desc(pacts.awakeningKeys),
-        desc(value),
-        ...tail,
-      ];
-    case "name":
-      return tail;
-    case "series":
-      return [sql`${seriesName} ASC NULLS LAST`, ...tail];
-    case "claimRank":
-      return [sql`${entities.claimRank} ASC NULLS LAST`, ...tail];
-    case "likeRank":
-      return [sql`${entities.likeRank} ASC NULLS LAST`, ...tail];
-    case "avgRank":
-      return [
-        sql`(coalesce(${entities.claimRank}, ${entities.likeRank}) + coalesce(${entities.likeRank}, ${entities.claimRank})) / 2.0 ASC NULLS LAST`,
-        ...tail,
-      ];
-    default:
-      return [asc(pacts.sortOrder), asc(pacts.boundAt), asc(pacts.id)];
-  }
 }
 
 /** Uma pagina do Panteao (page base 1) com os filtros/ordenacao; total e soma em outra query. */

@@ -2,7 +2,17 @@ import js from "@eslint/js";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist/**", "node_modules/**", ".cache/**", "coverage/**", "src/infra/db/migrations/**"] },
+  {
+    ignores: [
+      "dist/**",
+      "node_modules/**",
+      ".cache/**",
+      "coverage/**",
+      "src/infra/db/migrations/**",
+      // A dashboard tem toolchain e eslint próprios.
+      "dashboard/**",
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -13,5 +23,8 @@ export default tseslint.config(
       "no-empty": ["error", { allowEmptyCatch: true }],
     },
   },
-  { files: ["**/*.js"], languageOptions: { sourceType: "module" } }
+  {
+    files: ["**/*.js", "**/*.mjs"],
+    languageOptions: { sourceType: "module", globals: { process: "readonly", console: "readonly" } },
+  }
 );

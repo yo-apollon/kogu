@@ -54,6 +54,13 @@ export const rollOffers = pgTable(
       .where(sql`${t.status} = 'OPEN'`),
     guildIdx: index("idx_roll_offers_guild").on(t.guildId, t.createdAt),
     entityIdx: index("idx_roll_offers_entity").on(t.entityId),
+    // Historico de claims da dashboard (por jogador e por servidor): so ofertas reivindicadas.
+    claimedByIdx: index("idx_roll_offers_claimed")
+      .on(t.guildId, t.claimedBy, t.claimedAt.desc())
+      .where(sql`${t.status} = 'CLAIMED'`),
+    guildClaimedIdx: index("idx_roll_offers_guild_claimed")
+      .on(t.guildId, t.claimedAt)
+      .where(sql`${t.status} = 'CLAIMED'`),
   })
 );
 
@@ -76,6 +83,11 @@ export const rollLog = pgTable(
   (t) => ({
     guildRecentIdx: index("idx_roll_log_guild_recent").on(t.guildId, t.rolledAt.desc()),
     rolledAtIdx: index("idx_roll_log_rolled_at").on(t.rolledAt),
+    guildUserRecentIdx: index("idx_roll_log_guild_user_recent").on(
+      t.guildId,
+      t.userId,
+      t.rolledAt.desc()
+    ),
   })
 );
 

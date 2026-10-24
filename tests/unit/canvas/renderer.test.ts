@@ -99,7 +99,8 @@ describe("renderCard", () => {
     }
   });
 
-  it("orcamento de tempo: p95 < 80 ms por carta apos warm-up", async () => {
+  // Mede tempo: só roda isolado (`npm run test:perf`); em paralelo com a suíte inteira oscila.
+  it.skipIf(process.env.CANVAS_PERF !== "1")("orcamento de tempo: p95 < 80 ms por carta apos warm-up", async () => {
     // Em CI (runners lentos/compartilhados) a tolerancia dobra; ajuste via CANVAS_P95_BUDGET_MS.
     const budget = Number(process.env.CANVAS_P95_BUDGET_MS ?? (process.env.CI ? 200 : 80));
     const times: number[] = [];

@@ -14,6 +14,7 @@ import { getEnv } from "./config/env.js";
 import { isRealDiscordToken } from "./core/deploy.js";
 import { createCommandPipeline } from "./core/context.js";
 import { createInteractionRouter } from "./core/interactionRouter.js";
+import { registerGuildSync } from "./core/guildSync.js";
 import { createGuildConfigService } from "./core/middleware/guildConfig.js";
 import { createPrefixRouter } from "./core/prefixRouter.js";
 import { registry } from "./core/registry.js";
@@ -38,7 +39,9 @@ async function main(): Promise<void> {
   // Import dinamico: o cliente do banco le DATABASE_URL ao ser carregado.
   const { db, sql, closeDb } = await import("./infra/db/client.js");
 
-  const guildConfigs = createGuildConfigService({ kv, db });
+  // KV em memoria nao compartilha nada entre processos: sem camada KV a mudanca feita pela dashboard
+  // (config_version) vale em ate 30 s.
+  const guildConfigs = createGuildConfigService({ kv, db, kvLayer: kv.kind !== "memory" });
   await guildConfigs.start();
 
   // Registro global: o /help le os comandos por `listCommands()` do mesmo registry.
@@ -75,6 +78,7 @@ async function main(): Promise<void> {
       status: "online",
     });
   });
+  registerGuildSync(client, db);
   client.on(Events.MessageCreate, (message) => {
     routePrefix(message).catch((err: unknown) => logger.error({ err }, "erro no prefixRouter"));
   });
