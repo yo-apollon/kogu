@@ -117,7 +117,14 @@
     "power_legendary": "Coroa",
     "power_mythic": "Cranio",
     "awakening_keys": "Selos de Despertar",
-    "key_bonus": "🗝️ +1 Selo de Despertar! Total: **{keys}**"
+    "key_bonus": "🗝️ +1 Selo de Despertar! Total: **{keys}**",
+    "offer_protected": "🛡️ Esta carta está protegida por mais **{seconds}s**: só quem a invocou pode reivindicá-la agora.",
+    "rolls_reset_at": "🕒 Suas invocações voltam às {time} ({when}).",
+    "pact_ready_at": "🕒 Seu próximo Pacto fica disponível às {time} ({when}).",
+    "like_already": "⭐ Você já favoritou **{entity}**.",
+    "roll_opt_type": "Tipo de carta",
+    "roll_opt_gender": "Gênero",
+    "roll_opt_universe": "Universo"
   },
   "pantheon": {
     "title": "🏛️ Panteão Dimensional de {user}",
@@ -138,7 +145,7 @@
   "collection": {
     "pantheon_title": "🏛️ Panteão de {user} ({count} Entidades)",
     "pantheon_empty_filter": "Nenhuma entidade encontrada com estes filtros.",
-    "pantheon_footer": "Página {page}/{total} • Use {prefix}sp para reordenar",
+    "pantheon_footer": "Página {page}/{total}",
     "info_usage": "🔍 Informe o nome do personagem ou série. Exemplo: `{prefix}im Zero Two` ou `{prefix}im Satoru Gojo`",
     "info_not_found": "❌ Nenhuma entidade encontrada para **\"{query}\"**.\n💡 Dica: você pode importar qualquer personagem de Anime/Game em tempo real usando `{prefix}import {query}`!",
     "info_power": "Poder (+{value})",
@@ -164,7 +171,26 @@
     "note_success": "📝 Nota para **{entity}** atualizada: *\"{note}\"*",
     "note_none": "Nenhuma nota",
     "alias_usage": "🏷️ Uso: `{prefix}alias <personagem> $ <apelido>`\nExemplo: `{prefix}alias Zero Two $ 002`",
-    "alias_success": "🏷️ Apelido para **{entity}** definido como: **{alias}**!"
+    "alias_success": "🏷️ Apelido para **{entity}** definido como: **{alias}**!",
+    "slash": {
+      "user": "Jogador cujo Panteão será exibido.",
+      "sort": "Critério de ordenação.",
+      "gender": "Filtrar por gênero.",
+      "give_user": "Jogador que receberá a entidade.",
+      "name": "Nome da entidade (ou apelido).",
+      "note_text": "Texto da nota.",
+      "alias_text": "Apelido da entidade.",
+      "slot": "Qual apelido definir (1 ou 2)."
+    },
+    "sort": {
+      "aether": "Éter",
+      "keys": "Selos de Despertar",
+      "soulmates": "Almas gêmeas",
+      "name": "Nome",
+      "series": "Série",
+      "claim_rank": "Rank de pacto",
+      "like_rank": "Rank de likes"
+    }
   },
   "economy": {
     "daily_title": "🎁 Bônus Dimensional Diário Resgatado!",
@@ -174,14 +200,26 @@
     "relics_intro": "💰 **Seu Saldo:** **{balance} Éter 💠**\nPara evoluir uma Relíquia, digite `{prefix}k <nome>` (ex.: `{prefix}k bronze`, `{prefix}k emerald`).",
     "relics_line": "{name} [`{bar}` Nv.{level}/4] — **`{prefix}k {key}`**\n↳ *{desc}*",
     "relic": {
-      "bronze": { "name": "Relíquia de Bronze", "desc": "+25% Éter ao rolar desejos" },
-      "silver": { "name": "Relíquia de Prata", "desc": "+2 Slots na Lista de Desejos" },
-      "gold": { "name": "Relíquia de Ouro", "desc": "Reduz custo de recarga de Orbes" },
+      "bronze": {
+        "name": "Relíquia de Bronze",
+        "desc": "+25% Éter ao rolar desejos"
+      },
+      "silver": {
+        "name": "Relíquia de Prata",
+        "desc": "+2 Slots na Lista de Desejos"
+      },
+      "gold": {
+        "name": "Relíquia de Ouro",
+        "desc": "Reduz custo de recarga de Orbes"
+      },
       "sapphire": {
         "name": "Relíquia de Safira",
         "desc": "Transforma Orbes Azuis em Amarelos (+500 Éter)"
       },
-      "ruby": { "name": "Relíquia de Rubi", "desc": "-25% no preço de todas as outras Relíquias" },
+      "ruby": {
+        "name": "Relíquia de Rubi",
+        "desc": "-25% no preço de todas as outras Relíquias"
+      },
       "emerald": {
         "name": "Relíquia de Esmeralda",
         "desc": "Faz todo Pacto render o valor da carta em Éter na hora!"
@@ -208,7 +246,22 @@
     "top_server_title": "🏆 Ranking Dimensional do Servidor",
     "top_server_line": "**#{rank}** <@{userId}> — **{value} Éter 💠**",
     "top_server_empty": "Nenhum jogador registrado ainda.",
-    "balance": "💰 **Saldo:** {value}"
+    "balance": "💰 **Saldo:** {value}",
+    "timers_pact_charges": "Cargas: **{left}/{max}**",
+    "timers_daily_title": "🎁 Bônus Diário",
+    "timers_daily_ready": "✅ **Disponível agora!** Use `{prefix}daily`.",
+    "timers_daily_wait": "⏳ Próximo resgate {when}.",
+    "daily_next": "⏳ Próximo resgate {when}.",
+    "profile_shards": "Fragmentos Astrais: **{count}**",
+    "profile_section_overview": "Visão geral",
+    "profile_section_relics": "Relíquias",
+    "top_pacts_title": "🏛️ Ranking de Pactos do Servidor",
+    "top_pacts_line": "**#{rank}** <@{userId}> — **{value}**",
+    "top_mode_aether": "Éter",
+    "top_mode_pacts": "Pactos",
+    "slash_user_option": "Jogador a consultar (padrão: você).",
+    "slash_relic_option": "Relíquia a evoluir (vazio: abre o altar).",
+    "slash_top_mode_option": "Critério do ranking (padrão: Éter)."
   },
   "wishlist": {
     "empty": "🌠 Sua Lista de Desejos está vazia! Adicione um personagem com `{prefix}wish <nome>` (ex.: `{prefix}wish Zero Two`).",
@@ -219,7 +272,10 @@
     "removed": "🗑️ **{entity}** foi removido da sua Lista de Desejos.",
     "added": "⭐ **Adicionado à Lista de Desejos!** Você receberá um alerta especial quando **{entity}** (*{franchise}*) aparecer nas rolagens!",
     "starwish_added": "🌟 **Desejo Estelar Definido!** Você receberá um alerta especial quando **{entity}** (*{franchise}*) aparecer nas rolagens!",
-    "limit_reached": "❌ Sua Lista de Desejos está cheia ({max}/{max}). Remova alguém para adicionar outro."
+    "limit_reached": "❌ Sua Lista de Desejos está cheia ({max}/{max}). Remova alguém para adicionar outro.",
+    "already_added": "ℹ️ **{entity}** já está na sua Lista de Desejos.",
+    "not_in_list": "❌ **\"{query}\"** não está na sua Lista de Desejos.",
+    "starwish_limit_reached": "❌ Você já usou todos os seus Desejos Estelares ({max}/{max}). Remova um para definir outro."
   },
   "config": {
     "settings_title": "⚙️ Configurações Dimensionais do Servidor ({guild})",
@@ -247,7 +303,18 @@
     "disable_footer": "Use {prefix}antidisable <série> para reativar uma obra.",
     "disable_ok": "🚫 A série **{series}** foi desativada nas suas invocações! Personagens dessa obra não aparecerão mais nos seus rolls.",
     "disable_not_found": "❌ Nenhuma série encontrada na sua lista de desativação para **\"{query}\"**.",
-    "enable_ok": "✅ A série **{series}** foi reativada nas suas rolagens!"
+    "enable_ok": "✅ A série **{series}** foi reativada nas suas rolagens!",
+    "disable_series_not_found": "❌ Nenhuma série ou franquia encontrada para **\"{query}\"**.",
+    "disable_already": "ℹ️ **{series}** já está desativada.",
+    "disable_server_ok": "🚫 **{series}** foi desativada **para todo o servidor**! Personagens dessa obra não aparecerão nas invocações de ninguém.",
+    "enable_server_ok": "✅ **{series}** foi reativada para o servidor.",
+    "disable_server_title": "🚫 Séries Desativadas no Servidor ({count})",
+    "disable_server_empty": "📋 Nenhuma série está desativada para o servidor inteiro.",
+    "section_overview": "📋 Visão geral",
+    "section_advanced": "🧪 Avançado",
+    "section_disabled": "🚫 Séries desativadas",
+    "settings_advanced_title": "🧪 Avançado",
+    "settings_advanced_value": "• **Intervalo de rolls:** `{interval} min`\n• **Deslocamento do reset:** `{offset} min`\n• **Pactos por janela:** `{pacts}`\n• **Proteção de Éter:** `{aether}s`\n• **Boost de lançamento:** `{boost}`\n• **Conteúdo adulto:** `{adult}`"
   },
   "help": {
     "title": "🌌 Central Dimensional — Comandos do Arqon",
@@ -285,8 +352,8 @@
       "wish": "Adiciona ou remove uma entidade da Lista de Desejos.",
       "starwish": "Define o seu Desejo Estelar.",
       "wishlist": "Mostra a sua Lista de Desejos.",
-      "top": "Mostra as entidades mais valiosas do catálogo.",
-      "topserv": "Mostra o ranking de Éter do servidor.",
+      "top": "Mostra o ranking do servidor por Éter ou por pactos.",
+      "topserv": "Mostra o ranking do servidor por Éter ou por pactos.",
       "import": "Importa um personagem do AniList para o catálogo.",
       "suggest": "Sugere um personagem para o catálogo.",
       "suggestlist": "Lista as sugestões pendentes (staff).",
@@ -307,10 +374,17 @@
       "alias": "Define um apelido para uma entidade.",
       "cleanuser": "Libera todos os pactos de um usuário (staff).",
       "thanos": "Dissolve metade das entidades sem Selos (staff).",
-      "setvip": "Define o nível VIP de um membro (staff).",
-      "adminreset": "Restaura seus rolls para testes (staff).",
-      "help": "Mostra a central de ajuda."
-    }
+      "setvip": "Define o nível VIP de um membro (dono do bot).",
+      "adminreset": "Restaura seus rolls para testes (dono do bot).",
+      "help": "Mostra a central de ajuda.",
+      "set": "Altera uma configuração do servidor (rolls, timer, claim, gamemode, prefix, lang).",
+      "ping": "Mostra a latência do bot.",
+      "catalog": "Moderação do catálogo (revisão e merge)."
+    },
+    "overview_label": "Visão geral",
+    "commands_count": "{count} comandos",
+    "owner_only": "restrito ao dono do bot",
+    "credits": "Dados: AniList, IGDB e TMDB."
   },
   "catalog": {
     "universe": {
@@ -319,7 +393,14 @@
       "CINEMA": "Cinema & Séries",
       "MYTHOLOGY": "Mitologia"
     },
-    "gender": { "FEMALE": "Feminino", "MALE": "Masculino", "BOTH": "Indefinido" },
+    "gender": {
+      "FEMALE": "Feminino",
+      "MALE": "Masculino",
+      "BOTH": "Indefinido",
+      "NONBINARY": "Não binário",
+      "UNKNOWN": "Desconhecido",
+      "ITEM": "Item"
+    },
     "tier": {
       "COMMON": "Comum",
       "RARE": "Raro",
@@ -346,7 +427,73 @@
     "suggest_list_line": "**#{rank}** `{name}` sugerido por <@{userId}>",
     "suggest_list_footer": "Use {prefix}approvesuggest <nome> para aprovar e importar diretamente!",
     "approve_usage": "⚠️ Informe o nome da sugestão que deseja aprovar. Exemplo: `{prefix}approvesuggest Eren Yeager`",
-    "approve_ok": "✅ Sugestão de **\"{query}\"** aprovada! Importando para o catálogo global..."
+    "approve_ok": "✅ Sugestão de **\"{query}\"** aprovada! Importando para o catálogo global...",
+    "type": {
+      "CHARACTER": "Personagem",
+      "WEAPON": "Arma",
+      "COMPANION": "Companheiro",
+      "DOMAIN": "Domínio"
+    },
+    "import_exists": "ℹ️ **{name}** já está no catálogo (*{franchise}*).",
+    "import_review": "🕓 **{name}** (*{franchise}*) foi cadastrado, mas aguarda revisão: {reasons}.\nUm moderador precisa aprová-lo em `/catalog review`.",
+    "import_disabled": "🚫 **{name}** está desativado no catálogo e não pode ser importado novamente.",
+    "suggest_limit": "⏳ Você já tem **{max}** sugestões pendentes. Aguarde a moderação antes de enviar novas.",
+    "suggest_duplicate": "📋 **\"{query}\"** já está na fila de moderação.",
+    "review_title": "🛡️ Revisão do catálogo",
+    "review_empty": "✅ A fila de moderação está vazia.",
+    "review_footer": "Fila #{id} • item {position} de {total}",
+    "review_field_reason": "Motivo",
+    "review_field_entity": "Entidade",
+    "review_field_series": "Série",
+    "review_field_gender": "Gênero",
+    "review_field_status": "Status",
+    "review_field_favorites": "Favoritos na fonte",
+    "review_field_other": "Possível duplicata de",
+    "review_field_pending": "Outros motivos pendentes",
+    "review_hint_waive": "Aprovar mantém a entidade no catálogo; rejeitar a desativa.",
+    "review_hint_duplicate": "Mesclar absorve esta entidade na existente; “não é duplicata” mantém as duas.",
+    "review_hint_report": "Aprovar a denúncia desativa a entidade; rejeitar a descarta.",
+    "review_btn_approve": "Aprovar",
+    "review_btn_reject": "Rejeitar",
+    "review_btn_name": "Corrigir nome",
+    "review_btn_merge": "Mesclar duplicata",
+    "review_btn_not_dup": "Não é duplicata",
+    "review_gender_placeholder": "Definir gênero…",
+    "review_name_modal_title": "Corrigir nome",
+    "review_name_modal_label": "Novo nome ({min} a {max} caracteres)",
+    "review_approved": "✅ Item #{id} aprovado.",
+    "review_activated": "✅ **{entity}** foi ativado no catálogo.",
+    "review_rejected": "❌ Item #{id} rejeitado.",
+    "review_disabled": "🚫 **{entity}** foi desativado.",
+    "review_merged": "🔀 **{loser}** foi mesclado em **{winner}**.",
+    "review_not_dup": "↔️ Item #{id}: marcado como não duplicata.",
+    "review_gender_set": "⚧ Gênero de **{entity}** definido como **{gender}**.",
+    "review_name_set": "✏️ Nome atualizado para **{name}**.",
+    "review_invalid_name": "❌ Nome inválido: use de {min} a {max} caracteres.",
+    "review_blocked_gender": "⚠️ Defina o gênero antes de aprovar este item.",
+    "review_blocked_image": "⚠️ A entidade não tem imagem ativa: só é possível rejeitar ou aguardar a próxima sincronização.",
+    "review_stale": "ℹ️ Este item já foi processado por outro moderador.",
+    "review_merge_failed": "❌ Não foi possível mesclar: {reason}",
+    "merge_usage": "⚠️ Uso: `{prefix}catalog merge <id1> <id2>` — o primeiro ID permanece; o segundo é mesclado nele.",
+    "merge_confirm": "🔀 Mesclar **{loser}** (#{loserId}) em **{winner}** (#{winnerId})? Pactos, desejos e curtidas serão movidos e a ação não pode ser desfeita.",
+    "merge_ok": "🔀 **{loser}** foi mesclado em **{winner}**. Pactos movidos: {pacts} (conflitos: {conflicts}), desejos: {wishes}.",
+    "merge_not_found": "❌ Entidade #{id} não encontrada.",
+    "merge_failed": "❌ Não foi possível mesclar: {reason}",
+    "usage": "Subcomandos: `review` e `merge`.",
+    "reason": {
+      "NO_IMAGE": "sem imagem",
+      "UNKNOWN_GENDER": "gênero desconhecido",
+      "LEGACY_GENDER": "gênero herdado a confirmar",
+      "ADULT_CONTENT": "conteúdo adulto",
+      "INVALID_NAME": "nome inválido",
+      "LOW_FAVORITES": "poucos favoritos",
+      "DUPLICATE_SUSPECT": "suspeita de duplicata",
+      "REAL_PERSON": "pessoa real",
+      "UNMATCHED_DISABLED_SERIES": "série desativada sem correspondência",
+      "USER_REPORT": "denúncia de usuário",
+      "TAKEDOWN": "pedido de remoção",
+      "OTHER": "outro"
+    }
   },
   "admin": {
     "setvip_no_permission": "🛡️ Apenas administradores podem definir o status VIP de membros.",
@@ -357,6 +504,9 @@
     "moderation_no_permission": "🛡️ Você precisa ser um **Administrador** para executar comandos de moderação do Panteão.",
     "cleanuser_usage": "⚠️ Mencione o usuário que terá o Panteão resetado. Exemplo: `{prefix}cleanuser @usuario`",
     "cleanuser_ok": "🧹 Todos os **{count}** pactos de <@{userId}> foram liberados de volta ao éter dimensional!",
-    "thanos_ok": "🫰 *Thanos estalou os dedos...* **{count}** entidades do servidor foram dissolvidas no éter!"
+    "thanos_ok": "🫰 *Thanos estalou os dedos...* **{count}** entidades do servidor foram dissolvidas no éter!",
+    "cleanuser_confirm": "🧹 Liberar **todos** os **{count}** pactos de <@{userId}> neste servidor? Esta ação não pode ser desfeita.",
+    "thanos_confirm": "🫰 Dissolver aleatoriamente cerca de **metade** dos pactos sem Selos deste servidor (**{eligible}** elegíveis)? Esta ação não pode ser desfeita.",
+    "thanos_nothing": "🫰 Nenhum pacto elegível (sem Selos de Despertar) neste servidor."
   }
 }

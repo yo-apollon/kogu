@@ -6,6 +6,11 @@ export default defineWorkspace([
       name: "unit",
       include: ["tests/unit/**/*.test.ts"],
       environment: "node",
+      // Os testes de canvas sao CPU-bound e medem tempo; com todos os nucleos ocupados por ~60
+      // arquivos eles oscilam. Menos workers e mais timeout deixam a suite estavel.
+      pool: "threads",
+      poolOptions: { threads: { maxThreads: 4, minThreads: 1 } },
+      testTimeout: 20_000,
       // Os testes de tempo do canvas rodam junto com ~40 arquivos em paralelo; a medida
       // isolada (npx tsx src/scripts/testCanvas.ts --all) segue valendo o orcamento de 80 ms.
       env: { CANVAS_P95_BUDGET_MS: process.env.CANVAS_P95_BUDGET_MS ?? "150" },

@@ -117,7 +117,14 @@
     "power_legendary": "Crown",
     "power_mythic": "Skull",
     "awakening_keys": "Awakening Seals",
-    "key_bonus": "🗝️ +1 Awakening Seal! Total: **{keys}**"
+    "key_bonus": "🗝️ +1 Awakening Seal! Total: **{keys}**",
+    "offer_protected": "🛡️ This card is protected for **{seconds}s** more: only the summoner can claim it right now.",
+    "rolls_reset_at": "🕒 Your summons come back at {time} ({when}).",
+    "pact_ready_at": "🕒 Your next Pact becomes available at {time} ({when}).",
+    "like_already": "⭐ You already favorited **{entity}**.",
+    "roll_opt_type": "Card type",
+    "roll_opt_gender": "Gender",
+    "roll_opt_universe": "Universe"
   },
   "pantheon": {
     "title": "🏛️ Dimensional Pantheon of {user}",
@@ -138,7 +145,7 @@
   "collection": {
     "pantheon_title": "🏛️ {user}'s Pantheon ({count} Entities)",
     "pantheon_empty_filter": "No entity found with these filters.",
-    "pantheon_footer": "Page {page}/{total} • Use {prefix}sp to reorder",
+    "pantheon_footer": "Page {page}/{total}",
     "info_usage": "🔍 Enter the name of a character or series. Example: `{prefix}im Zero Two` or `{prefix}im Satoru Gojo`",
     "info_not_found": "❌ No entity found for **\"{query}\"**.\n💡 Tip: you can import any Anime/Game character in real time using `{prefix}import {query}`!",
     "info_power": "Power (+{value})",
@@ -164,7 +171,26 @@
     "note_success": "📝 Note for **{entity}** updated: *\"{note}\"*",
     "note_none": "No note",
     "alias_usage": "🏷️ Usage: `{prefix}alias <character> $ <nickname>`\nExample: `{prefix}alias Zero Two $ 002`",
-    "alias_success": "🏷️ Nickname for **{entity}** set to: **{alias}**!"
+    "alias_success": "🏷️ Nickname for **{entity}** set to: **{alias}**!",
+    "slash": {
+      "user": "Player whose Pantheon to show.",
+      "sort": "Sort order.",
+      "gender": "Filter by gender.",
+      "give_user": "Player who receives the entity.",
+      "name": "Entity name (or nickname).",
+      "note_text": "Note text.",
+      "alias_text": "Entity nickname.",
+      "slot": "Which nickname to set (1 or 2)."
+    },
+    "sort": {
+      "aether": "Aether",
+      "keys": "Awakening keys",
+      "soulmates": "Soulmates",
+      "name": "Name",
+      "series": "Series",
+      "claim_rank": "Pact rank",
+      "like_rank": "Like rank"
+    }
   },
   "economy": {
     "daily_title": "🎁 Daily Dimensional Bonus Claimed!",
@@ -174,14 +200,26 @@
     "relics_intro": "💰 **Your Balance:** **{balance} Aether 💠**\nTo upgrade a Relic, type `{prefix}k <name>` (e.g. `{prefix}k bronze`, `{prefix}k emerald`).",
     "relics_line": "{name} [`{bar}` Lv.{level}/4] — **`{prefix}k {key}`**\n↳ *{desc}*",
     "relic": {
-      "bronze": { "name": "Bronze Relic", "desc": "+25% Aether when rolling wishes" },
-      "silver": { "name": "Silver Relic", "desc": "+2 Wishlist slots" },
-      "gold": { "name": "Gold Relic", "desc": "Reduces the Orb recharge cost" },
+      "bronze": {
+        "name": "Bronze Relic",
+        "desc": "+25% Aether when rolling wishes"
+      },
+      "silver": {
+        "name": "Silver Relic",
+        "desc": "+2 Wishlist slots"
+      },
+      "gold": {
+        "name": "Gold Relic",
+        "desc": "Reduces the Orb recharge cost"
+      },
       "sapphire": {
         "name": "Sapphire Relic",
         "desc": "Turns Blue Orbs into Yellow ones (+500 Aether)"
       },
-      "ruby": { "name": "Ruby Relic", "desc": "-25% price on all other Relics" },
+      "ruby": {
+        "name": "Ruby Relic",
+        "desc": "-25% price on all other Relics"
+      },
       "emerald": {
         "name": "Emerald Relic",
         "desc": "Makes every Pact instantly yield the card's value in Aether!"
@@ -208,7 +246,22 @@
     "top_server_title": "🏆 Server Dimensional Ranking",
     "top_server_line": "**#{rank}** <@{userId}> — **{value} Aether 💠**",
     "top_server_empty": "No players registered yet.",
-    "balance": "💰 **Balance:** {value}"
+    "balance": "💰 **Balance:** {value}",
+    "timers_pact_charges": "Charges: **{left}/{max}**",
+    "timers_daily_title": "🎁 Daily Bonus",
+    "timers_daily_ready": "✅ **Available now!** Use `{prefix}daily`.",
+    "timers_daily_wait": "⏳ Next claim {when}.",
+    "daily_next": "⏳ Next claim {when}.",
+    "profile_shards": "Astral Shards: **{count}**",
+    "profile_section_overview": "Overview",
+    "profile_section_relics": "Relics",
+    "top_pacts_title": "🏛️ Server Pact Ranking",
+    "top_pacts_line": "**#{rank}** <@{userId}> — **{value}**",
+    "top_mode_aether": "Aether",
+    "top_mode_pacts": "Pacts",
+    "slash_user_option": "Player to look up (default: you).",
+    "slash_relic_option": "Relic to upgrade (empty: opens the altar).",
+    "slash_top_mode_option": "Ranking criterion (default: Aether)."
   },
   "wishlist": {
     "empty": "🌠 Your Wishlist is empty! Add a character with `{prefix}wish <name>` (e.g. `{prefix}wish Zero Two`).",
@@ -219,7 +272,10 @@
     "removed": "🗑️ **{entity}** was removed from your Wishlist.",
     "added": "⭐ **Added to the Wishlist!** You will get a special alert when **{entity}** (*{franchise}*) shows up in the rolls!",
     "starwish_added": "🌟 **Starwish Set!** You will get a special alert when **{entity}** (*{franchise}*) shows up in the rolls!",
-    "limit_reached": "❌ Your Wishlist is full ({max}/{max}). Remove someone to add another."
+    "limit_reached": "❌ Your Wishlist is full ({max}/{max}). Remove someone to add another.",
+    "already_added": "ℹ️ **{entity}** is already on your Wishlist.",
+    "not_in_list": "❌ **\"{query}\"** is not on your Wishlist.",
+    "starwish_limit_reached": "❌ You have used all your Starwishes ({max}/{max}). Remove one to set another."
   },
   "config": {
     "settings_title": "⚙️ Dimensional Server Settings ({guild})",
@@ -247,7 +303,18 @@
     "disable_footer": "Use {prefix}antidisable <series> to re-enable a work.",
     "disable_ok": "🚫 The series **{series}** was disabled in your summons! Characters from this work will no longer show up in your rolls.",
     "disable_not_found": "❌ No series found in your disabled list for **\"{query}\"**.",
-    "enable_ok": "✅ The series **{series}** was re-enabled in your rolls!"
+    "enable_ok": "✅ The series **{series}** was re-enabled in your rolls!",
+    "disable_series_not_found": "❌ No series or franchise found for **\"{query}\"**.",
+    "disable_already": "ℹ️ **{series}** is already disabled.",
+    "disable_server_ok": "🚫 **{series}** was disabled **for the whole server**! Characters from it will not show up in anyone's rolls.",
+    "enable_server_ok": "✅ **{series}** was re-enabled for the server.",
+    "disable_server_title": "🚫 Series Disabled Server-wide ({count})",
+    "disable_server_empty": "📋 No series is disabled for the whole server.",
+    "section_overview": "📋 Overview",
+    "section_advanced": "🧪 Advanced",
+    "section_disabled": "🚫 Disabled series",
+    "settings_advanced_title": "🧪 Advanced",
+    "settings_advanced_value": "• **Roll interval:** `{interval} min`\n• **Reset offset:** `{offset} min`\n• **Pacts per window:** `{pacts}`\n• **Aether protection:** `{aether}s`\n• **Release boost:** `{boost}`\n• **Adult content:** `{adult}`"
   },
   "help": {
     "title": "🌌 Dimensional Hub — Arqon Commands",
@@ -285,8 +352,8 @@
       "wish": "Adds or removes an entity from your Wishlist.",
       "starwish": "Sets your Starwish.",
       "wishlist": "Shows your Wishlist.",
-      "top": "Shows the most valuable entities in the catalog.",
-      "topserv": "Shows the server's Aether ranking.",
+      "top": "Shows the server ranking by Aether or by pacts.",
+      "topserv": "Shows the server ranking by Aether or by pacts.",
       "import": "Imports a character from AniList into the catalog.",
       "suggest": "Suggests a character for the catalog.",
       "suggestlist": "Lists pending suggestions (staff).",
@@ -307,10 +374,17 @@
       "alias": "Sets a nickname for an entity.",
       "cleanuser": "Releases every pact of a user (staff).",
       "thanos": "Dissolves half of the entities without Seals (staff).",
-      "setvip": "Sets a member's VIP tier (staff).",
-      "adminreset": "Restores your rolls for testing (staff).",
-      "help": "Shows the help hub."
-    }
+      "setvip": "Sets a member's VIP tier (bot owner only).",
+      "adminreset": "Resets your rolls for testing (bot owner only).",
+      "help": "Shows the help hub.",
+      "set": "Changes a server setting (rolls, timer, claim, gamemode, prefix, lang).",
+      "ping": "Shows the bot latency.",
+      "catalog": "Catalog moderation (review and merge)."
+    },
+    "overview_label": "Overview",
+    "commands_count": "{count} commands",
+    "owner_only": "bot owner only",
+    "credits": "Data: AniList, IGDB and TMDB."
   },
   "catalog": {
     "universe": {
@@ -319,7 +393,14 @@
       "CINEMA": "Cinema & Series",
       "MYTHOLOGY": "Mythology"
     },
-    "gender": { "FEMALE": "Female", "MALE": "Male", "BOTH": "Unspecified" },
+    "gender": {
+      "FEMALE": "Female",
+      "MALE": "Male",
+      "BOTH": "Unspecified",
+      "NONBINARY": "Non-binary",
+      "UNKNOWN": "Unknown",
+      "ITEM": "Item"
+    },
     "tier": {
       "COMMON": "Common",
       "RARE": "Rare",
@@ -346,7 +427,73 @@
     "suggest_list_line": "**#{rank}** `{name}` suggested by <@{userId}>",
     "suggest_list_footer": "Use {prefix}approvesuggest <name> to approve and import directly!",
     "approve_usage": "⚠️ Enter the name of the suggestion you want to approve. Example: `{prefix}approvesuggest Eren Yeager`",
-    "approve_ok": "✅ Suggestion for **\"{query}\"** approved! Importing into the global catalog..."
+    "approve_ok": "✅ Suggestion for **\"{query}\"** approved! Importing into the global catalog...",
+    "type": {
+      "CHARACTER": "Character",
+      "WEAPON": "Weapon",
+      "COMPANION": "Companion",
+      "DOMAIN": "Domain"
+    },
+    "import_exists": "ℹ️ **{name}** is already in the catalog (*{franchise}*).",
+    "import_review": "🕓 **{name}** (*{franchise}*) was added but is awaiting review: {reasons}.\nA moderator must approve it in `/catalog review`.",
+    "import_disabled": "🚫 **{name}** is disabled in the catalog and cannot be imported again.",
+    "suggest_limit": "⏳ You already have **{max}** pending suggestions. Wait for moderation before sending new ones.",
+    "suggest_duplicate": "📋 **\"{query}\"** is already in the moderation queue.",
+    "review_title": "🛡️ Catalog review",
+    "review_empty": "✅ The moderation queue is empty.",
+    "review_footer": "Queue #{id} • item {position} of {total}",
+    "review_field_reason": "Reason",
+    "review_field_entity": "Entity",
+    "review_field_series": "Series",
+    "review_field_gender": "Gender",
+    "review_field_status": "Status",
+    "review_field_favorites": "Source favorites",
+    "review_field_other": "Possible duplicate of",
+    "review_field_pending": "Other pending reasons",
+    "review_hint_waive": "Approving keeps the entity in the catalog; rejecting disables it.",
+    "review_hint_duplicate": "Merge absorbs this entity into the existing one; “not a duplicate” keeps both.",
+    "review_hint_report": "Approving the report disables the entity; rejecting dismisses it.",
+    "review_btn_approve": "Approve",
+    "review_btn_reject": "Reject",
+    "review_btn_name": "Fix name",
+    "review_btn_merge": "Merge duplicate",
+    "review_btn_not_dup": "Not a duplicate",
+    "review_gender_placeholder": "Set gender…",
+    "review_name_modal_title": "Fix name",
+    "review_name_modal_label": "New name ({min} to {max} characters)",
+    "review_approved": "✅ Item #{id} approved.",
+    "review_activated": "✅ **{entity}** was activated in the catalog.",
+    "review_rejected": "❌ Item #{id} rejected.",
+    "review_disabled": "🚫 **{entity}** was disabled.",
+    "review_merged": "🔀 **{loser}** was merged into **{winner}**.",
+    "review_not_dup": "↔️ Item #{id}: marked as not a duplicate.",
+    "review_gender_set": "⚧ Gender of **{entity}** set to **{gender}**.",
+    "review_name_set": "✏️ Name updated to **{name}**.",
+    "review_invalid_name": "❌ Invalid name: use {min} to {max} characters.",
+    "review_blocked_gender": "⚠️ Set the gender before approving this item.",
+    "review_blocked_image": "⚠️ The entity has no active image: you can only reject it or wait for the next sync.",
+    "review_stale": "ℹ️ This item was already handled by another moderator.",
+    "review_merge_failed": "❌ Could not merge: {reason}",
+    "merge_usage": "⚠️ Usage: `{prefix}catalog merge <id1> <id2>` — the first ID stays; the second is merged into it.",
+    "merge_confirm": "🔀 Merge **{loser}** (#{loserId}) into **{winner}** (#{winnerId})? Pacts, wishes and likes will be moved and this cannot be undone.",
+    "merge_ok": "🔀 **{loser}** was merged into **{winner}**. Pacts moved: {pacts} (conflicts: {conflicts}), wishes: {wishes}.",
+    "merge_not_found": "❌ Entity #{id} not found.",
+    "merge_failed": "❌ Could not merge: {reason}",
+    "usage": "Subcommands: `review` and `merge`.",
+    "reason": {
+      "NO_IMAGE": "no image",
+      "UNKNOWN_GENDER": "unknown gender",
+      "LEGACY_GENDER": "legacy gender to confirm",
+      "ADULT_CONTENT": "adult content",
+      "INVALID_NAME": "invalid name",
+      "LOW_FAVORITES": "low favorites",
+      "DUPLICATE_SUSPECT": "duplicate suspect",
+      "REAL_PERSON": "real person",
+      "UNMATCHED_DISABLED_SERIES": "unmatched disabled series",
+      "USER_REPORT": "user report",
+      "TAKEDOWN": "takedown request",
+      "OTHER": "other"
+    }
   },
   "admin": {
     "setvip_no_permission": "🛡️ Only administrators can set the VIP status of members.",
@@ -357,6 +504,9 @@
     "moderation_no_permission": "🛡️ You must be an **Administrator** to run Pantheon moderation commands.",
     "cleanuser_usage": "⚠️ Mention the user whose Pantheon will be reset. Example: `{prefix}cleanuser @user`",
     "cleanuser_ok": "🧹 All **{count}** pacts of <@{userId}> were released back into the dimensional aether!",
-    "thanos_ok": "🫰 *Thanos snapped his fingers...* **{count}** entities in the server were dissolved into the aether!"
+    "thanos_ok": "🫰 *Thanos snapped his fingers...* **{count}** entities in the server were dissolved into the aether!",
+    "cleanuser_confirm": "🧹 Release **all** **{count}** pacts of <@{userId}> in this server? This cannot be undone.",
+    "thanos_confirm": "🫰 Randomly dissolve about **half** of this server's pacts without Seals (**{eligible}** eligible)? This cannot be undone.",
+    "thanos_nothing": "🫰 No eligible pacts (without Awakening Seals) in this server."
   }
 }

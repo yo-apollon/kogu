@@ -42,6 +42,55 @@ services:
     environment:
       REDIS_PASSWORD: ${REDIS_PASSWORD}
 
+  migrate:
+    build:
+      context: .
+      target: bot
+    container_name: arqon_migrate
+    restart: "no"
+    command: ["node", "dist/infra/db/migrate.js"]
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-arqon_user}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-arqon_db}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  bot:
+    build:
+      context: .
+      target: bot
+    container_name: arqon_bot
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-arqon_user}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-arqon_db}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
+    ports:
+      - "127.0.0.1:${HEALTH_PORT:-8080}:8080"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: .
+      target: worker
+    container_name: arqon_worker
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-arqon_user}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-arqon_db}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+
 volumes:
   arqon_pgdata:
   arqon_redisdata:

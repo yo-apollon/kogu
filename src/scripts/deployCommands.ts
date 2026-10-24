@@ -7,14 +7,14 @@
 import { getEnv, requireEnv } from "../config/env.js";
 import { CommandRegistry } from "../core/registry.js";
 import { deployCommands } from "../core/deploy.js";
-import { allCommands } from "../modules/index.js";
+import { allRegistrations } from "../modules/index.js";
 
 async function main(): Promise<void> {
   const clear = process.argv.includes("--clear");
   const env = getEnv();
 
   const registry = new CommandRegistry();
-  for (const command of allCommands) registry.register(command);
+  for (const registration of allRegistrations) registry.register(registration);
 
   const result = await deployCommands({
     token: requireEnv("DISCORD_TOKEN"),

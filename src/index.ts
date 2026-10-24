@@ -16,12 +16,12 @@ import { createCommandPipeline } from "./core/context.js";
 import { createInteractionRouter } from "./core/interactionRouter.js";
 import { createGuildConfigService } from "./core/middleware/guildConfig.js";
 import { createPrefixRouter } from "./core/prefixRouter.js";
-import { CommandRegistry } from "./core/registry.js";
+import { registry } from "./core/registry.js";
 import { installProcessHandlers, isShuttingDown, onShutdown, shutdown } from "./core/shutdown.js";
 import { startHealthServer } from "./infra/health/server.js";
 import { closeKV, getKV } from "./infra/redis/client.js";
 import { logger } from "./lib/logger.js";
-import { allCommands, allComponentHandlers } from "./modules/index.js";
+import { allComponentHandlers, allRegistrations, jobs } from "./modules/index.js";
 
 async function main(): Promise<void> {
   const env = getEnv();
@@ -41,8 +41,8 @@ async function main(): Promise<void> {
   const guildConfigs = createGuildConfigService({ kv, db });
   await guildConfigs.start();
 
-  const registry = new CommandRegistry();
-  for (const command of allCommands) registry.register(command);
+  // Registro global: o /help le os comandos por `listCommands()` do mesmo registry.
+  for (const registration of allRegistrations) registry.register(registration);
   logger.info({ commands: registry.size }, "comandos registrados");
 
   const pipeline = createCommandPipeline({ kv, guildConfigs });
@@ -97,6 +97,9 @@ async function main(): Promise<void> {
   });
 
   // Ordem de encerramento: config -> gateway -> KV -> banco -> health (fica ate o fim para /readyz = 503).
+  // Varredura das ofertas de invocacao expiradas (desabilita botoes); so roda com o gateway pronto.
+  // Registrada antes do client/banco: o stop espera o tick em andamento, que ainda usa os dois.
+  onShutdown("summon-sweeper", jobs.startSummonSweeper(client, kv));
   onShutdown("guildConfig", () => guildConfigs.stop());
   onShutdown("discord-client", () => client.destroy());
   onShutdown("kv", () => closeKV());

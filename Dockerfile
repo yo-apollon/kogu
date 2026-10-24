@@ -18,6 +18,8 @@ COPY package*.json ./
 RUN npm ci --omit=dev
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/locales ./locales
+# tsc nao copia .sql: o migrator le a pasta ao lado de dist/infra/db/migrate.js
+COPY --from=builder /app/src/infra/db/migrations ./dist/infra/db/migrations
 COPY assets ./assets
 USER node
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
@@ -25,6 +27,8 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
 
 # Alvo do worker de catalogo: docker build --target worker
 FROM runner AS worker
+# O worker so expoe health com WORKER_HEALTH_PORT; sem ele nao ha o que checar.
+HEALTHCHECK NONE
 CMD ["node", "dist/worker.js"]
 
 # Alvo padrao (ultimo estagio): o bot
