@@ -28,7 +28,7 @@ import type { Locale } from "../../config/constants.js";
 import type { AnyCommand, CommandContext, GuildConfig } from "../../core/contracts.js";
 import { db } from "../../infra/db/client.js";
 import { guilds } from "../../infra/db/schema/index.js";
-import { t } from "../../i18n/index.js";
+import { t, tPlural } from "../../i18n/index.js";
 import { UserError } from "../../lib/errors.js";
 import { childLogger } from "../../lib/logger.js";
 import type { RenderCardInput } from "../../canvas/index.js";
@@ -296,12 +296,27 @@ function offerContent(
   wishers: readonly string[],
   locale: Locale
 ): string | undefined {
-  if (result.awardedKey) return tr("summon.key_bonus", locale, { keys: result.awakeningKeys });
-  if (wishers.length === 0) return undefined;
-  return tr("summon.wish_alert", locale, {
-    users: wishers.map((id) => `<@${id}>`).join(" "),
-    entity: escapeMarkdown(truncate(result.entity.name, 100)),
-  });
+  const parts: string[] = [];
+
+  if (wishers.length > 0) {
+    parts.push(
+      tr("summon.wish_alert", locale, {
+        users: wishers.map((id) => `<@${id}>`).join(" "),
+        entity: escapeMarkdown(truncate(result.entity.name, 100)),
+      })
+    );
+  }
+
+  if (result.awardedKey) {
+    parts.push(tr("summon.key_bonus", locale, { keys: result.awakeningKeys }));
+  }
+
+  const remaining = result.consumption.remaining + result.consumption.stacked;
+  if (remaining > 0 && remaining <= 2) {
+    parts.push(tPlural("summon.rolls_left", remaining, locale, { count: remaining }));
+  }
+
+  return parts.length > 0 ? parts.join("\n") : undefined;
 }
 
 /** Nucleo dos comandos de invocacao. `deps` existe para testes. */

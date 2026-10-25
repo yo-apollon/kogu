@@ -360,6 +360,77 @@ describe("runSummon", () => {
     expect(embed.footer.text).toBe("Free for Pact");
     expect(embed.description).toContain("Animanga roulette");
   });
+
+  it("quando faltam 2 rolls: exibe aviso de 2 rolls restantes no content", async () => {
+    const result = fakeResult();
+    result.consumption.remaining = 2;
+    result.consumption.stacked = 0;
+    const deps = fakeSummonDeps(result);
+    const { ctx, reply } = fakeCtx({ locale: "pt-BR" });
+    await runSummon(ctx, deps);
+    const payload = reply.mock.calls[0][0] as any;
+    expect(payload.content).toBe("⚠️ **2** rolls restantes!");
+  });
+
+  it("quando resta 1 roll: exibe aviso de 1 roll restante no content", async () => {
+    const result = fakeResult();
+    result.consumption.remaining = 1;
+    result.consumption.stacked = 0;
+    const deps = fakeSummonDeps(result);
+    const { ctx, reply } = fakeCtx({ locale: "pt-BR" });
+    await runSummon(ctx, deps);
+    const payload = reply.mock.calls[0][0] as any;
+    expect(payload.content).toBe("⚠️ **1** roll restante!");
+  });
+
+  it("em en-US: exibe aviso em ingles (rolls left)", async () => {
+    const result = fakeResult();
+    result.consumption.remaining = 2;
+    result.consumption.stacked = 0;
+    const deps = fakeSummonDeps(result);
+    const { ctx, reply } = fakeCtx({ locale: "en-US" });
+    await runSummon(ctx, deps);
+    const payload = reply.mock.calls[0][0] as any;
+    expect(payload.content).toBe("⚠️ **2** rolls left!");
+  });
+
+  it("quando faltam 3 ou mais rolls: content fica undefined", async () => {
+    const result = fakeResult();
+    result.consumption.remaining = 3;
+    result.consumption.stacked = 0;
+    const deps = fakeSummonDeps(result);
+    const { ctx, reply } = fakeCtx({ locale: "pt-BR" });
+    await runSummon(ctx, deps);
+    const payload = reply.mock.calls[0][0] as any;
+    expect(payload.content).toBeUndefined();
+  });
+
+  it("quando faltam 2 rolls vindos de rolls empilhados: exibe o aviso", async () => {
+    const result = fakeResult();
+    result.consumption.source = "stacked";
+    result.consumption.remaining = 0;
+    result.consumption.stacked = 2;
+    const deps = fakeSummonDeps(result);
+    const { ctx, reply } = fakeCtx({ locale: "pt-BR" });
+    await runSummon(ctx, deps);
+    const payload = reply.mock.calls[0][0] as any;
+    expect(payload.content).toBe("⚠️ **2** rolls restantes!");
+  });
+
+  it("quando ha wishers e restam 2 rolls: combina wish_alert e aviso de rolls no content", async () => {
+    const result = fakeResult();
+    result.consumption.remaining = 2;
+    result.consumption.stacked = 0;
+    const deps = fakeSummonDeps(result, {
+      findWishers: vi.fn(async () => ["u2"]),
+    });
+    const { ctx, reply } = fakeCtx({ locale: "pt-BR" });
+    await runSummon(ctx, deps);
+    const payload = reply.mock.calls[0][0] as any;
+    expect(payload.content).toContain("<@u2>");
+    expect(payload.content).toContain("⚠️ **2** rolls restantes!");
+    expect(payload.content).toContain("\n");
+  });
 });
 
 describe("views: i18n com fallback", () => {
