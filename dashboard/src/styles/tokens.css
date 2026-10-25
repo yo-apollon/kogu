@@ -1,0 +1,103 @@
+﻿/*
+ * Tokens do design system. Neutro (zinc); cor so como sinal (tier, variante, estado).
+ * Tier/variante/estado espelham src/ui/tokens.ts do bot.
+ * O script inline do layout raiz define html[data-theme]; o bloco de media query cobre o caso sem JS.
+ */
+:root {
+  color-scheme: light;
+
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --surface-2: #f4f4f5;
+  --border: #e4e4e7;
+  --border-strong: #d4d4d8;
+  --fg: #18181b;
+  --muted: #52525b;
+  --subtle: #6a6a74;
+  --accent: #5865f2;
+  --accent-fg: #ffffff;
+  --brand: #5865f2;
+  --ring: #5865f2;
+  --overlay: rgb(9 9 11 / 0.45);
+
+  /* tier */
+  --tier-common: #9ca3af;
+  --tier-rare: #3b82f6;
+  --tier-epic: #a855f7;
+  --tier-legendary: #f59e0b;
+  --tier-mythic: #ff2e63;
+
+  /* variante: primary / secondary / glow */
+  --variant-standard: #5865f2;
+  --variant-standard-2: #2b2d31;
+  --variant-standard-glow: #5865f2;
+  --variant-foil: #e2e8f0;
+  --variant-foil-2: #64748b;
+  --variant-foil-glow: #cbd5e1;
+  --variant-holo: #facc15;
+  --variant-holo-2: #ca8a04;
+  --variant-holo-glow: #fde047;
+  --variant-astral: #e879f9;
+  --variant-astral-2: #06b6d4;
+  --variant-astral-glow: #d946ef;
+
+  /* estado */
+  --state-free: #e03b54;
+  --state-claimed: #52525b;
+  --state-expired: #6b7280;
+  --state-error: #dc2626;
+  --state-success: #15803d;
+  --state-warn: #b45309;
+  --state-info: #5865f2;
+
+  --radius: 6px;
+  --radius-lg: 10px;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #09090b;
+  --surface: #111113;
+  --surface-2: #18181b;
+  --border: #27272a;
+  --border-strong: #3f3f46;
+  --fg: #fafafa;
+  --muted: #a1a1aa;
+  --subtle: #8b8b95;
+  --accent: #7983f5;
+  --accent-fg: #09090b;
+  --ring: #7983f5;
+  --overlay: rgb(0 0 0 / 0.6);
+
+  --state-claimed: #a1a1aa;
+  --state-error: #ef4444;
+  --state-success: #4ade80;
+  --state-warn: #f59e0b;
+  --state-info: #7983f5;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+
+    --bg: #09090b;
+    --surface: #111113;
+    --surface-2: #18181b;
+    --border: #27272a;
+    --border-strong: #3f3f46;
+    --fg: #fafafa;
+    --muted: #a1a1aa;
+    --subtle: #8b8b95;
+    --accent: #7983f5;
+    --accent-fg: #09090b;
+    --ring: #7983f5;
+    --overlay: rgb(0 0 0 / 0.6);
+
+    --state-claimed: #a1a1aa;
+    --state-error: #ef4444;
+    --state-success: #4ade80;
+    --state-warn: #f59e0b;
+    --state-info: #7983f5;
+  }
+}

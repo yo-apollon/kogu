@@ -1,4 +1,4 @@
-import { and, eq, gte, sql } from "drizzle-orm";
+import { and, eq, gte, isNull, lte, or, sql } from "drizzle-orm";
 import { db, type Database } from "../../infra/db/client.js";
 import {
   entities,
@@ -7,7 +7,6 @@ import {
   pacts,
   users,
 } from "../../infra/db/schema/index.js";
-import { getKV } from "../../infra/redis/client.js";
 import { UserError } from "../../lib/errors.js";
 import { discordRelative } from "../../lib/time.js";
 import { pactAetherValue, type Rng } from "../summon/variants.js";
@@ -215,45 +214,52 @@ export async function claimDaily(
   opts: DailyOptions = {}
 ): Promise<DailyResult> {
   const rng = opts.rng ?? Math.random;
-  const kv = await getKV();
-  const key = dailyKey(guildId, userId);
   const now = Date.now();
+  const cutoff = new Date(now - DAILY_COOLDOWN_MS);
 
-  const acquired = await kv.set(key, String(now), { nx: true, px: DAILY_COOLDOWN_MS });
-  if (!acquired) {
-    const ttl = await kv.pttl(key);
-    const nextAt = now + Math.max(ttl, 0);
+  const reward = DAILY_AETHER_MIN + Math.floor(rng() * DAILY_AETHER_SPAN);
+  const row = await db.transaction(async (tx) => {
+    await ensureMember(tx, { guildId, userId, username: opts.username, profile: opts.profile });
+    // O cooldown vive no banco (last_daily_at), na mesma condicao do UPDATE: sobrevive a
+    // reinicios do bot e dois $daily simultaneos nao passam juntos.
+    const [updated] = await tx
+      .update(guildMembers)
+      .set({
+        aetherBalance: sql`${guildMembers.aetherBalance} + ${reward}`,
+        stackedRolls: sql`${guildMembers.stackedRolls} + ${DAILY_STACKED_ROLLS}`,
+        rollsUsed: 0,
+        pactsUsed: 0,
+        lastDailyAt: new Date(now),
+      })
+      .where(
+        and(
+          eq(guildMembers.guildId, guildId),
+          eq(guildMembers.userId, userId),
+          or(isNull(guildMembers.lastDailyAt), lte(guildMembers.lastDailyAt, cutoff))
+        )
+      )
+      .returning({ balance: guildMembers.aetherBalance, stacked: guildMembers.stackedRolls });
+    return updated;
+  });
+
+  if (!row) {
+    const [member] = await db
+      .select({ lastDailyAt: guildMembers.lastDailyAt })
+      .from(guildMembers)
+      .where(and(eq(guildMembers.guildId, guildId), eq(guildMembers.userId, userId)))
+      .limit(1);
+    const last = member?.lastDailyAt?.getTime() ?? now;
+    const nextAt = last + DAILY_COOLDOWN_MS;
     throw new UserError("economy.daily_cooldown", { when: discordRelative(nextAt), nextAt });
   }
 
-  const reward = DAILY_AETHER_MIN + Math.floor(rng() * DAILY_AETHER_SPAN);
-  try {
-    const row = await db.transaction(async (tx) => {
-      await ensureMember(tx, { guildId, userId, username: opts.username, profile: opts.profile });
-      const [updated] = await tx
-        .update(guildMembers)
-        .set({
-          aetherBalance: sql`${guildMembers.aetherBalance} + ${reward}`,
-          stackedRolls: sql`${guildMembers.stackedRolls} + ${DAILY_STACKED_ROLLS}`,
-          rollsUsed: 0,
-          pactsUsed: 0,
-          lastDailyAt: new Date(now),
-        })
-        .where(and(eq(guildMembers.guildId, guildId), eq(guildMembers.userId, userId)))
-        .returning({ balance: guildMembers.aetherBalance, stacked: guildMembers.stackedRolls });
-      return updated;
-    });
-    return {
-      reward,
-      stackedAdded: DAILY_STACKED_ROLLS,
-      balance: row.balance,
-      stackedRolls: row.stacked,
-      nextAt: now + DAILY_COOLDOWN_MS,
-    };
-  } catch (err) {
-    await kv.del(key).catch(() => undefined);
-    throw err;
-  }
+  return {
+    reward,
+    stackedAdded: DAILY_STACKED_ROLLS,
+    balance: row.balance,
+    stackedRolls: row.stacked,
+    nextAt: now + DAILY_COOLDOWN_MS,
+  };
 }
 
 export interface DissolveResult {

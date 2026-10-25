@@ -1,0 +1,142 @@
+{
+  "common": {
+    "appName": "Arqon",
+    "close": "Fechar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "loading": "Carregando",
+    "all": "Todos",
+    "none": "Nenhum",
+    "skipToContent": "Ir para o conteúdo",
+    "openMenu": "Abrir menu de navegação",
+    "navigation": "Navegação"
+  },
+  "nav": {
+    "player": {
+      "overview": "Visão geral",
+      "pantheon": "Panteão",
+      "wishlist": "Wishlist",
+      "economy": "Economia",
+      "history": "Histórico",
+      "catalog": "Catálogo",
+      "rankings": "Rankings",
+      "profile": "Perfil"
+    },
+    "admin": {
+      "overview": "Visão geral",
+      "settings": "Configurações",
+      "disabledSeries": "Séries desativadas",
+      "members": "Membros",
+      "audit": "Auditoria"
+    },
+    "groupPlayer": "Jogador",
+    "groupAdmin": "Administração",
+    "needGuild": "Selecione um servidor"
+  },
+  "shell": {
+    "guildSwitcher": {
+      "label": "Selecionar servidor",
+      "placeholder": "Servidor",
+      "noGuilds": "Nenhum servidor disponível",
+      "manage": "Admin"
+    },
+    "stats": {
+      "aether": "Éter",
+      "aetherLabel": "Saldo de Éter",
+      "rolls": "Invocações",
+      "rollsLabel": "Invocações restantes",
+      "resets": "renova {when}"
+    },
+    "theme": { "toggle": "Alternar tema claro e escuro" },
+    "locale": {
+      "label": "Idioma",
+      "pt-BR": "Português (Brasil)",
+      "en-US": "English (US)"
+    },
+    "user": {
+      "menu": "Menu do usuário",
+      "profile": "Meu perfil",
+      "admin": "Administração do servidor",
+      "signOut": "Sair"
+    }
+  },
+  "table": {
+    "sortAsc": "Ordenar por {column} em ordem crescente",
+    "sortDesc": "Ordenar por {column} em ordem decrescente",
+    "sortNone": "Ordenar por {column}",
+    "empty": "Nenhum registro encontrado.",
+    "rowCount": "{count, plural, =0 {Nenhuma linha} one {# linha} other {# linhas}}",
+    "list": "Lista de registros"
+  },
+  "pager": {
+    "label": "Paginação",
+    "prev": "Anterior",
+    "next": "Próxima",
+    "page": "Página {page} de {total}",
+    "pageOnly": "Página {page}"
+  },
+  "filter": {
+    "label": "Filtros",
+    "search": "Buscar",
+    "searchPlaceholder": "Buscar…",
+    "all": "Todos",
+    "remove": "Remover filtro {name}",
+    "clearAll": "Limpar filtros",
+    "activeFilters": "Filtros ativos"
+  },
+  "empty": {
+    "useCommand": "Use no bot:",
+    "defaultTitle": "Nada por aqui ainda"
+  },
+  "error": {
+    "title": "Algo deu errado",
+    "description": "Não foi possível carregar esta página. Tente novamente em instantes.",
+    "retry": "Tentar de novo",
+    "digest": "ID do erro: {id}",
+    "notFoundTitle": "Página não encontrada",
+    "notFoundDescription": "O endereço não existe ou você não tem acesso a ele.",
+    "back": "Voltar ao início"
+  },
+  "tier": {
+    "common": "Comum",
+    "rare": "Raro",
+    "epic": "Épico",
+    "legendary": "Lendário",
+    "mythic": "Mítico"
+  },
+  "variant": {
+    "standard": "Padrão",
+    "foil": "Foil prateada",
+    "holo": "Holográfica",
+    "astral": "Astral"
+  },
+  "gender": {
+    "female": "Feminino",
+    "male": "Masculino",
+    "both": "Indefinido",
+    "nonbinary": "Não binário",
+    "unknown": "Desconhecido",
+    "item": "Item"
+  },
+  "state": {
+    "free": "Livre",
+    "claimed": "Reivindicada",
+    "expired": "Expirada",
+    "error": "Erro",
+    "success": "Sucesso",
+    "warn": "Atenção",
+    "info": "Info"
+  },
+  "kpi": {
+    "up": "alta de {value}",
+    "down": "queda de {value}",
+    "flat": "sem variação"
+  },
+  "chart": {
+    "noData": "Sem dados no período",
+    "series": "Série de dados"
+  },
+  "card": {
+    "alt": "Carta de {name}"
+  }
+}

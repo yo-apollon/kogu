@@ -2,12 +2,11 @@ import { and, eq, lt, or, sql } from "drizzle-orm";
 import type { CardVariant } from "../../config/gacha.js";
 import { db } from "../../infra/db/client.js";
 import { guildMembers, rollLog, type Guild, type RollOffer } from "../../infra/db/schema/index.js";
-import { getKV } from "../../infra/redis/client.js";
 import { UserError } from "../../lib/errors.js";
 import { childLogger } from "../../lib/logger.js";
 import { discordRelative } from "../../lib/time.js";
 import { currentWindow, nextWindowStart, usedInWindow } from "../../shared/time.js";
-import { dailyKey, ensureMember } from "../economy/service.js";
+import { DAILY_COOLDOWN_MS, ensureMember } from "../economy/service.js";
 import { createOffer, incrementAwakening } from "./offers.js";
 import type { RollFilter } from "./pool.js";
 import { rollEntity, type RolledEntity } from "./rollEngine.js";
@@ -207,6 +206,7 @@ export async function getTimers(
       pactsUsed: guildMembers.pactsUsed,
       pactWindow: guildMembers.pactWindow,
       balance: guildMembers.aetherBalance,
+      lastDailyAt: guildMembers.lastDailyAt,
     })
     .from(guildMembers)
     .where(and(eq(guildMembers.guildId, guildId), eq(guildMembers.userId, userId)))
@@ -216,12 +216,10 @@ export async function getTimers(
   const pactsUsed = m ? usedInWindow(m.pactWindow, m.pactsUsed, pactWindow) : 0;
 
   let daily: Timers["daily"] = { available: true, nextAt: null };
-  try {
-    const kv = await getKV();
-    const ttl = await kv.pttl(dailyKey(guildId, userId));
-    if (ttl > 0) daily = { available: false, nextAt: now + ttl };
-  } catch (err) {
-    log.warn({ err }, "KV indisponivel ao ler o cooldown do daily");
+  // O cooldown do $daily vive no banco (guild_members.last_daily_at), nao no KV.
+  if (m?.lastDailyAt) {
+    const nextAt = m.lastDailyAt.getTime() + DAILY_COOLDOWN_MS;
+    if (nextAt > now) daily = { available: false, nextAt };
   }
 
   return {

@@ -1,0 +1,116 @@
+/*
+ * Arte da carta (skin Mudae em CSS puro): razao 480x750, raio 4% da largura, borda branca fina,
+ * sem texto na arte. O efeito de variante e sutil e vive nos pseudo-elementos do quadro.
+ */
+@property --holo-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes card-holo-spin {
+  to { --holo-angle: 360deg; }
+}
+
+.card-art {
+  container-type: inline-size;
+  width: 100%;
+}
+
+.card-art__frame {
+  position: relative;
+  aspect-ratio: 480 / 750;
+  border-radius: 4cqw;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--surface-2);
+}
+
+/* a borda branca fica acima da imagem e dos efeitos */
+.card-art__ring {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.85);
+  pointer-events: none;
+}
+
+.card-art__img {
+  object-fit: cover;
+  object-position: 50% 8%;
+}
+
+.card-art__fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+  font-size: 22cqw;
+  letter-spacing: 0.02em;
+  color: var(--fg);
+  background: color-mix(in oklab, var(--card-tier, var(--tier-common)) 22%, var(--surface-2));
+}
+
+.card-art__frame::before,
+.card-art__frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+  display: none;
+}
+
+/* FOIL: brilho prateado diagonal */
+.card-art[data-variant="foil"] .card-art__frame::after {
+  display: block;
+  background: linear-gradient(
+    115deg,
+    transparent 18%,
+    rgb(226 232 240 / 0.7) 42%,
+    rgb(203 213 225 / 0.15) 58%,
+    transparent 78%
+  );
+  mix-blend-mode: overlay;
+  opacity: 0.75;
+}
+
+/* HOLO: conic dourado com giro lento */
+.card-art[data-variant="holo"] .card-art__frame::after {
+  display: block;
+  background: conic-gradient(
+    from var(--holo-angle),
+    rgb(250 204 21 / 0.55),
+    rgb(253 224 71 / 0.15),
+    rgb(245 158 11 / 0.5),
+    rgb(255 247 174 / 0.2),
+    rgb(250 204 21 / 0.55)
+  );
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+  animation: card-holo-spin 14s linear infinite;
+}
+
+/* ASTRAL: fucsia -> ciano + particulas estaticas */
+.card-art[data-variant="astral"] .card-art__frame::after {
+  display: block;
+  background: linear-gradient(135deg, rgb(217 70 239 / 0.5), rgb(6 182 212 / 0.45));
+  mix-blend-mode: overlay;
+  opacity: 0.7;
+}
+.card-art[data-variant="astral"] .card-art__frame::before {
+  display: block;
+  z-index: 2;
+  opacity: 0.85;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><g fill='white'><circle cx='14' cy='22' r='1.2' opacity='.9'/><circle cx='47' cy='9' r='.8' opacity='.7'/><circle cx='88' cy='31' r='1.4' opacity='.85'/><circle cx='105' cy='70' r='.9' opacity='.7'/><circle cx='63' cy='58' r='1' opacity='.6'/><circle cx='22' cy='84' r='1.3' opacity='.8'/><circle cx='77' cy='101' r='.8' opacity='.7'/><circle cx='38' cy='112' r='1.1' opacity='.75'/></g></svg>");
+  background-size: 120px 120px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-art[data-variant="holo"] .card-art__frame::after {
+    animation: none;
+  }
+}

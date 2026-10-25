@@ -1,32 +1,83 @@
 @import "tailwindcss";
+@import "../styles/tokens.css";
+@import "../styles/motion.css";
+@import "../styles/card.css";
 
-:root {
-  --bg: #f7f7f9;
-  --fg: #16161d;
-  --muted: #62627a;
-  --surface: #ffffff;
-  --border: #e2e2ea;
-  --accent: #5865f2;
-  --accent-fg: #ffffff;
-}
-
-[data-theme="dark"] {
-  --bg: #0e0e14;
-  --fg: #ececf3;
-  --muted: #9a9ab0;
-  --surface: #16161f;
-  --border: #272735;
-  --accent: #7983f5;
-  --accent-fg: #0e0e14;
-}
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 @theme inline {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  /* escala tipografica: 12/13/14/16/20/24 */
+  --text-xs: 12px;
+  --text-xs--line-height: 16px;
+  --text-sm: 13px;
+  --text-sm--line-height: 18px;
+  --text-base: 14px;
+  --text-base--line-height: 20px;
+  --text-lg: 16px;
+  --text-lg--line-height: 24px;
+  --text-xl: 20px;
+  --text-xl--line-height: 28px;
+  --text-2xl: 24px;
+  --text-2xl--line-height: 32px;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-ring: var(--ring);
+  --color-success: var(--state-success);
+  --color-warn: var(--state-warn);
+  --color-error: var(--state-error);
+  --color-info: var(--state-info);
+  --color-free: var(--state-free);
+  --color-tier-common: var(--tier-common);
+  --color-tier-rare: var(--tier-rare);
+  --color-tier-epic: var(--tier-epic);
+  --color-tier-legendary: var(--tier-legendary);
+  --color-tier-mythic: var(--tier-mythic);
+
+  --radius-sm: 4px;
+  --radius-md: var(--radius);
+  --radius-lg: var(--radius-lg);
+}
+
+@utility num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum", "zero" 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 30%, transparent);
+}
+
+/* rolagem fina e neutra */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
 }
