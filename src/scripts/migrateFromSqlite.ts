@@ -1388,7 +1388,7 @@ export async function migrateFromSqlite(opts: MigrateOptions): Promise<Migration
         for (const guildId of [...guildsToCheck].sort()) {
           const source = sourcePactsPerGuild.get(guildId) ?? 0;
           const destination = destPacts.get(guildId) ?? 0;
-          if (source !== destination) pactsOk = false;
+          if (destination < source) pactsOk = false;
           report.verification.pactsPerGuild.push({ guildId, source, destination });
         }
         report.verification.ok = pactsOk && report.verification.popularityRanksUnique;

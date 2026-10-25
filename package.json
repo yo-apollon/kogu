@@ -19,6 +19,7 @@
     "db:migrate": "tsx src/infra/db/migrate.ts",
     "db:push": "drizzle-kit push",
     "migrate:sqlite": "tsx src/scripts/migrateFromSqlite.ts",
+    "catalog:expand": "tsx src/scripts/expandCatalog1000.ts",
     "sync:once": "tsx src/scripts/syncOnce.ts",
     "catalog:bootstrap": "tsx src/scripts/catalogBootstrap.ts",
     "deploy:commands": "tsx src/scripts/deployCommands.ts",

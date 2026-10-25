@@ -9,6 +9,8 @@ export const IMAGE_HOST_ALLOWLIST = [
   "image.tmdb.org",
   "cdn.discordapp.com",
   "media.discordapp.net",
+  "upload.wikimedia.org",
+  "static.wikia.nocookie.net",
 ] as const;
 
 export const IMAGE_MAX_BYTES = 8 * 1024 * 1024;
