@@ -33,7 +33,7 @@ describe("buildSummonEmbed", () => {
       [
         "Persona 5 ♂",
         "*Game roulette*  ·  **380** 💠  ·  🗝️ (8)",
-        "Pact Rank: #855",
+        "Claim Rank: #855",
         "Like Rank: #587",
         "Shard (+19)",
         "***art by askziye***",

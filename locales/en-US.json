@@ -92,7 +92,7 @@
     "roulette_game": "Game roulette",
     "roulette_cinema": "Cinema roulette",
     "roulette_dimensional": "Dimensional roulette",
-    "pact_rank": "Pact Rank: {rank}",
+    "pact_rank": "Claim Rank: {rank}",
     "like_rank": "Like Rank: {rank}",
     "combat": "Combat: ATK {atk} · DEF {def} · SPD {spd}",
     "belongs_to": "Belongs to {owner} ~~ {keys} / {limit} [{pos}]",

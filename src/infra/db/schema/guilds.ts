@@ -12,7 +12,7 @@ export const guilds = pgTable("guilds", {
   // A janela de pactos usa claim_cooldown_minutes como intervalo.
   claimCooldownMinutes: integer("claim_cooldown_minutes").notNull().default(180),
   pactsPerWindow: integer("pacts_per_window").notNull().default(1),
-  claimWindowSeconds: integer("claim_window_seconds").notNull().default(45),
+  claimWindowSeconds: integer("claim_window_seconds").notNull().default(120),
   snipeProtectionLevel: integer("snipe_protection_level").notNull().default(0),
   snipeProtectionSeconds: integer("snipe_protection_seconds").notNull().default(8),
   aetherSnipeProtectionLevel: integer("aether_snipe_protection_level").notNull().default(0),

@@ -66,7 +66,7 @@ export const GUILD_DEFAULTS = {
   baseRolls: 10,
   rollIntervalMin: 60,
   claimIntervalMin: 180,
-  claimWindowSeconds: 45,
+  claimWindowSeconds: 120,
   pactLimit: 8100,
 } as const;
 

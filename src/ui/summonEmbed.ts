@@ -39,6 +39,11 @@ export interface SummonView {
   ownerKeys?: number;
   /** Posicao do dono, entre colchetes no footer. */
   ownerPosition?: number;
+  /** Cor da borda lateral do embed (combinando com o personagem/franquia). */
+  cardColor?: number;
+  /** Apelido / codinome (ex: Joker, CV01) para exibição estilizada no poder (+N). */
+  alias?: string;
+  isSoulmate?: boolean;
 }
 
 export interface SummonEmbedOptions {
@@ -98,15 +103,23 @@ export function buildSummonEmbed(view: SummonView, opts: SummonEmbedOptions = {}
   if (view.claimRank !== undefined) lines.push(t("summon.pact_rank", locale, { rank: `#${view.claimRank}` }));
   if (view.likeRank !== undefined) lines.push(t("summon.like_rank", locale, { rank: `#${view.likeRank}` }));
 
-  lines.push(`${powerKind(view.tier, locale)} (+${powerOf(view.aetherValue, view.tier)})`);
+  const powerLabel = view.alias ?? powerKind(view.tier, locale);
+  lines.push(`${powerLabel} (+${powerOf(view.aetherValue, view.tier)})`);
 
   if (view.ownerNote) lines.push(`***${escapeMarkdown(truncate(view.ownerNote, 100))}***`);
   if (view.ownerNote || view.ownerPhrase) lines.push(summonDivider(variantEmoji(view.variant)));
   if (view.ownerPhrase) lines.push(`**"${escapeMarkdown(truncate(view.ownerPhrase, 200))}"**`);
   if (view.hasCustomPic) lines.push(t("summon.custom_pic", locale, { n: view.customPicIndex ?? 1 }));
 
+  const embedColor =
+    view.cardColor !== undefined
+      ? view.cardColor
+      : owned
+        ? (view.ownerEmbedColor ?? DEFAULT_OWNER_COLOR)
+        : FREE_CARD_COLOR;
+
   const embed = new EmbedBuilder()
-    .setColor(owned ? (view.ownerEmbedColor ?? DEFAULT_OWNER_COLOR) : FREE_CARD_COLOR)
+    .setColor(embedColor)
     .setAuthor({ name: truncate(view.name, 256) })
     .setDescription(lines.join("\n"))
     .setImage(`attachment://${attachmentName}`);

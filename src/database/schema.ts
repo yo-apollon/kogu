@@ -16,7 +16,7 @@ export const guilds = sqliteTable("guilds", {
   gamemode: integer("gamemode").default(1).notNull(),
   baseRolls: integer("base_rolls").default(10).notNull(),
   claimCooldownMinutes: integer("claim_cooldown_minutes").default(180).notNull(),
-  claimWindowSeconds: integer("claim_window_seconds").default(45).notNull(),
+  claimWindowSeconds: integer("claim_window_seconds").default(120).notNull(),
   snipeProtectionLevel: integer("snipe_protection_level").default(0).notNull(),
   snipeProtectionSeconds: integer("snipe_protection_seconds").default(8).notNull(),
   aetherSnipeProtectionLevel: integer("aether_snipe_protection_level").default(0).notNull(),

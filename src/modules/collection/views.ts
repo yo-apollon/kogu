@@ -8,7 +8,7 @@ import { t } from "../../i18n/index.js";
 import { baseEmbed } from "../../ui/embeds.js";
 import { emoji, variantEmoji } from "../../ui/emojis.js";
 import { escapeMarkdown, formatNumber, truncate } from "../../ui/format.js";
-import { BRAND_COLOR } from "../../ui/tokens.js";
+import { BRAND_COLOR, resolveCardEmbedColor } from "../../ui/tokens.js";
 import type { SummonView } from "../../ui/summonEmbed.js";
 import { calculateAetherValue, pactAetherValue } from "../summon/variants.js";
 import type { PantheonDisplay, PantheonQuery } from "./flags.js";
@@ -117,9 +117,11 @@ export function buildInfoView(
   opts: { locale: string; ownerAvatarUrl?: string }
 ): SummonView {
   const pact = info.pact;
+  const franchise = info.seriesTitle ?? t("catalog.default_universe", opts.locale);
+  const ownerEmbedColor = parseHexColor(pact?.ownerEmbedColor);
   return {
     name: info.name,
-    franchise: info.seriesTitle ?? t("catalog.default_universe", opts.locale),
+    franchise,
     gender: info.gender,
     universe: info.universe,
     aetherValue: infoAetherValue(info),
@@ -128,13 +130,21 @@ export function buildInfoView(
     likeRank: info.likeRank ?? undefined,
     tier: info.tier,
     variant: pact?.variant ?? "STANDARD",
+    alias: pact?.alias ?? undefined,
     ownerNote: pact?.note ?? pact?.alias ?? undefined,
     hasCustomPic: pact?.hasCustomImage ?? false,
     ownerName: pact ? pact.ownerName || t("summon.unknown_owner", opts.locale) : undefined,
     ownerAvatarUrl: pact ? opts.ownerAvatarUrl : undefined,
-    ownerEmbedColor: parseHexColor(pact?.ownerEmbedColor),
+    ownerEmbedColor,
     ownerKeys: pact?.awakeningKeys,
     ownerPosition: pact?.position,
+    cardColor: resolveCardEmbedColor({
+      name: info.name,
+      franchise,
+      tier: info.tier,
+      variant: pact?.variant ?? "STANDARD",
+      ownerEmbedColor,
+    }),
   };
 }
 

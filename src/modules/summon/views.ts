@@ -17,6 +17,7 @@ import type { UserError } from "../../lib/errors.js";
 import { discordRelative, discordTime } from "../../lib/time.js";
 import { emoji } from "../../ui/emojis.js";
 import { truncate } from "../../ui/format.js";
+import { resolveCardEmbedColor } from "../../ui/tokens.js";
 import { buildSummonButtons, type SummonView } from "../../ui/summonEmbed.js";
 import type { SummonResult } from "./service.js";
 
@@ -109,6 +110,7 @@ export function describeUserError(err: UserError, locale: Locale | string): stri
 export interface OwnerExtras {
   avatarUrl?: string;
   embedColor?: number;
+  alias?: string | null;
   note?: string | null;
   customImage?: string | null;
   /** Posicao do pacto na colecao do dono (ordem de pacto). */
@@ -148,12 +150,20 @@ export function buildOfferView(
     view.ownerEmbedColor = owner.embedColor;
     view.ownerKeys = awakeningKeys;
     view.ownerPosition = owner.position;
+    if (owner.alias) view.alias = owner.alias;
     if (owner.note) view.ownerNote = owner.note;
     if (owner.customImage) {
       view.hasCustomPic = true;
       view.customPicIndex = 1;
     }
   }
+  view.cardColor = resolveCardEmbedColor({
+    name: entity.name,
+    franchise: view.franchise,
+    tier: entity.tier,
+    variant,
+    ownerEmbedColor: owner.embedColor,
+  });
   return view;
 }
 
