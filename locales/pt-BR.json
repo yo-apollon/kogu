@@ -111,7 +111,7 @@
     "orb_announce": "💠 **{user}** absorveu **+{amount} Éter** da fenda de **{entity}**!",
     "rift_expired": "Fenda Dimensional Dissipada",
     "wish_alert": "🌠 {users}, **{entity}** da sua Lista de Desejos apareceu!",
-    "custom_pic": "(Imagem personalizada {n})",
+    "custom_pic": "(Custom Pic {n})",
     "power_common": "Fragmento",
     "power_rare": "Cristal",
     "power_epic": "Runa",

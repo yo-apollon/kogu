@@ -244,7 +244,7 @@ describe("runSummon", () => {
     expect(embed.color).toBe(0x123456);
     expect(embed.footer.text).toBe("Pertence a bob ~~ 3 / 40 [4]");
     expect(embed.description).toContain("art by x");
-    expect(embed.description).toContain("(Imagem personalizada 1)");
+    expect(embed.description).toContain("(Custom Pic 1)");
     expect(rowIds(payload.components[0])).toEqual(["sm:like:7", "sm:orb:7"]);
     expect(payload.allowedMentions).toEqual({ parse: [], users: [] });
     expect(payload.content).toBeUndefined();

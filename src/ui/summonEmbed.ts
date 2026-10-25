@@ -75,13 +75,9 @@ export function powerOf(aetherValue: number, tier: EntityTier): number {
   return base + 5 * Math.max(0, ENTITY_TIERS.indexOf(tier));
 }
 
-function powerKind(tier: EntityTier, locale: string): string {
-  return t(`summon.power_${tier.toLowerCase()}` as TranslationKey, locale);
-}
-
 /** Divisor ornamental com o emoji da variante ao centro. */
 export function summonDivider(center: string): string {
-  return `━━━━━━━•·༺${center}༻·•━━━━━━━`;
+  return `━━━━━•·༺${center}༻·•━━━━━`;
 }
 
 export function buildSummonEmbed(view: SummonView, opts: SummonEmbedOptions = {}): { embed: EmbedBuilder; attachmentName: string } {
@@ -98,13 +94,13 @@ export function buildSummonEmbed(view: SummonView, opts: SummonEmbedOptions = {}
 
   const stats = [`*${t(rouletteKey, locale)}*`, `**${formatNumber(view.aetherValue, locale)}** ${emoji("aether")}`];
   if (keys > 0) stats.push(`${emoji("key")} (${keys})`);
-  lines.push(stats.join("  ·  "));
+  lines.push(stats.join(" · "));
 
   if (view.claimRank !== undefined) lines.push(t("summon.pact_rank", locale, { rank: `#${view.claimRank}` }));
   if (view.likeRank !== undefined) lines.push(t("summon.like_rank", locale, { rank: `#${view.likeRank}` }));
 
-  const powerLabel = view.alias ?? powerKind(view.tier, locale);
-  lines.push(`${powerLabel} (+${powerOf(view.aetherValue, view.tier)})`);
+  const powerBonus = `(+${powerOf(view.aetherValue, view.tier)})`;
+  lines.push(view.alias ? `${view.alias} ${powerBonus}` : powerBonus);
 
   if (view.ownerNote) lines.push(`***${escapeMarkdown(truncate(view.ownerNote, 100))}***`);
   if (view.ownerNote || view.ownerPhrase) lines.push(summonDivider(variantEmoji(view.variant)));

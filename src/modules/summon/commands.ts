@@ -377,6 +377,8 @@ export async function runSummon(
     const view = buildOfferView(result, locale, {
       avatarUrl: pact ? cachedAvatar(ctx, pact.userId) : undefined,
       embedColor: extras?.embedColor,
+      alias: extras?.alias,
+      phrase: extras?.phrase,
       note: extras?.note,
       customImage: extras?.customImage,
       position: extras?.position,

@@ -111,6 +111,7 @@ export interface OwnerExtras {
   avatarUrl?: string;
   embedColor?: number;
   alias?: string | null;
+  phrase?: string | null;
   note?: string | null;
   customImage?: string | null;
   /** Posicao do pacto na colecao do dono (ordem de pacto). */
@@ -152,6 +153,7 @@ export function buildOfferView(
     view.ownerPosition = owner.position;
     if (owner.alias) view.alias = owner.alias;
     if (owner.note) view.ownerNote = owner.note;
+    if (owner.phrase) view.ownerPhrase = owner.phrase;
     if (owner.customImage) {
       view.hasCustomPic = true;
       view.customPicIndex = 1;
@@ -264,6 +266,8 @@ export async function findWishers(
 
 export interface PactExtras {
   note: string | null;
+  alias?: string | null;
+  phrase?: string | null;
   customImage: string | null;
   /** Cor do pacto, ou a do membro dono quando o pacto nao define. */
   embedColor: number | undefined;
@@ -280,6 +284,8 @@ export async function loadPactExtras(pact: {
   const [row] = await db
     .select({
       note: pacts.note,
+      alias: pacts.alias,
+      alias2: pacts.alias2,
       customImage: pacts.customImage,
       pactColor: pacts.embedColor,
       memberColor: guildMembers.embedColor,
@@ -295,6 +301,8 @@ export async function loadPactExtras(pact: {
   const position = await loadPactPosition(pact);
   return {
     note: row.note,
+    alias: row.alias,
+    phrase: row.alias2,
     customImage: row.customImage,
     embedColor: parseHexColor(row.pactColor) ?? parseHexColor(row.memberColor),
     position,

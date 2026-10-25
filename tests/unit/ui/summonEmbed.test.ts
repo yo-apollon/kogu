@@ -32,12 +32,12 @@ describe("buildSummonEmbed", () => {
     expect(json.description).toBe(
       [
         "Persona 5 ♂",
-        "*Game roulette*  ·  **380** 💠  ·  🗝️ (8)",
+        "*Game roulette* · **380** 💠 · 🗝️ (8)",
         "Claim Rank: #855",
         "Like Rank: #587",
-        "Shard (+19)",
+        "(+19)",
         "***art by askziye***",
-        "━━━━━━━•·༺📜༻·•━━━━━━━",
+        "━━━━━•·༺📜༻·•━━━━━",
         '**"For real ?!"**',
         "(Custom Pic 1)",
       ].join("\n")
@@ -58,7 +58,7 @@ describe("buildSummonEmbed", () => {
     };
     const json = buildSummonEmbed(free, { locale: "en-US", attachmentName: "x.webp" }).embed.toJSON();
     expect(json.description).toBe(
-      ["DARLING in the FRANXX ⚧", "*Animanga roulette*  ·  **120** 💠", "Skull (+26)"].join("\n")
+      ["DARLING in the FRANXX ⚧", "*Animanga roulette* · **120** 💠", "(+26)"].join("\n")
     );
     expect(json.image?.url).toBe("attachment://x.webp");
     expect(json.color).toBe(0x2b2d31);
