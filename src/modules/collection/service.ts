@@ -388,6 +388,31 @@ export async function setPactText(input: {
   return row;
 }
 
+/** Define ou remove imagem personalizada de um pacto. Somente o dono. */
+export async function setPactCustomImage(input: {
+  guildId: string;
+  userId: string;
+  pactId: number;
+  imageUrl: string | null;
+  label?: string;
+}): Promise<{ pactId: number; entityId: number }> {
+  const [row] = await db
+    .update(pacts)
+    .set({ customImage: input.imageUrl })
+    .where(
+      and(
+        eq(pacts.id, input.pactId),
+        eq(pacts.guildId, input.guildId),
+        eq(pacts.userId, input.userId)
+      )
+    )
+    .returning({ pactId: pacts.id, entityId: pacts.entityId });
+  if (!row) {
+    throw new UserError("errors.not_in_pantheon", { query: input.label ?? String(input.pactId) });
+  }
+  return row;
+}
+
 /** Dissolve o pacto do jogador (reembolso e saldo no economy); erro de nao-dono cita o nome. */
 export async function dissolveOwnPact(
   guildId: string,
@@ -547,6 +572,7 @@ export interface EntityPactInfo {
   note: string | null;
   alias: string | null;
   hasCustomImage: boolean;
+  customImage?: string | null;
   ownerEmbedColor: string | null;
   /** Posicao do pacto no Panteao do dono (ordem padrao), base 1. */
   position: number;
@@ -632,6 +658,7 @@ export async function getEntityInfo(guildId: string, entityId: number): Promise<
       note: r.pactNote,
       alias: r.pactAlias,
       hasCustomImage: Boolean(r.pactCustomImage),
+      customImage: r.pactCustomImage,
       ownerEmbedColor: r.ownerColor,
       position: await pactPosition(r.pactId),
     };

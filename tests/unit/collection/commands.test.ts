@@ -19,6 +19,9 @@ vi.mock("../../../src/canvas/index.js", () => canvasMock);
 const confirmMock = vi.hoisted(() => ({ confirm: vi.fn() }));
 vi.mock("../../../src/ui/components/confirm.js", () => confirmMock);
 
+const safeFetchMock = vi.hoisted(() => ({ safeFetchImage: vi.fn() }));
+vi.mock("../../../src/lib/http/safeFetch.js", () => safeFetchMock);
+
 const svc = vi.hoisted(() => ({
   listPantheon: vi.fn(),
   findOwnPact: vi.fn(),
@@ -29,6 +32,7 @@ const svc = vi.hoisted(() => ({
   giveEntity: vi.fn(),
   setLeader: vi.fn(),
   setPactText: vi.fn(),
+  setPactCustomImage: vi.fn(),
   dissolveOwnPact: vi.fn(),
 }));
 vi.mock("../../../src/modules/collection/service.js", async (importOriginal) => ({
@@ -46,6 +50,7 @@ import { formatNumber } from "../../../src/ui/format.js";
 import {
   aliasCommand,
   commands,
+  custompicCommand,
   dissolveCommand,
   firstmarryCommand,
   giveCommand,
@@ -168,6 +173,7 @@ const entityInfo = (extra: Partial<EntityInfo> = {}): EntityInfo => ({
 beforeEach(() => {
   vi.resetAllMocks();
   kvHolder.kv = new MemoryStore();
+  safeFetchMock.safeFetchImage.mockResolvedValue({ buffer: Buffer.from("png"), contentType: "image/png" });
   canvasMock.renderCardInPool.mockResolvedValue(Buffer.from("webp"));
   confirmMock.confirm.mockImplementation(async (o: any) => {
     await o.send({ embeds: [], components: [] });
@@ -229,7 +235,7 @@ describe("registro: todo alias do messageHandler legado resolve", () => {
     expect(registrations.filter((r) => r.matcher)).toHaveLength(1);
     expect(components).toEqual([]);
     expect(commands.map((c) => c.name).sort()).toEqual(
-      ["alias", "dissolve", "firstmarry", "give", "info", "note", "pantheon"].sort()
+      ["alias", "custompic", "dissolve", "firstmarry", "give", "info", "note", "pantheon"].sort()
     );
   });
 });
@@ -238,9 +244,9 @@ describe("slash: payload valido", () => {
   const payload = registry.buildSlashPayload();
   const byName = new Map(payload.map((p) => [p.name, p]));
 
-  it("registra os 7 slash com descricao pt-BR e en-US", () => {
+  it("registra os 8 slash com descricao pt-BR e en-US", () => {
     expect([...byName.keys()].sort()).toEqual(
-      ["alias", "dissolve", "firstmarry", "give", "info", "note", "pantheon"].sort()
+      ["alias", "custompic", "dissolve", "firstmarry", "give", "info", "note", "pantheon"].sort()
     );
     for (const p of payload) {
       expect(p.description.length).toBeGreaterThan(0);
@@ -810,6 +816,62 @@ describe("$note / $alias / $alias2", () => {
     await noteCommand.execute(slashCtx(n.interaction, noteCommand));
     expect(svc.setPactText).toHaveBeenLastCalledWith(
       expect.objectContaining({ field: "note", value: "oi" })
+    );
+  });
+
+  it("$c / $custompic atualiza a imagem personalizada da carta", async () => {
+    svc.findOwnPact.mockResolvedValue(ownPact());
+    svc.setPactCustomImage.mockResolvedValue({ pactId: 55, entityId: 7 });
+
+    const m = await run("$c Zero Two https://example.com/art.png");
+    expect(svc.setPactCustomImage).toHaveBeenLastCalledWith(
+      expect.objectContaining({ pactId: 55, imageUrl: "https://example.com/art.png" })
+    );
+    expect(embedText(payloadOf(m))).toContain("Imagem personalizada de **Zero Two** atualizada");
+
+    const m2 = await run("$c Zero Two remove");
+    expect(svc.setPactCustomImage).toHaveBeenLastCalledWith(
+      expect.objectContaining({ pactId: 55, imageUrl: null })
+    );
+    expect(embedText(payloadOf(m2))).toContain("removida");
+
+    expect((await runError("$c Zero Two")).key).toBe("collection.custompic_usage");
+    expect((await runError("$c")).key).toBe("collection.custompic_usage");
+
+    safeFetchMock.safeFetchImage.mockRejectedValueOnce(new Error("bad image"));
+    expect((await runError("$c Zero Two https://example.com/bad.png")).key).toBe(
+      "collection.custompic_invalid_url"
+    );
+  });
+
+  it("slash /custompic aceita url e reset", async () => {
+    svc.findOwnPact.mockResolvedValue(ownPact());
+    svc.setPactCustomImage.mockResolvedValue({ pactId: 55, entityId: 7 });
+
+    const slashSet = fakeSlash({
+      commandName: "custompic",
+      userId: ME,
+      options: [
+        { name: "name", value: "pact:55" },
+        { name: "url", value: "https://example.com/fanart.png" },
+      ],
+    });
+    await custompicCommand.execute(slashCtx(slashSet.interaction, custompicCommand));
+    expect(svc.setPactCustomImage).toHaveBeenLastCalledWith(
+      expect.objectContaining({ pactId: 55, imageUrl: "https://example.com/fanart.png" })
+    );
+
+    const slashReset = fakeSlash({
+      commandName: "custompic",
+      userId: ME,
+      options: [
+        { name: "name", value: "pact:55" },
+        { name: "reset", value: true },
+      ],
+    });
+    await custompicCommand.execute(slashCtx(slashReset.interaction, custompicCommand));
+    expect(svc.setPactCustomImage).toHaveBeenLastCalledWith(
+      expect.objectContaining({ pactId: 55, imageUrl: null })
     );
   });
 });

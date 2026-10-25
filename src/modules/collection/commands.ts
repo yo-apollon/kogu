@@ -17,6 +17,7 @@ import { renderCardInPool } from "../../canvas/index.js";
 import type { AnyCommand, CommandContext, CommandDefinition } from "../../core/contracts.js";
 import type { CommandRegistration } from "../../core/registry.js";
 import { t } from "../../i18n/index.js";
+import { safeFetchImage } from "../../lib/http/safeFetch.js";
 import { getKV } from "../../infra/redis/client.js";
 import { UserError } from "../../lib/errors.js";
 import { childLogger } from "../../lib/logger.js";
@@ -46,6 +47,7 @@ import {
   listPantheon,
   searchOwnPacts,
   setLeader,
+  setPactCustomImage,
   setPactText,
   type OwnPact,
   type PantheonPage,
@@ -101,6 +103,18 @@ const SLASH_TEXT = {
     ptName: "slot",
     pt: "Qual apelido definir (1 ou 2).",
     en: "Which nickname to set (1 or 2).",
+  },
+  custompicUrl: {
+    name: "url",
+    ptName: "url",
+    pt: "Link direto da imagem (HTTPS).",
+    en: "Direct image URL (HTTPS).",
+  },
+  custompicReset: {
+    name: "reset",
+    ptName: "remover",
+    pt: "Remover imagem personalizada e voltar à original.",
+    en: "Remove custom art and reset to default.",
   },
 } satisfies Record<string, OptionText>;
 
@@ -660,6 +674,137 @@ export const aliasCommand: CommandDefinition<typeof aliasArgs> = {
 };
 
 // ---------------------------------------------------------------------------
+// $custompic / $c / /custompic
+// ---------------------------------------------------------------------------
+
+function parseCustompicArgs(
+  tokens: readonly string[],
+  extra?: { message?: Message }
+): { name: string; url: string; reset: boolean } {
+  const attachmentUrl = extra?.message?.attachments?.first()?.url ?? "";
+
+  const hasDollar = tokens.some((t) => t.includes("$"));
+  if (hasDollar) {
+    const { name, text } = splitNameAndText(tokens);
+    const trimmed = text.trim();
+    if (
+      trimmed.toLowerCase() === "remove" ||
+      trimmed.toLowerCase() === "reset" ||
+      trimmed.toLowerCase() === "remover"
+    ) {
+      return { name, url: "", reset: true };
+    }
+    return { name, url: trimmed || attachmentUrl, reset: false };
+  }
+
+  if (attachmentUrl && tokens.length > 0) {
+    return { name: tokens.join(" ").trim(), url: attachmentUrl, reset: false };
+  }
+
+  if (tokens.length === 0) {
+    return { name: "", url: "", reset: false };
+  }
+
+  const last = tokens[tokens.length - 1]!;
+  if (
+    tokens.length > 1 &&
+    (last.toLowerCase() === "remove" ||
+      last.toLowerCase() === "reset" ||
+      last.toLowerCase() === "remover")
+  ) {
+    return { name: tokens.slice(0, -1).join(" ").trim(), url: "", reset: true };
+  }
+
+  if (tokens.length > 1 && /^https?:\/\//i.test(last)) {
+    return { name: tokens.slice(0, -1).join(" ").trim(), url: last, reset: false };
+  }
+
+  return { name: tokens.join(" ").trim(), url: attachmentUrl, reset: false };
+}
+
+const custompicArgs = z.object({
+  name: queryText,
+  url: z.string().trim().default(""),
+  reset: z.boolean().default(false),
+});
+
+export const custompicCommand: CommandDefinition<typeof custompicArgs> = {
+  name: "custompic",
+  aliases: ["c", "customimage"],
+  category: "collection",
+  descriptionKey: "help.commands.custompic",
+  args: custompicArgs,
+  cooldownMs: 2_000,
+  parseArgs: (tokens, extra) => parseCustompicArgs(tokens, extra),
+  slash: () =>
+    slashBase("custompic", "help.commands.custompic")
+      .addStringOption((o) => describe(o, SLASH_TEXT.name).setRequired(true).setAutocomplete(true))
+      .addStringOption((o) => describe(o, SLASH_TEXT.custompicUrl))
+      .addBooleanOption((o) => describe(o, SLASH_TEXT.custompicReset)),
+  slashArgs: (interaction) => {
+    const reset = Boolean(optionValue(interaction, "reset"));
+    const url = String(optionValue(interaction, "url") ?? "").trim();
+    return {
+      name: optionValue(interaction, "name"),
+      url,
+      reset,
+    };
+  },
+  autocomplete: ownPactAutocomplete,
+  async execute(ctx) {
+    const { name, url, reset } = ctx.args;
+    const prefix = usagePrefix(ctx);
+    if (!name || (!url && !reset)) {
+      throw new UserError("collection.custompic_usage", { prefix });
+    }
+
+    const pact = await requireOwnPact(ctx, name);
+
+    if (reset) {
+      await setPactCustomImage({
+        guildId: ctx.guild.id,
+        userId: ctx.user.id,
+        pactId: pact.pactId,
+        imageUrl: null,
+        label: safeText(name),
+      });
+      await ctx.reply({
+        embeds: [
+          successEmbed({
+            description: ctx.t("collection.custompic_removed", { entity: safeText(pact.name) }),
+            footer: false,
+          }),
+        ],
+      });
+      return;
+    }
+
+    try {
+      await safeFetchImage(url, { allowAnyPublicHost: true });
+    } catch {
+      throw new UserError("collection.custompic_invalid_url");
+    }
+
+    await setPactCustomImage({
+      guildId: ctx.guild.id,
+      userId: ctx.user.id,
+      pactId: pact.pactId,
+      imageUrl: url,
+      label: safeText(name),
+    });
+
+    await ctx.reply({
+      embeds: [
+        successEmbed({
+          description: ctx.t("collection.custompic_success", { entity: safeText(pact.name) }),
+          footer: false,
+        }),
+      ],
+    });
+  },
+};
+
+// ---------------------------------------------------------------------------
 // Exportacao
 // ---------------------------------------------------------------------------
 
@@ -671,6 +816,7 @@ export const commands: AnyCommand[] = [
   giveCommand,
   noteCommand,
   aliasCommand,
+  custompicCommand,
 ];
 
 /**

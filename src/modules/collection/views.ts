@@ -156,7 +156,7 @@ export function cardRenderInput(info: EntityInfo, locale: string): RenderCardInp
     spd: info.baseSpd,
     ownerName: pact?.ownerName ?? undefined,
     locale,
-    imageUrl: info.imageUrl ?? undefined,
+    imageUrl: pact?.customImage ?? info.imageUrl ?? undefined,
     skinId: "mudae",
   };
 }

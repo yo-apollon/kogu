@@ -172,6 +172,10 @@
     "note_none": "Nenhuma nota",
     "alias_usage": "🏷️ Uso: `{prefix}alias <personagem> $ <apelido>`\nExemplo: `{prefix}alias Zero Two $ 002`",
     "alias_success": "🏷️ Apelido para **{entity}** definido como: **{alias}**!",
+    "custompic_usage": "🖼️ Uso: `{prefix}c <personagem> <url>` ou anexe uma imagem com `{prefix}c <personagem>`.\n💡 Para remover e voltar à imagem padrão: `{prefix}c <personagem> remover`.",
+    "custompic_invalid_url": "❌ O link fornecido não é uma imagem válida (HTTPS, PNG/JPG/WebP/GIF até 8 MB).",
+    "custompic_success": "✨ Imagem personalizada de **{entity}** atualizada com sucesso!",
+    "custompic_removed": "🔄 Imagem personalizada de **{entity}** removida. A carta voltou à arte padrão original!",
     "slash": {
       "user": "Jogador cujo Panteão será exibido.",
       "sort": "Critério de ordenação.",
@@ -372,6 +376,7 @@
       "give": "Presenteia uma entidade a outro jogador.",
       "note": "Anota uma mensagem personalizada na carta.",
       "alias": "Define um apelido para uma entidade.",
+      "custompic": "Define uma arte/imagem personalizada para uma carta do seu Panteão.",
       "cleanuser": "Libera todos os pactos de um usuário (staff).",
       "thanos": "Dissolve metade das entidades sem Selos (staff).",
       "setvip": "Define o nível VIP de um membro (dono do bot).",

@@ -11,6 +11,12 @@ export const IMAGE_HOST_ALLOWLIST = [
   "media.discordapp.net",
   "upload.wikimedia.org",
   "static.wikia.nocookie.net",
+  "i.imgur.com",
+  "imgur.com",
+  "i.pinimg.com",
+  "files.catbox.moe",
+  "i.postimg.cc",
+  "i.redd.it",
 ] as const;
 
 export const IMAGE_MAX_BYTES = 8 * 1024 * 1024;

@@ -172,6 +172,10 @@
     "note_none": "No note",
     "alias_usage": "🏷️ Usage: `{prefix}alias <character> $ <nickname>`\nExample: `{prefix}alias Zero Two $ 002`",
     "alias_success": "🏷️ Nickname for **{entity}** set to: **{alias}**!",
+    "custompic_usage": "🖼️ Usage: `{prefix}c <character> <url>` or attach an image with `{prefix}c <character>`.\n💡 To remove and reset to default: `{prefix}c <character> remove`.",
+    "custompic_invalid_url": "❌ The provided URL is not a valid image (HTTPS, PNG/JPG/WebP/GIF up to 8 MB).",
+    "custompic_success": "✨ Custom art for **{entity}** updated successfully!",
+    "custompic_removed": "🔄 Custom art for **{entity}** removed. The card has been reset to its default artwork!",
     "slash": {
       "user": "Player whose Pantheon to show.",
       "sort": "Sort order.",
@@ -372,6 +376,7 @@
       "give": "Gives an entity to another player.",
       "note": "Writes a custom note on the card.",
       "alias": "Sets a nickname for an entity.",
+      "custompic": "Sets custom art/image for a card in your Pantheon.",
       "cleanuser": "Releases every pact of a user (staff).",
       "thanos": "Dissolves half of the entities without Seals (staff).",
       "setvip": "Sets a member's VIP tier (bot owner only).",
