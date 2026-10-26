@@ -8,7 +8,8 @@
  * - `components`: vazio (paginador e confirmacao sao roteados pelos namespaces globais pg/cf).
  */
 import type { ComponentHandler } from "../../core/contracts.js";
+import { tradeComponent } from "./tradeViews.js";
 
 export { commands, registrations } from "./commands.js";
 
-export const components: ComponentHandler[] = [];
+export const components: ComponentHandler[] = [tradeComponent];

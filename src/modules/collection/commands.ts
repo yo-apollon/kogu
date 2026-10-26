@@ -5,6 +5,7 @@
  */
 import {
   AttachmentBuilder,
+  EmbedBuilder,
   SlashCommandBuilder,
   type APIApplicationCommandOptionChoice,
   type AutocompleteInteraction,
@@ -61,6 +62,12 @@ import {
   pactChoice,
   safeText,
 } from "./views.js";
+import {
+  buildPickUserComponents,
+  buildTradeComponents,
+  buildTradeEmbed,
+  createTradeSession,
+} from "./tradeViews.js";
 
 const log = childLogger("collection");
 
@@ -115,6 +122,24 @@ const SLASH_TEXT = {
     ptName: "remover",
     pt: "Remover imagem personalizada e voltar à original.",
     en: "Remove custom art and reset to default.",
+  },
+  tradeTarget: {
+    name: "user",
+    ptName: "usuario",
+    pt: "Jogador com quem deseja negociar.",
+    en: "Player to trade with.",
+  },
+  tradeMyCard: {
+    name: "my_card",
+    ptName: "minha_carta",
+    pt: "Sua carta ofertada (opcional).",
+    en: "Your offered card (optional).",
+  },
+  tradeTheirCard: {
+    name: "their_card",
+    ptName: "carta_dele",
+    pt: "Carta solicitada do outro jogador (opcional).",
+    en: "Card requested from the other player (optional).",
   },
 } satisfies Record<string, OptionText>;
 
@@ -564,6 +589,155 @@ export const giveCommand: CommandDefinition<typeof giveArgs> = {
 };
 
 // ---------------------------------------------------------------------------
+// $trade / $trocar / $troca / /trade
+// ---------------------------------------------------------------------------
+
+const tradeArgs = z.object({
+  target: userRefSchema.optional(),
+  query: queryText,
+});
+
+export const tradeCommand: CommandDefinition<typeof tradeArgs> = {
+  name: "trade",
+  aliases: ["trocar", "troca"],
+  category: "collection",
+  descriptionKey: "help.commands.trade",
+  args: tradeArgs,
+  cooldownMs: 3_000,
+  parseArgs(tokens, { message }) {
+    const target = mentionedUser(message, tokens);
+    const index = tokens.findIndex((tok) => userIdFromToken(tok) === target?.id);
+    const rest = index === -1 ? tokens : [...tokens.slice(0, index), ...tokens.slice(index + 1)];
+    return { target, query: rest.join(" ").trim() };
+  },
+  slash: () =>
+    slashBase("trade", "help.commands.trade")
+      .addUserOption((o) => describe(o, SLASH_TEXT.tradeTarget).setRequired(false))
+      .addStringOption((o) =>
+        describe(o, SLASH_TEXT.tradeMyCard).setRequired(false).setAutocomplete(true)
+      )
+      .addStringOption((o) =>
+        describe(o, SLASH_TEXT.tradeTheirCard).setRequired(false)
+      ),
+  slashArgs: (interaction) => {
+    const target = optionUser(interaction, "user");
+    const myCard = typeof optionValue(interaction, "my_card") === "string" ? String(optionValue(interaction, "my_card")).trim() : "";
+    const theirCard = typeof optionValue(interaction, "their_card") === "string" ? String(optionValue(interaction, "their_card")).trim() : "";
+    let query = "";
+    if (myCard && theirCard) {
+      query = `${myCard} : ${theirCard}`;
+    } else if (myCard) {
+      query = myCard;
+    }
+    return { target, query };
+  },
+  autocomplete: ownPactAutocomplete,
+  async execute(ctx) {
+    const prefix = usagePrefix(ctx);
+    const { target, query } = ctx.args;
+
+    // Caso 1: Sem alvo especificado -> Abre menu para selecionar membro
+    if (!target) {
+      await ctx.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setTitle(ctx.t("collection.trade_pick_user_title"))
+            .setDescription(ctx.t("collection.trade_pick_user_desc", { prefix }))
+            .setColor(0x3b82f6),
+        ],
+        components: [buildPickUserComponents(ctx.user.id, ctx.locale)],
+      });
+      return;
+    }
+
+    // Validacoes do alvo
+    if (target.id === ctx.user.id) throw new UserError("collection.trade_self");
+    if (target.bot) throw new UserError("collection.trade_bot");
+
+    const recipient = await resolveUser(ctx, target);
+    if (!recipient || recipient.bot) throw new UserError("collection.trade_bot");
+    if (recipient.id === ctx.user.id) throw new UserError("collection.trade_self");
+
+    // Processamento das cartas (se informadas no texto)
+    let pactA: OwnPact | null = null;
+    let pactB: OwnPact | null = null;
+
+    if (query) {
+      if (query.includes(":")) {
+        const [left, ...rightParts] = query.split(":");
+        const myName = left.trim();
+        const theirName = rightParts.join(":").trim();
+
+        if (myName) {
+          pactA = await findOwnPact(ctx.guild.id, ctx.user.id, myName);
+          if (!pactA) throw new UserError("errors.not_in_pantheon", { query: safeText(myName) });
+        }
+        if (theirName) {
+          pactB = await findOwnPact(ctx.guild.id, recipient.id, theirName);
+          if (!pactB) {
+            throw new UserError("collection.trade_target_not_owned", {
+              user: safeText(recipient.name),
+              query: safeText(theirName),
+            });
+          }
+        }
+      } else {
+        pactA = await findOwnPact(ctx.guild.id, ctx.user.id, query);
+        if (!pactA) throw new UserError("errors.not_in_pantheon", { query: safeText(query) });
+      }
+    }
+
+    const session = createTradeSession({
+      guildId: ctx.guild.id,
+      channelId: ctx.message?.channelId ?? ctx.interaction?.channelId ?? "",
+      userA: {
+        id: ctx.user.id,
+        username: ctx.user.displayName || ctx.user.username,
+        pact: pactA
+          ? {
+              pactId: pactA.pactId,
+              entityId: pactA.entityId,
+              name: pactA.name,
+              series: null,
+              variant: pactA.variant,
+              value: pactA.value,
+            }
+          : null,
+        accepted: Boolean(pactA && pactB),
+      },
+      userB: {
+        id: recipient.id,
+        username: recipient.name,
+        pact: pactB
+          ? {
+              pactId: pactB.pactId,
+              entityId: pactB.entityId,
+              name: pactB.name,
+              series: null,
+              variant: pactB.variant,
+              value: pactB.value,
+            }
+          : null,
+        accepted: false,
+      },
+      locale: ctx.locale,
+    });
+
+    const components = await buildTradeComponents(session);
+    const reply = await ctx.reply({
+      content: `<@${recipient.id}>`,
+      embeds: [buildTradeEmbed(session)],
+      components,
+      allowedMentions: { users: [recipient.id] },
+    });
+
+    if (reply && typeof reply === "object" && "edit" in reply) {
+      session.message = reply as Message;
+    }
+  },
+};
+
+// ---------------------------------------------------------------------------
 // $note / $nota e $alias / $alias2
 // ---------------------------------------------------------------------------
 
@@ -814,6 +988,7 @@ export const commands: AnyCommand[] = [
   dissolveCommand,
   firstmarryCommand,
   giveCommand,
+  tradeCommand,
   noteCommand,
   aliasCommand,
   custompicCommand,

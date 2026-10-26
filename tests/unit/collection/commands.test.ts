@@ -230,12 +230,12 @@ describe("registro: todo alias do messageHandler legado resolve", () => {
     }
   });
 
-  it("exporta os mesmos comandos em commands e registrations; sem componentes proprios", () => {
+  it("exporta os mesmos comandos em commands e registrations; componentes de trade", () => {
     expect(registrations.map((r) => r.cmd)).toEqual(commands);
     expect(registrations.filter((r) => r.matcher)).toHaveLength(1);
-    expect(components).toEqual([]);
+    expect(components.map((c) => c.namespace)).toEqual(["tr"]);
     expect(commands.map((c) => c.name).sort()).toEqual(
-      ["alias", "custompic", "dissolve", "firstmarry", "give", "info", "note", "pantheon"].sort()
+      ["alias", "custompic", "dissolve", "firstmarry", "give", "info", "note", "pantheon", "trade"].sort()
     );
   });
 });
@@ -244,9 +244,9 @@ describe("slash: payload valido", () => {
   const payload = registry.buildSlashPayload();
   const byName = new Map(payload.map((p) => [p.name, p]));
 
-  it("registra os 8 slash com descricao pt-BR e en-US", () => {
+  it("registra os 9 slash com descricao pt-BR e en-US", () => {
     expect([...byName.keys()].sort()).toEqual(
-      ["alias", "custompic", "dissolve", "firstmarry", "give", "info", "note", "pantheon"].sort()
+      ["alias", "custompic", "dissolve", "firstmarry", "give", "info", "note", "pantheon", "trade"].sort()
     );
     for (const p of payload) {
       expect(p.description.length).toBeGreaterThan(0);
