@@ -268,9 +268,9 @@ export function relicsEmbed(input: RelicsViewInput): EmbedBuilder {
       ? ""
       : `${t("economy.relics_intro", locale, { balance: formatNumber(balance, locale), prefix })}\n\n`;
   return baseEmbed({
-    title: t("economy.relics_title", locale, { user: escapeMarkdown(userName) }),
+    title: t("economy.relics_title", locale, { user: escapeMarkdown(userName || "Viajante") }),
     description: intro + lines,
-    color: colorForVariant("HOLO"),
+    color: 0xf59e0b,
   });
 }
 
@@ -293,13 +293,13 @@ export function relicButtons(input: {
   const buttons = RELIC_KEYS.map((key) => {
     const cost = relicUpgradeCost(key, levels[key], levels.ruby);
     const max = isMaxLevel(levels[key]);
+    const canAfford = !max && cost !== null && balance >= cost;
+    const label = max || cost === null ? "MAX" : `${formatNumber(cost, locale)} Éter`;
     return new ButtonBuilder()
       .setCustomId(relicButtonId(key, ownerId))
       .setEmoji(relicEmoji(key))
-      .setLabel(max || cost === null ? "MAX" : `${formatNumber(cost, locale)} ${emoji("aether")}`)
-      .setStyle(
-        !max && cost !== null && balance >= cost ? ButtonStyle.Success : ButtonStyle.Secondary
-      )
+      .setLabel(label)
+      .setStyle(canAfford ? ButtonStyle.Success : ButtonStyle.Secondary)
       .setDisabled(max);
   });
   return chunk(buttons, 3).map((row) => new ActionRowBuilder<ButtonBuilder>().addComponents(row));

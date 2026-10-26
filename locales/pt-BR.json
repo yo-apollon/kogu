@@ -202,8 +202,8 @@
     "daily_body": "✨ **+{aether} Éter 💠** adicionados à sua conta!\n🎲 **+{rolls} Invocações Empilhadas** adicionadas!\n🔄 Suas invocações da hora (**{base}/{base}**) e carga de Pacto foram restauradas!\n\n💰 **Saldo Atual:** `{balance} Éter`",
     "daily_cooldown": "⏳ Você já resgatou o bônus diário. Volte {when}.",
     "relics_title": "🏺 Altar de Relíquias de {user}",
-    "relics_intro": "💰 **Seu Saldo:** **{balance} Éter 💠**\nPara evoluir uma Relíquia, digite `{prefix}k <nome>` (ex.: `{prefix}k bronze`, `{prefix}k emerald`).",
-    "relics_line": "{name} [`{bar}` Nv.{level}/4] — **`{prefix}k {key}`**\n↳ *{desc}*",
+    "relics_intro": "💰 **Saldo Disponível:** **{balance} Éter 💠**\n*Evolua suas relíquias clicando nos botões ou usando `{prefix}k <nome>` (ex.: `{prefix}k bronze`).*",
+    "relics_line": "{name} • {bar} **`[Nv.{level}/4]`**\n> *{desc}* ᛫ **`{prefix}k {key}`**",
     "relic": {
       "bronze": {
         "name": "Relíquia de Bronze",

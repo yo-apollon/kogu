@@ -202,8 +202,8 @@
     "daily_body": "✨ **+{aether} Aether 💠** added to your account!\n🎲 **+{rolls} Stacked Summons** added!\n🔄 Your hourly summons (**{base}/{base}**) and Pact charge were restored!\n\n💰 **Current Balance:** `{balance} Aether`",
     "daily_cooldown": "⏳ You already claimed your daily bonus. Come back {when}.",
     "relics_title": "🏺 {user}'s Relic Altar",
-    "relics_intro": "💰 **Your Balance:** **{balance} Aether 💠**\nTo upgrade a Relic, type `{prefix}k <name>` (e.g. `{prefix}k bronze`, `{prefix}k emerald`).",
-    "relics_line": "{name} [`{bar}` Lv.{level}/4] — **`{prefix}k {key}`**\n↳ *{desc}*",
+    "relics_intro": "💰 **Available Balance:** **{balance} Aether 💠**\n*Upgrade your relics by clicking the buttons or using `{prefix}k <name>` (e.g. `{prefix}k bronze`).*",
+    "relics_line": "{name} • {bar} **`[Lv.{level}/4]`**\n> *{desc}* ᛫ **`{prefix}k {key}`**",
     "relic": {
       "bronze": {
         "name": "Bronze Relic",

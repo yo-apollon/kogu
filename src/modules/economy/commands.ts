@@ -90,7 +90,12 @@ function optionDescription(key: string): {
 
 /** Nome mostrado nas respostas: apelido no servidor, senao o nome global/usuario. */
 export function displayName(ctx: Pick<CommandContext, "member" | "user">): string {
-  return ctx.member?.displayName ?? ctx.user.displayName ?? ctx.user.username;
+  return (
+    ctx.member?.displayName?.trim() ||
+    ctx.user.displayName?.trim() ||
+    ctx.user.username?.trim() ||
+    "Viajante"
+  );
 }
 
 const SNOWFLAKE = /^\d{15,25}$/;
@@ -464,7 +469,14 @@ export const economyComponent: ComponentHandler = {
       await interaction.update({
         embeds: [
           relicsEmbed({
-            userName: interaction.user.displayName ?? interaction.user.username,
+            userName:
+              (interaction.member &&
+              "displayName" in interaction.member &&
+              typeof interaction.member.displayName === "string" &&
+              interaction.member.displayName.trim()) ||
+              interaction.user.displayName?.trim() ||
+              interaction.user.username?.trim() ||
+              "Viajante",
             balance: result.balance,
             levels: result.levels,
             locale,
