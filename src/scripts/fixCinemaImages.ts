@@ -55,7 +55,7 @@ export const ENTITY_IMAGE_FIXES = [
 
 async function main() {
   const databaseUrl =
-    process.env.DATABASE_URL ?? "postgres://postgres:postgres@127.0.0.1:54329/arqon_dev";
+    process.env.DATABASE_URL ?? "postgres://postgres:arqon_dev_pw@127.0.0.1:54329/arqon_dev";
 
   console.log(`🔌 Conectando ao banco Postgres em: ${databaseUrl.replace(/:[^:@]+@/, ":***@")}`);
 
