@@ -422,7 +422,7 @@ const SPECIAL_FORMS: SpecialForm[] = [
     gender: "MALE",
     franchise: "Star Wars",
     description: "Na fortaleza de Mustafar, o Lorde Sith canaliza o ódio e a dor da armadura cibernética para partir estrelas e romper o tecido da Força.",
-    imageUrl: "https://image.tmdb.org/t/p/w500/kyeqWdyUXW608qlYkRqosgbbJyK.jpg",
+    imageUrl: "https://image.tmdb.org/t/p/w500/xfSAoBEm9MNBjmlNcDYLvLSMlnq.jpg",
     baseAether: 1290,
     atk: 99,
     def: 98,

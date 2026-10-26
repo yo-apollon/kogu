@@ -199,6 +199,14 @@ async function onPact(
     iconURL: user.displayAvatarURL(),
   });
 
+  // Se a mensagem original possuia anexo de carta (card.png), mantem o embed referenciando
+  // o anexo local (`attachment://...`). Caso contrario, a URL absoluta da CDN do Discord
+  // faz o cliente renderizar o anexo solto no topo e a imagem duplicada dentro do embed.
+  const firstAttachment = interaction.message.attachments?.first?.();
+  if (firstAttachment?.name) {
+    embed.setImage(`attachment://${firstAttachment.name}`);
+  }
+
   await updateMessage(interaction, {
     embeds: [embed],
     components: [claimedRow(offerId, user.username, locale)],
