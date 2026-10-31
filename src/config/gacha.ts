@@ -11,10 +11,10 @@ export type CardVariant = (typeof CARD_VARIANTS)[number];
 /** Peso de sorteio por tier (maior = mais comum). */
 export const TIER_WEIGHT: Record<EntityTier, number> = {
   COMMON: 1.0,
-  RARE: 0.8,
-  EPIC: 0.55,
-  LEGENDARY: 0.3,
-  MYTHIC: 0.12,
+  RARE: 0.65,
+  EPIC: 0.35,
+  LEGENDARY: 0.12,
+  MYTHIC: 0.03,
 };
 
 /** Corte de percentil (do topo) para cada tier; o restante e COMMON. */
