@@ -16,7 +16,7 @@
  * timers e agora responde como `$ru` (rolls restantes). O daily fica em `$daily`/`$dk`/`$diario`.
  * `$top` deixou de listar o catalogo global e passou a ranquear o servidor (Eter ou pactos).
  */
-import { MessageFlags, SlashCommandBuilder, type User } from "discord.js";
+import { EmbedBuilder, MessageFlags, SlashCommandBuilder, type User } from "discord.js";
 import { z } from "zod";
 import type { Locale } from "../../config/constants.js";
 import type { AnyCommand, CommandContext, ComponentHandler } from "../../core/contracts.js";
@@ -28,7 +28,8 @@ import { UserError } from "../../lib/errors.js";
 import { assertOwner } from "../../ui/components/ownership.js";
 import { createPaginator, type Paginator } from "../../ui/components/paginator.js";
 import { createPanel } from "../../ui/components/panel.js";
-import { truncate } from "../../ui/format.js";
+import { emoji } from "../../ui/emojis.js";
+import { formatNumber, truncate } from "../../ui/format.js";
 import { getTimers } from "../summon/service.js";
 import {
   getGuildBasics,
@@ -41,7 +42,7 @@ import {
   type RankRow,
   type TopMode,
 } from "./extra.js";
-import { parseRelicKey, RELIC_KEYS, type RelicKey } from "./relics.js";
+import { parseRelicKey, RELIC_KEYS, RELIC_MAX_LEVEL, relicDiscount, type RelicKey } from "./relics.js";
 import { claimDaily, ensureMember } from "./service.js";
 import {
   dailyEmbed,
@@ -433,6 +434,222 @@ export const topCommand: AnyCommand = {
       kv: await getKV(),
       guildId: ctx.guild.id,
       mode: ctx.args.mode,
+      ownerId: ctx.user.id,
+      locale: ctx.locale,
+    });
+    paginator.attach(await ctx.reply(paginator.payload));
+  },
+};
+
+// ---------------------------------------------------------------------------
+// Comandos Diretos de Insígnias: $bronze, $silver, $gold, $sapphire, $ruby, $emerald
+// ---------------------------------------------------------------------------
+
+function createDirectRelicCommand(
+  key: RelicKey,
+  name: string,
+  aliases: string[],
+  descKey: string
+): AnyCommand {
+  return {
+    name,
+    aliases,
+    category: "economy",
+    descriptionKey: descKey,
+    cooldownMs: 2_000,
+    async execute(ctx: CommandContext) {
+      const { prefix } = ctx.guildConfig;
+      const result = await upgradeRelic(ctx.guild.id, ctx.user.id, key, {
+        username: ctx.user.username,
+        locale: ctx.locale,
+        prefix,
+      });
+      await ctx.reply({
+        embeds: [
+          relicUpgradedEmbed({
+            key: result.key,
+            toLevel: result.toLevel,
+            balance: result.balance,
+            locale: ctx.locale,
+          }),
+        ],
+      });
+    },
+  };
+}
+
+export const bronzeCommand = createDirectRelicCommand(
+  "bronze",
+  "bronze",
+  ["badgebronze", "bronzeo"],
+  "help.commands.relics"
+);
+
+export const silverCommand = createDirectRelicCommand(
+  "silver",
+  "silver",
+  ["badgeprata", "prata"],
+  "help.commands.relics"
+);
+
+export const goldCommand = createDirectRelicCommand(
+  "gold",
+  "gold",
+  ["badgeouro", "ouro"],
+  "help.commands.relics"
+);
+
+export const sapphireCommand = createDirectRelicCommand(
+  "sapphire",
+  "sapphire",
+  ["safira", "badgesafira"],
+  "help.commands.relics"
+);
+
+export const rubyCommand = createDirectRelicCommand(
+  "ruby",
+  "ruby",
+  ["rubi", "badgerubi"],
+  "help.commands.relics"
+);
+
+export const emeraldCommand = createDirectRelicCommand(
+  "emerald",
+  "emerald",
+  ["em", "esmeralda", "badgeesmeralda"],
+  "help.commands.relics"
+);
+
+// ---------------------------------------------------------------------------
+// $badgevalue / $bv
+// ---------------------------------------------------------------------------
+
+export const badgevalueCommand: AnyCommand = {
+  name: "badgevalue",
+  aliases: ["bv", "badgevalues", "custosinsignias"],
+  category: "economy",
+  descriptionKey: "help.commands.relics",
+  cooldownMs: 3_000,
+  async execute(ctx) {
+    await ensureMember(db, {
+      guildId: ctx.guild.id,
+      userId: ctx.user.id,
+      username: ctx.user.username,
+    });
+    const snapshot = await getMemberSnapshot(ctx.guild.id, ctx.user.id);
+    const rubyLvl = snapshot.relics.ruby;
+    const discount = relicDiscount(rubyLvl);
+    const p = ctx.guildConfig.prefix;
+
+    const embed = new EmbedBuilder()
+      .setColor(0x3b82f6)
+      .setTitle("💎 Tabela de Insígnias & Custos de Éter — Kogu")
+      .setDescription(
+        `Seu Desconto de Rubi atual: **${Math.round(discount * 100)}%** *(Rubi Nível ${rubyLvl}/${RELIC_MAX_LEVEL})*\n` +
+          `Seu Saldo: **${formatNumber(snapshot.balance, ctx.locale)}** ${emoji("aether")} Éter\n\n` +
+          `### 🥉 Bronze (\`${p}bronze\`)\n` +
+          `▸ Níveis 1 a 4: Reduz o tempo de espera do Pacto / Casamento (\`${p}mu\`).\n` +
+          `▸ Custos: \`500\` • \`1.000\` • \`1.500\` • \`2.000\` Éter\n\n` +
+          `### 🥈 Prata (\`${p}silver\`)\n` +
+          `▸ Níveis 1 a 4: Concede slots extras para sua Lista de Desejos (\`${p}wishlist\`).\n` +
+          `▸ Custos: \`1.000\` • \`2.000\` • \`3.000\` • \`4.000\` Éter\n\n` +
+          `### 🥇 Ouro (\`${p}gold\`)\n` +
+          `▸ Níveis 1 a 4: Adiciona +1 a +4 Invocações extras por hora (\`${p}ru\`).\n` +
+          `▸ Custos: \`1.500\` • \`3.000\` • \`4.500\` • \`6.000\` Éter\n\n` +
+          `### 🔹 Safira (\`${p}sapphire\`)\n` +
+          `▸ Níveis 1 a 4: Gera orbes de Éter Azul bônus ao sortear cartas.\n` +
+          `▸ Pré-requisito: Bronze, Prata e Ouro no Nível 2.\n` +
+          `▸ Custos: \`3.000\` • \`6.000\` • \`9.000\` • \`12.000\` Éter\n\n` +
+          `### 🔻 Rubi (\`${p}ruby\`)\n` +
+          `▸ Níveis 1 a 4: Aplica desconto permanente em TODAS as outras insígnias!\n` +
+          `▸ Pré-requisito: Safira no Nível 2.\n` +
+          `▸ Custos: \`5.000\` • \`10.000\` • \`15.000\` • \`20.000\` Éter\n\n` +
+          `### 🟢 Esmeralda (\`${p}emerald\`)\n` +
+          `▸ Nível 1: Desbloqueia \`${p}rt\` (reset imediato do cooldown de casamento).\n` +
+          `▸ Níveis 2 a 4: Bônus de Éter ao casar com cartas desejadas por outros.\n` +
+          `▸ Pré-requisito: Rubi no Nível 3.\n` +
+          `▸ Custos: \`8.000\` • \`16.000\` • \`24.000\` • \`32.000\` Éter`
+      )
+      .setFooter({
+        text: `Para evoluir uma insígnia: digite ${p}relics ou use o comando direto como ${p}bronze`,
+      });
+
+    await ctx.reply({ embeds: [embed] });
+  },
+};
+
+// ---------------------------------------------------------------------------
+// $kakerareward / $kr
+// ---------------------------------------------------------------------------
+
+export const kakerarewardCommand: AnyCommand = {
+  name: "kakerareward",
+  aliases: ["kr", "kakerarewards", "recompensas"],
+  category: "economy",
+  descriptionKey: "help.commands.relics",
+  cooldownMs: 3_000,
+  async execute(ctx) {
+    const p = ctx.guildConfig.prefix;
+    const aether = emoji("aether");
+
+    const embed = new EmbedBuilder()
+      .setColor(0xec4899)
+      .setTitle("🔮 Recompensas & Valores de Éter / Kakera")
+      .setDescription(
+        `Ao quebrar cartas, dissolver pactos (\`${p}divorce\`) ou coletar orbes dimensionais durante o roll:\n\n` +
+          `### 🃏 Valor por Raridade de Carta:\n` +
+          `▸ 👑 **Mítico (1/1 Único):** **1.000 ~ 2.500** ${aether} Éter\n` +
+          `▸ 🟡 **Lendário (Máx 3):** **500 ~ 1.000** ${aether} Éter\n` +
+          `▸ 🟣 **Épico (Máx 10):** **250 ~ 500** ${aether} Éter\n` +
+          `▸ 🔵 **Raro:** **100 ~ 250** ${aether} Éter\n` +
+          `▸ 🟢 **Incomum:** **50 ~ 100** ${aether} Éter\n` +
+          `▸ ⚪ **Comum:** **25 ~ 50** ${aether} Éter\n\n` +
+          `### 💎 Orbes de Éter no Roll:\n` +
+          `Ao sortear uma carta já casada por alguém, você pode reagir ou clicar para colher Éter livre:\n` +
+          `▸ 🔹 **Orbe Azul:** +100 a +250 Éter\n` +
+          `▸ 🔻 **Orbe Vermelho:** +250 a +500 Éter\n` +
+          `▸ 🟡 **Orbe Dourado:** +500 a +1.000 Éter\n` +
+          `▸ 🌈 **Orbe Dimensional:** +1.000 a +2.000 Éter\n\n` +
+          `*Dica: Melhore suas insígnias em \`${p}relics\` para multiplicar a frequência de orbes e reduzir os cooldowns!*`
+      );
+
+    await ctx.reply({ embeds: [embed] });
+  },
+};
+
+// ---------------------------------------------------------------------------
+// $topservk & $topservm
+// ---------------------------------------------------------------------------
+
+export const topservkCommand: AnyCommand = {
+  name: "topservk",
+  aliases: ["topk", "topkakera", "topeter"],
+  category: "economy",
+  descriptionKey: "help.commands.top",
+  cooldownMs: 3_000,
+  async execute(ctx) {
+    const paginator = await buildTopPaginator({
+      kv: await getKV(),
+      guildId: ctx.guild.id,
+      mode: "aether",
+      ownerId: ctx.user.id,
+      locale: ctx.locale,
+    });
+    paginator.attach(await ctx.reply(paginator.payload));
+  },
+};
+
+export const topservmCommand: AnyCommand = {
+  name: "topservm",
+  aliases: ["topm", "topmarry", "toppactos"],
+  category: "economy",
+  descriptionKey: "help.commands.top",
+  cooldownMs: 3_000,
+  async execute(ctx) {
+    const paginator = await buildTopPaginator({
+      kv: await getKV(),
+      guildId: ctx.guild.id,
+      mode: "pacts",
       ownerId: ctx.user.id,
       locale: ctx.locale,
     });

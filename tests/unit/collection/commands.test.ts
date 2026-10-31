@@ -235,7 +235,20 @@ describe("registro: todo alias do messageHandler legado resolve", () => {
     expect(registrations.filter((r) => r.matcher)).toHaveLength(1);
     expect(components.map((c) => c.namespace)).toEqual(["tr"]);
     expect(commands.map((c) => c.name).sort()).toEqual(
-      ["alias", "custompic", "dissolve", "firstmarry", "give", "info", "note", "pantheon", "trade"].sort()
+      [
+        "alias",
+        "changeimg",
+        "custompic",
+        "dissolve",
+        "embedcolor",
+        "firstmarry",
+        "give",
+        "info",
+        "note",
+        "pantheon",
+        "sortmarry",
+        "trade",
+      ].sort()
     );
   });
 });
@@ -244,9 +257,22 @@ describe("slash: payload valido", () => {
   const payload = registry.buildSlashPayload();
   const byName = new Map(payload.map((p) => [p.name, p]));
 
-  it("registra os 9 slash com descricao pt-BR e en-US", () => {
+  it("registra os slash com descricao pt-BR e en-US", () => {
     expect([...byName.keys()].sort()).toEqual(
-      ["alias", "custompic", "dissolve", "firstmarry", "give", "info", "note", "pantheon", "trade"].sort()
+      [
+        "alias",
+        "changeimg",
+        "custompic",
+        "dissolve",
+        "embedcolor",
+        "firstmarry",
+        "give",
+        "info",
+        "note",
+        "pantheon",
+        "sortmarry",
+        "trade",
+      ].sort()
     );
     for (const p of payload) {
       expect(p.description.length).toBeGreaterThan(0);

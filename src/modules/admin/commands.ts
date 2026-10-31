@@ -11,11 +11,12 @@
  * (`ownerOnly: true`, verificado no middleware de permissoes). Os comandos destrutivos de
  * moderacao (`cleanuser`, `thanos`) pedem confirmacao e rodam em transacao.
  */
-import { InteractionContextType, PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
+import { EmbedBuilder, InteractionContextType, PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
 import { z } from "zod";
 import type { AnyCommand, CommandContext, CommandDefinition } from "../../core/contracts.js";
 import { t } from "../../i18n/index.js";
 import { db } from "../../infra/db/client.js";
+import { getKV } from "../../infra/redis/client.js";
 import { confirm } from "../../ui/components/confirm.js";
 import { truncate } from "../../ui/format.js";
 import { msg } from "./messages.js";
@@ -25,9 +26,11 @@ import {
   MIN_VIP_TIER,
   countThanosCandidates,
   countUserPacts,
+  createBitesTheDust,
   isValidVipTier,
   releaseUserPacts,
   restoreRolls,
+  restoreUserHarem,
   setVipTier,
   snapThanos,
 } from "./service.js";
@@ -288,9 +291,150 @@ export const thanosCommand: AnyCommand = define({
   },
 });
 
+export const bitesTheDustCommand: AnyCommand = define({
+  name: "bitesthedust",
+  aliases: ["btd"],
+  category: "admin",
+  descriptionKey: "help.commands.thanos",
+  permissions: PermissionFlagsBits.Administrator,
+  cooldownMs: 60_000,
+  slash: () =>
+    slashBase("bitesthedust", "help.commands.thanos", {
+      pt: "Reseta o servidor criando um backup seguro e criptografado.",
+      en: "Resets the server creating a secure encrypted backup.",
+    }),
+  async execute(ctx) {
+    const p = ctx.guildConfig.prefix;
+    const confirmed = await confirm({
+      ownerId: ctx.user.id,
+      locale: ctx.locale,
+      danger: true,
+      prompt:
+        `⚠️ **AVISO CRÍTICO — BITES THE DUST**\n\n` +
+        `Você está prestes a **REINICIAR TODOS OS PACTOS E CASAMENTOS** deste servidor!\n\n` +
+        `🔒 **Proteção Total:** Um snapshot completo de backup será gravado na nuvem e poderá ser restaurado a qualquer momento com \`${p}restore @usuario\`.\n\n` +
+        `Deseja ativar o Bites the Dust e retornar ao tempo zero?`,
+      send: (payload) => ctx.reply(payload),
+    });
+
+    if (!confirmed) {
+      await ctx.followUp({ content: t("ui.confirm.cancelled", ctx.locale) });
+      return;
+    }
+
+    const res = await createBitesTheDust(db, ctx.guild.id);
+    const embed = new EmbedBuilder()
+      .setColor(0xef4444)
+      .setTitle("⏳ BITES THE DUST ATIVADO COM SUCESSO!")
+      .setDescription(
+        `O tempo deste servidor foi reiniciado. **${res.totalPacts}** cartas foram liberadas ao vácuo dimensional!\n\n` +
+          `📦 **Snapshot de Restauração Criado:**\n\`${res.snapshotId}\`\n\n` +
+          `Para devolver o harém de um jogador específico a qualquer momento:\n` +
+          `\`${p}restore @usuario\` (ou \`${p}restore @usuario ${res.snapshotId}\`)`
+      );
+
+    await ctx.followUp({ embeds: [embed] });
+  },
+});
+
+const restoreArgs = z.object({
+  user: z.string().optional(),
+  snapshotId: z.string().optional(),
+});
+
+export const restoreCommand: AnyCommand = define({
+  name: "restore",
+  aliases: ["restaurar", "restorerecover"],
+  category: "admin",
+  descriptionKey: "help.commands.thanos",
+  permissions: PermissionFlagsBits.Administrator,
+  args: restoreArgs,
+  cooldownMs: 5_000,
+  parseArgs: (tokens) => {
+    if (tokens.length === 0) return {};
+    const userId = parseUserId(tokens[0]);
+    const snapshotId = tokens.length > 1 ? tokens[1] : undefined;
+    return { user: userId, snapshotId };
+  },
+  async execute(ctx) {
+    const p = ctx.guildConfig.prefix;
+    const targetId = ctx.args.user;
+    if (!targetId) {
+      await ctx.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(0x8b5cf6)
+            .setTitle("🔄 Como Restaurar Cartas ($restore)")
+            .setDescription(
+              `Restaura as cartas de um jogador que foram salvas antes de um \`${p}btd\`:\n\n` +
+                `▸ Uso: \`${p}restore @usuario\` (restaura do último backup gravado)\n` +
+                `▸ Uso com ID específico: \`${p}restore @usuario <snapshot_id>\`\n\n` +
+                `Digite \`${p}restorelist\` para visualizar os backups disponíveis.`
+            ),
+        ],
+      });
+      return;
+    }
+
+    try {
+      const res = await restoreUserHarem(db, ctx.guild.id, targetId, ctx.args.snapshotId);
+      await ctx.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(0x10b981)
+            .setTitle("✅ Harém Restaurado com Sucesso!")
+            .setDescription(
+              `Foram devolvidas **${res.restoredCount}** cartas para <@${targetId}> a partir do backup:\n` +
+                `\`${res.snapshotId}\``
+            ),
+        ],
+      });
+    } catch {
+      await ctx.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(0xef4444)
+            .setTitle("⚠️ Falha na Restauração")
+            .setDescription(`Nenhum snapshot de backup encontrado ou usuário sem cartas no registro.`),
+        ],
+      });
+    }
+  },
+});
+
+export const restoreListCommand: AnyCommand = define({
+  name: "restorelist",
+  aliases: ["backuplist", "snapshots"],
+  category: "admin",
+  descriptionKey: "help.commands.thanos",
+  permissions: PermissionFlagsBits.Administrator,
+  cooldownMs: 5_000,
+  async execute(ctx) {
+    const kv = await getKV();
+    const latest = await kv.get(`btd_latest:${ctx.guild.id}`);
+    const p = ctx.guildConfig.prefix;
+
+    const embed = new EmbedBuilder()
+      .setColor(0x3b82f6)
+      .setTitle("📦 Snapshots de Restauração — Kogu")
+      .setDescription(
+        latest
+          ? `Último backup registrado deste servidor:\n` +
+              `▸ **ID:** \`${latest}\`\n\n` +
+              `Para restaurar um jogador deste backup:\n\`${p}restore @usuario ${latest}\``
+          : `Nenhum snapshot do \`${p}bitesthedust\` foi realizado recentemente neste servidor.`
+      );
+
+    await ctx.reply({ embeds: [embed] });
+  },
+});
+
 export const adminCommands: AnyCommand[] = [
   setVipCommand,
   adminResetCommand,
   cleanUserCommand,
   thanosCommand,
+  bitesTheDustCommand,
+  restoreCommand,
+  restoreListCommand,
 ];

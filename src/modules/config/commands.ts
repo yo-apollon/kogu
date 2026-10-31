@@ -10,6 +10,7 @@
  *    Administrador.
  */
 import {
+  EmbedBuilder,
   PermissionFlagsBits,
   SlashCommandBuilder,
   type AutocompleteInteraction,
@@ -439,6 +440,7 @@ export function buildDisableSlash(): SlashCommandBuilder {
 
 export const disableCommand: CommandDefinition<typeof disableArgsSchema> = {
   name: "disable",
+  aliases: ["d"],
   category: "config",
   descriptionKey: "help.commands.disable",
   args: disableArgsSchema,
@@ -456,7 +458,7 @@ export const disableCommand: CommandDefinition<typeof disableArgsSchema> = {
 
 export const antiDisableCommand: CommandDefinition<typeof disableArgsSchema> = {
   name: "antidisable",
-  aliases: ["ad"],
+  aliases: ["ad", "enable", "e"],
   category: "config",
   descriptionKey: "help.commands.antidisable",
   args: disableArgsSchema,
@@ -476,6 +478,123 @@ export const disableListCommand: CommandDefinition<typeof disableArgsSchema> = {
   execute: guarded(runDisable),
 };
 
+const limroulArgs = z.object({
+  limit: z.number().int().min(1).max(50000).optional(),
+});
+
+export const limroulCommand: CommandDefinition<typeof limroulArgs> = {
+  name: "limroul",
+  aliases: ["lr"],
+  category: "config",
+  descriptionKey: "help.commands.gamemode",
+  args: limroulArgs,
+  cooldownMs: 2_000,
+  parseArgs: (tokens) => {
+    if (tokens.length === 0) return {};
+    const n = parseInt(tokens[0]!, 10);
+    return isNaN(n) ? {} : { limit: n };
+  },
+  async execute(ctx) {
+    const p = ctx.guildConfig.prefix;
+    const kv = await getKV();
+    const key = `user:${ctx.user.id}:limroul`;
+
+    if (ctx.args.limit !== undefined) {
+      const val = Math.min(Math.max(ctx.args.limit, 100), 20000);
+      await kv.set(key, String(val));
+      await ctx.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(0x10b981)
+            .setTitle("🎯 Limite de Rolagem Pessoal Atualizado ($limroul)")
+            .setDescription(
+              `Seu limite de invocação foi ajustado para os **Top ${val.toLocaleString("pt-BR")}** personagens mais populares!\n` +
+                `Todas as suas rolagens em \`${p}w\`, \`${p}h\`, etc. agora priorizam personagens deste patamar de rank.`
+            ),
+        ],
+      });
+      return;
+    }
+
+    const current = (await kv.get(key)) ?? "4000";
+    await ctx.reply({
+      embeds: [
+        new EmbedBuilder()
+          .setColor(0x8b5cf6)
+          .setTitle("🎯 Modo Competitivo — Limite de Rolagem ($limroul)")
+          .setDescription(
+            `Filtre o pool de sorteio para conter apenas os personagens mais conhecidos do mundo dos animes, jogos e cinema!\n\n` +
+              `▸ Limite Pessoal Atual: **Top ${parseInt(current, 10).toLocaleString("pt-BR")}**\n\n` +
+              `**Como Alterar:**\n` +
+              `\`${p}limroul 1000\` — Sorteia apenas o Top 1.000 global\n` +
+              `\`${p}limroul 4000\` — Padrão balanceado do Mudae (Top 4.000)\n` +
+              `\`${p}limroul 8000\` — Pool expandido com personagens secundários`
+          ),
+      ],
+    });
+  },
+};
+
+const personalrareArgs = z.object({
+  rate: z.number().int().min(1).max(5).optional(),
+});
+
+export const personalrareCommand: CommandDefinition<typeof personalrareArgs> = {
+  name: "personalrare",
+  aliases: ["prb", "rare"],
+  category: "config",
+  descriptionKey: "help.commands.gamemode",
+  args: personalrareArgs,
+  cooldownMs: 2_000,
+  parseArgs: (tokens) => {
+    if (tokens.length === 0) return {};
+    const n = parseInt(tokens[0]!, 10);
+    return isNaN(n) ? {} : { rate: n };
+  },
+  async execute(ctx) {
+    const p = ctx.guildConfig.prefix;
+    const kv = await getKV();
+    const key = `user:${ctx.user.id}:personalrare`;
+
+    if (ctx.args.rate !== undefined) {
+      await kv.set(key, String(ctx.args.rate));
+      await ctx.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(0x10b981)
+            .setTitle("🎲 Frequência de Cartas Casadas ($personalrare)")
+            .setDescription(
+              `Seu nível de raridade pessoal foi definido para **Nível ${ctx.args.rate}**!\n` +
+                (ctx.args.rate === 1
+                  ? "▸ Nível 1: Prioriza cartas livres ainda não casadas por ninguém no servidor."
+                  : ctx.args.rate === 5
+                    ? "▸ Nível 5: Máxima frequência de cartas já casadas para geração de Éter e Orbes."
+                    : `▸ Nível ${ctx.args.rate}: Equilíbrio calibrado entre cartas livres e cartas casadas.`)
+            ),
+        ],
+      });
+      return;
+    }
+
+    const current = (await kv.get(key)) ?? "2";
+    await ctx.reply({
+      embeds: [
+        new EmbedBuilder()
+          .setColor(0x8b5cf6)
+          .setTitle("🎲 Frequência de Cartas Casadas ($personalrare)")
+          .setDescription(
+            `Controle a probabilidade de sortear cartas que já pertencem a outros jogadores no servidor:\n\n` +
+              `▸ Nível Atual: **Nível ${current}** (de 1 a 5)\n\n` +
+              `**Escala de 1 a 5:**\n` +
+              `▸ \`${p}personalrare 1\` — Menor taxa de repetidos (foco em achar cartas solteiras)\n` +
+              `▸ \`${p}personalrare 2\` — Padrão recomendado\n` +
+              `▸ \`${p}personalrare 5\` — Maior taxa de repetidos (foco em farm de Éter / Kakera com orbes)`
+          ),
+      ],
+    });
+  },
+};
+
 export const configCommands: AnyCommand[] = [
   settingsCommand,
   setRollsCommand,
@@ -488,4 +607,6 @@ export const configCommands: AnyCommand[] = [
   disableCommand,
   antiDisableCommand,
   disableListCommand,
+  limroulCommand,
+  personalrareCommand,
 ];

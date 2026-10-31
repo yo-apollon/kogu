@@ -3,7 +3,7 @@ import { commands, progressionComponentHandler } from "../../../src/modules/prog
 import { PROGRESSION_NS } from "../../../src/modules/progression/index.js";
 
 describe("progression module commands", () => {
-	it("registers all 15 progression, tutorial, and minigame commands", () => {
+	it("registers all progression, tutorial, and minigame commands", () => {
 		const names = commands.map((c) => c.name);
 		expect(names).toEqual([
 			"tuto",
@@ -19,6 +19,15 @@ describe("progression module commands", () => {
 			"arena",
 			"slot",
 			"blacktea",
+			"greentea",
+			"redtea",
+			"yellowtea",
+			"mixtea",
+			"pokeduel",
+			"fate",
+			"42ball",
+			"quote",
+			"beam",
 			"quiz",
 			"invite",
 		]);

@@ -61,6 +61,16 @@ describe("registro do modulo economy", () => {
       "profile",
       "relics",
       "top",
+      "bronze",
+      "silver",
+      "gold",
+      "sapphire",
+      "ruby",
+      "emerald",
+      "badgevalue",
+      "kakerareward",
+      "topservk",
+      "topservm",
     ]);
   });
 

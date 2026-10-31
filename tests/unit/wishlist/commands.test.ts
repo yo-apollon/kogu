@@ -85,7 +85,14 @@ describe("registro", () => {
   });
 
   it("o modulo exporta comandos e nenhum componente proprio", () => {
-    expect(moduleCommands.map((c) => c.name)).toEqual(["wish", "wishlist", "starwish"]);
+    expect(moduleCommands.map((c) => c.name)).toEqual([
+      "wish",
+      "wishlist",
+      "starwish",
+      "wishseries",
+      "wishdm",
+      "wishpurge",
+    ]);
     expect(components).toEqual([]);
     for (const cmd of moduleCommands) {
       expect(cmd.category).toBe("wishlist");

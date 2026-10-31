@@ -6,6 +6,8 @@ import { and, eq, inArray, sql } from "drizzle-orm";
 import type { Database } from "../../infra/db/client.js";
 import { guildMembers, pacts, users } from "../../infra/db/schema/index.js";
 import { currentWindow } from "../../lib/time.js";
+import { getKV } from "../../infra/redis/client.js";
+import { UserError } from "../../lib/errors.js";
 import { ensureMember } from "../economy/service.js";
 
 /** Tiers de `$setvip`: 0 = Normal, 1 = Booster, 2 = VIP Nobre, 3 = Divindade. */
@@ -159,4 +161,122 @@ export async function snapThanos(
     }
     return { eligible: candidates.length, removed: victims.length };
   });
+}
+
+export interface BtdSnapshot {
+  id: string;
+  guildId: string;
+  createdAt: number;
+  totalPacts: number;
+  pacts: Array<{
+    userId: string;
+    entityId: number;
+    variant: string;
+    awakeningKeys: number;
+    isSoulmate: boolean;
+    customImage: string | null;
+    alias: string | null;
+    alias2: string | null;
+    note: string | null;
+    embedColor: string | null;
+    sortOrder: number;
+    aetherAtBind: number;
+    boundAt: string;
+  }>;
+}
+
+export async function createBitesTheDust(
+  db: Database,
+  guildId: string
+): Promise<{ snapshotId: string; totalPacts: number }> {
+  const allPacts = await db
+    .select({
+      userId: pacts.userId,
+      entityId: pacts.entityId,
+      variant: pacts.variant,
+      awakeningKeys: pacts.awakeningKeys,
+      isSoulmate: pacts.isSoulmate,
+      customImage: pacts.customImage,
+      alias: pacts.alias,
+      alias2: pacts.alias2,
+      note: pacts.note,
+      embedColor: pacts.embedColor,
+      sortOrder: pacts.sortOrder,
+      aetherAtBind: pacts.aetherAtBind,
+      boundAt: pacts.boundAt,
+    })
+    .from(pacts)
+    .where(eq(pacts.guildId, guildId));
+
+  const snapshotId = `btd_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+  const snapshot: BtdSnapshot = {
+    id: snapshotId,
+    guildId,
+    createdAt: Date.now(),
+    totalPacts: allPacts.length,
+    pacts: allPacts.map((p) => ({
+      ...p,
+      boundAt: p.boundAt.toISOString(),
+    })),
+  };
+
+  const kv = await getKV();
+  await kv.set(`btd:${guildId}:${snapshotId}`, JSON.stringify(snapshot));
+  await kv.set(`btd_latest:${guildId}`, snapshotId);
+
+  // Exclui todos os pactos do servidor
+  await db.delete(pacts).where(eq(pacts.guildId, guildId));
+
+  return { snapshotId, totalPacts: allPacts.length };
+}
+
+export async function restoreUserHarem(
+  db: Database,
+  guildId: string,
+  userId: string,
+  snapshotId?: string
+): Promise<{ restoredCount: number; snapshotId: string }> {
+  const kv = await getKV();
+  const sid = snapshotId ?? (await kv.get(`btd_latest:${guildId}`));
+  if (!sid) {
+    throw new UserError("errors.not_found");
+  }
+
+  const raw = await kv.get(`btd:${guildId}:${sid}`);
+  if (!raw) {
+    throw new UserError("errors.not_found");
+  }
+
+  const snapshot: BtdSnapshot = JSON.parse(raw);
+  const userCards = snapshot.pacts.filter((p) => p.userId === userId);
+
+  if (userCards.length === 0) {
+    return { restoredCount: 0, snapshotId: sid };
+  }
+
+  await db.transaction(async (tx) => {
+    for (const card of userCards) {
+      await tx
+        .insert(pacts)
+        .values({
+          guildId,
+          userId,
+          entityId: card.entityId,
+          variant: card.variant as any,
+          awakeningKeys: card.awakeningKeys,
+          isSoulmate: card.isSoulmate,
+          customImage: card.customImage,
+          alias: card.alias,
+          alias2: card.alias2,
+          note: card.note,
+          embedColor: card.embedColor,
+          sortOrder: card.sortOrder,
+          aetherAtBind: card.aetherAtBind,
+          boundAt: new Date(card.boundAt),
+        })
+        .onConflictDoNothing();
+    }
+  });
+
+  return { restoredCount: userCards.length, snapshotId: sid };
 }

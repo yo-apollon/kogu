@@ -178,6 +178,8 @@ export interface OwnPact {
   awakeningKeys: number;
   aetherAtBind: number;
   baseAether: number;
+  customImage?: string | null;
+  embedColor?: string | null;
   /** Valor atual: o mesmo que o dissolve devolve. */
   value: number;
 }
@@ -226,6 +228,8 @@ export async function findOwnPact(
       awakeningKeys: pacts.awakeningKeys,
       aetherAtBind: pacts.aetherAtBind,
       baseAether: entities.baseAether,
+      customImage: pacts.customImage,
+      embedColor: pacts.embedColor,
       value: pactValueSql(),
     })
     .from(pacts)
@@ -411,6 +415,122 @@ export async function setPactCustomImage(input: {
     throw new UserError("errors.not_in_pantheon", { query: input.label ?? String(input.pactId) });
   }
   return row;
+}
+
+/** Define ou remove a cor de borda (hex) de um pacto. Somente o dono. */
+export async function setPactEmbedColor(input: {
+  guildId: string;
+  userId: string;
+  pactId: number;
+  embedColor: string | null;
+  label?: string;
+}): Promise<{ pactId: number; entityId: number }> {
+  const [row] = await db
+    .update(pacts)
+    .set({ embedColor: input.embedColor })
+    .where(
+      and(
+        eq(pacts.id, input.pactId),
+        eq(pacts.guildId, input.guildId),
+        eq(pacts.userId, input.userId)
+      )
+    )
+    .returning({ pactId: pacts.id, entityId: pacts.entityId });
+  if (!row) {
+    throw new UserError("errors.not_in_pantheon", { query: input.label ?? String(input.pactId) });
+  }
+  return row;
+}
+
+/** Retorna todas as fotos ativas cadastradas para a entidade no catalogo. */
+export async function getEntityImages(
+  entityId: number
+): Promise<Array<{ id: number; url: string; isPrimary: boolean }>> {
+  return db
+    .select({
+      id: entityImages.id,
+      url: entityImages.url,
+      isPrimary: entityImages.isPrimary,
+    })
+    .from(entityImages)
+    .where(and(eq(entityImages.entityId, entityId), eq(entityImages.status, "ACTIVE")))
+    .orderBy(desc(entityImages.isPrimary), asc(entityImages.id));
+}
+
+export type SortMarryCriteria = "aether" | "name" | "series" | "rank" | "date" | "tier";
+
+/** Reorganiza a ordem padrao ($sort_order) do Panteao do jogador. */
+export async function sortPactsBy(
+  guildId: string,
+  userId: string,
+  criteria: SortMarryCriteria
+): Promise<number> {
+  const value = pactValueSql();
+  const seriesName = sql<string | null>`coalesce(${series.title}, ${franchises.name})`;
+
+  let order: SQL[];
+  switch (criteria) {
+    case "aether":
+      order = [desc(value), asc(pacts.id)];
+      break;
+    case "name":
+      order = [asc(sql`lower(${entities.name})`), asc(pacts.id)];
+      break;
+    case "series":
+      order = [sql`${seriesName} ASC NULLS LAST`, asc(sql`lower(${entities.name})`), asc(pacts.id)];
+      break;
+    case "rank":
+      order = [
+        sql`${entities.claimRank} ASC NULLS LAST`,
+        sql`${entities.likeRank} ASC NULLS LAST`,
+        asc(pacts.id),
+      ];
+      break;
+    case "date":
+      order = [asc(pacts.boundAt), asc(pacts.id)];
+      break;
+    case "tier":
+      order = [
+        sql`CASE ${entities.tier}
+          WHEN 'MYTHIC' THEN 1
+          WHEN 'LEGENDARY' THEN 2
+          WHEN 'EPIC' THEN 3
+          WHEN 'RARE' THEN 4
+          WHEN 'UNCOMMON' THEN 5
+          ELSE 6 END ASC`,
+        desc(value),
+        asc(pacts.id),
+      ];
+      break;
+    default:
+      order = [asc(pacts.boundAt), asc(pacts.id)];
+  }
+
+  const rows = await db
+    .select({ pactId: pacts.id })
+    .from(pacts)
+    .innerJoin(entities, eq(entities.id, pacts.entityId))
+    .leftJoin(
+      entitySeries,
+      and(eq(entitySeries.entityId, entities.id), eq(entitySeries.isPrimary, true))
+    )
+    .leftJoin(series, eq(series.id, entitySeries.seriesId))
+    .leftJoin(franchises, eq(franchises.id, entities.franchiseId))
+    .where(and(eq(pacts.guildId, guildId), eq(pacts.userId, userId)))
+    .orderBy(...order);
+
+  if (rows.length === 0) return 0;
+
+  await db.transaction(async (tx) => {
+    for (let i = 0; i < rows.length; i++) {
+      await tx
+        .update(pacts)
+        .set({ sortOrder: i + 1 })
+        .where(eq(pacts.id, rows[i]!.pactId));
+    }
+  });
+
+  return rows.length;
 }
 
 /** Dissolve o pacto do jogador (reembolso e saldo no economy); erro de nao-dono cita o nome. */

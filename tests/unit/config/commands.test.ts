@@ -112,7 +112,7 @@ describe("registro", () => {
 
   it("o modulo exporta comandos e nenhum componente proprio; categoria e descricao validas", () => {
     expect(components).toEqual([]);
-    expect(moduleCommands).toHaveLength(11);
+    expect(moduleCommands).toHaveLength(13);
     for (const cmd of moduleCommands) {
       expect(cmd.category).toBe("config");
       // `help.commands.set` ainda nao existe em locales/*.json (ver relatorio): so confere o resto

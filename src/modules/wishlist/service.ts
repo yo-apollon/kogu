@@ -430,3 +430,65 @@ export async function removeWish(
     .returning({ entityId: wishes.entityId });
   return rows.length > 0;
 }
+
+/** Deseja todas as entidades de uma série/franquia até o limite de slots. */
+export async function addSeriesWishes(
+  ref: MemberRef,
+  seriesQuery: string
+): Promise<{ seriesTitle: string; added: number; total: number }> {
+  // Busca a série mais próxima por título
+  const [targetSeries] = await db
+    .select({ id: series.id, title: series.title })
+    .from(series)
+    .where(sql`${series.title} ILIKE ${`%${seriesQuery.trim()}%`}`)
+    .limit(1);
+
+  if (!targetSeries) {
+    throw new UserError("errors.not_found");
+  }
+
+  // Busca entidades ativas pertencentes a esta série
+  const members = await db
+    .select({ entityId: entitySeries.entityId })
+    .from(entitySeries)
+    .innerJoin(entities, eq(entities.id, entitySeries.entityId))
+    .where(and(eq(entitySeries.seriesId, targetSeries.id), eq(entities.status, "ACTIVE")))
+    .orderBy(desc(entities.popularityScore))
+    .limit(WISH_LIMIT);
+
+  let added = 0;
+  let total = 0;
+
+  for (const m of members) {
+    try {
+      const res = await addWish(ref, m.entityId);
+      if (res.status === "added") added++;
+      total = res.total;
+    } catch (err) {
+      if (err instanceof UserError && err.key === "wishlist.limit_reached") {
+        break;
+      }
+    }
+  }
+
+  return { seriesTitle: targetSeries.title, added, total };
+}
+
+/** Remove da wishlist todas as cartas que o usuário já casou / possui pacto. */
+export async function purgeClaimedWishes(
+  guildId: string,
+  userId: string
+): Promise<{ purgedCount: number }> {
+  const deleted = await db.execute(sql`
+    DELETE FROM wishes w
+    USING pacts p
+    WHERE w.guild_id = ${guildId}
+      AND w.user_id = ${userId}
+      AND p.guild_id = ${guildId}
+      AND p.user_id = ${userId}
+      AND p.entity_id = w.entity_id
+    RETURNING w.entity_id;
+  `);
+
+  return { purgedCount: (deleted as unknown as { rowCount?: number }).rowCount ?? 0 };
+}

@@ -17,9 +17,12 @@ import {
   activateFreeClaim,
   activateResetTimer,
   buildTowerFloor,
+  calculateCosmicFate,
   claimTutorialRewards,
   destroyTower,
   generateQuizQuestion,
+  get42BallAnswer,
+  getRandomQuote,
   getTowerState,
   LOOTBOX_COST,
   openLootbox,
@@ -534,7 +537,7 @@ export const slotCommand: AnyCommand = {
 
 export const blackTeaCommand: AnyCommand = {
   name: "blacktea",
-  aliases: ["bt", "greentea", "redtea", "tea"],
+  aliases: ["bt", "tea"],
   category: "economy",
   descriptionKey: "help.commands.blacktea",
   cooldownMs: 5000,
@@ -560,6 +563,280 @@ export const blackTeaCommand: AnyCommand = {
       );
 
     await ctx.reply({ embeds: [embed], components: [row] });
+  },
+};
+
+export const greenTeaCommand: AnyCommand = {
+  name: "greentea",
+  aliases: ["gt"],
+  category: "economy",
+  descriptionKey: "help.commands.blacktea",
+  cooldownMs: 5000,
+  async execute(ctx: CommandContext) {
+    const round = pickTeaChallenge();
+    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      ...round.options.map((word, idx) =>
+        new ButtonBuilder()
+          .setCustomId(`${PROGRESSION_NS}:tea:${idx === round.correctIndex ? "1" : "0"}:${idx}`)
+          .setLabel(word.toUpperCase())
+          .setStyle(ButtonStyle.Success)
+      )
+    );
+
+    const embed = new EmbedBuilder()
+      .setColor(0x10b981)
+      .setTitle("🍵 Salão de Chá Verde — Greentea Speed!")
+      .setDescription(
+        `⚡ **Corrida de Velocidade!** Clique na palavra que contém o grupo de letras antes dos outros jogadores:\n\n` +
+          `## 🔤 **[ ${round.syllable} ]**\n\n` +
+          `Prêmio: **+250** ${emoji("aether")} para o dedo mais veloz!`
+      );
+
+    await ctx.reply({ embeds: [embed], components: [row] });
+  },
+};
+
+export const redTeaCommand: AnyCommand = {
+  name: "redtea",
+  aliases: ["rtgame"],
+  category: "economy",
+  descriptionKey: "help.commands.blacktea",
+  cooldownMs: 5000,
+  async execute(ctx: CommandContext) {
+    const round = pickTeaChallenge();
+    const sortedByLen = [...round.options].sort((a, b) => b.length - a.length);
+    const longest = sortedByLen[0]!;
+    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      ...round.options.map((word, idx) =>
+        new ButtonBuilder()
+          .setCustomId(`${PROGRESSION_NS}:tea:${word === longest ? "1" : "0"}:${idx}`)
+          .setLabel(word.toUpperCase())
+          .setStyle(ButtonStyle.Danger)
+      )
+    );
+
+    const embed = new EmbedBuilder()
+      .setColor(0xef4444)
+      .setTitle("🍵 Salão de Chá Vermelho — Redtea!")
+      .setDescription(
+        `🔥 **Desafio da Palavra Mais Longa!** Encontre a palavra que contém a sequência e possui o MAIOR número de caracteres:\n\n` +
+          `## 🔤 **[ ${round.syllable} ]**\n\n` +
+          `Prêmio: **+300** ${emoji("aether")} Éter!`
+      );
+
+    await ctx.reply({ embeds: [embed], components: [row] });
+  },
+};
+
+export const yellowTeaCommand: AnyCommand = {
+  name: "yellowtea",
+  aliases: ["yt"],
+  category: "economy",
+  descriptionKey: "help.commands.blacktea",
+  cooldownMs: 5000,
+  async execute(ctx: CommandContext) {
+    const round = pickTeaChallenge();
+    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      ...round.options.map((word, idx) =>
+        new ButtonBuilder()
+          .setCustomId(`${PROGRESSION_NS}:tea:${idx === round.correctIndex ? "1" : "0"}:${idx}`)
+          .setLabel(word.toUpperCase())
+          .setStyle(ButtonStyle.Primary)
+      )
+    );
+
+    const embed = new EmbedBuilder()
+      .setColor(0xeab308)
+      .setTitle("🍵 Salão de Chá Dourado — Yellowtea!")
+      .setDescription(
+        `⭐ **Desafio de Resistência!** Clique na palavra válida para marcar pontos da rodada:\n\n` +
+          `## 🔤 **[ ${round.syllable} ]**\n\n` +
+          `Prêmio: **+200** ${emoji("aether")} Éter!`
+      );
+
+    await ctx.reply({ embeds: [embed], components: [row] });
+  },
+};
+
+export const mixTeaCommand: AnyCommand = {
+  name: "mixtea",
+  aliases: ["mt"],
+  category: "economy",
+  descriptionKey: "help.commands.blacktea",
+  cooldownMs: 5000,
+  async execute(ctx: CommandContext) {
+    const round = pickTeaChallenge();
+    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      ...round.options.map((word, idx) =>
+        new ButtonBuilder()
+          .setCustomId(`${PROGRESSION_NS}:tea:${idx === round.correctIndex ? "1" : "0"}:${idx}`)
+          .setLabel(word.toUpperCase())
+          .setStyle(ButtonStyle.Secondary)
+      )
+    );
+
+    const embed = new EmbedBuilder()
+      .setColor(0x8b5cf6)
+      .setTitle("🍵 Salão de Chá Místico — Mixtea!")
+      .setDescription(
+        `🌀 **Regras Mutantes!** O padrão dimensional foi alterado. Descubra o enigma da sequência:\n\n` +
+          `## 🔤 **[ ${round.syllable} ]**\n\n` +
+          `Prêmio: **+350** ${emoji("aether")} Éter!`
+      );
+
+    await ctx.reply({ embeds: [embed], components: [row] });
+  },
+};
+
+const targetOptionalArgs = z.object({
+  target: z.string().optional(),
+});
+
+const questionOptionalArgs = z.object({
+  question: z.string().default(""),
+});
+
+export const pokeDuelCommand: AnyCommand = {
+  name: "pokeduel",
+  aliases: ["familiarbattle", "duelofamiliar"],
+  category: "economy",
+  descriptionKey: "help.commands.arena",
+  args: targetOptionalArgs,
+  parseArgs: (tokens) => ({ target: tokens[0] }),
+  cooldownMs: 3000,
+  async execute(ctx: CommandContext<z.infer<typeof targetOptionalArgs>>) {
+    const rawTarget = ctx.args.target;
+    const opponentId = parseUserId(rawTarget);
+    const p = ctx.guildConfig.prefix;
+
+    const res = await runArenaBattle(ctx.guild.id, ctx.user.id, opponentId);
+    const won = res.winnerId === ctx.user.id;
+
+    const embed = new EmbedBuilder()
+      .setColor(won ? 0x10b981 : 0xef4444)
+      .setTitle(`⚔️ Duelo de Familiares do Cassino — ${won ? "Vitória!" : "Derrota!"}`)
+      .setDescription(
+        `**${ctx.user.displayName ?? ctx.user.username}** enviou seu **${res.fighterA.cardName}** para a batalha!\n\n` +
+          `▸ **Seu Lutador:** ATK ${res.fighterA.atk} • DEF ${res.fighterA.def} • SPD ${res.fighterA.spd} • HP ${res.fighterA.hp}\n` +
+          `▸ **Adversário:** ${res.fighterB.cardName} (ATK ${res.fighterB.atk} • DEF ${res.fighterB.def} • SPD ${res.fighterB.spd} • HP ${res.fighterB.hp})\n\n` +
+          `Duração: **${res.rounds}** rounds de combate intenso!\n` +
+          (won
+            ? `🏆 **Você venceu a partida e faturou +${res.rewardAether} ${emoji("aether")} Éter!**`
+            : `💀 Seu lutador foi superado. Tente novamente ou consiga familiares mais fortes em \`${p}slot\`!`)
+      );
+
+    await ctx.reply({ embeds: [embed] });
+  },
+};
+
+export const fateCommand: AnyCommand = {
+  name: "fate",
+  aliases: ["afinidade", "lovemeter"],
+  category: "economy",
+  descriptionKey: "help.commands.arena",
+  args: targetOptionalArgs,
+  parseArgs: (tokens) => ({ target: tokens[0] }),
+  cooldownMs: 3000,
+  async execute(ctx: CommandContext<z.infer<typeof targetOptionalArgs>>) {
+    const rawTarget = ctx.args.target;
+    const targetId = parseUserId(rawTarget) ?? ctx.user.id;
+    const targetUser = await ctx.guild.client.users.fetch(targetId).catch(() => null);
+    const targetName = targetUser?.displayName ?? targetUser?.username ?? "Espírito Astral";
+
+    const { score, verdict } = await calculateCosmicFate(ctx.guild.id, ctx.user.id, targetId);
+
+    const embed = new EmbedBuilder()
+      .setColor(score >= 70 ? 0xec4899 : score >= 40 ? 0x8b5cf6 : 0x64748b)
+      .setTitle(`🔮 Oráculo de Afinidade Cósmica — $fate`)
+      .setDescription(
+        `Calculando a ressonância das cartas dimensionais entre:\n` +
+          `**${ctx.user.displayName ?? ctx.user.username}** ⚡ **${targetName}**\n\n` +
+          `### 💖 Afinidade Astral: **${score}%**\n` +
+          `\`${"█".repeat(Math.round(score / 10))}${"░".repeat(10 - Math.round(score / 10))}\`\n\n` +
+          `📜 **Veredito das Estrelas:**\n${verdict}`
+      );
+
+    await ctx.reply({ embeds: [embed] });
+  },
+};
+
+export const ball42Command: AnyCommand = {
+  name: "42ball",
+  aliases: ["8ball", "magicball", "oraculo"],
+  category: "economy",
+  descriptionKey: "help.commands.arena",
+  args: questionOptionalArgs,
+  parseArgs: (tokens) => ({ question: tokens.join(" ").trim() }),
+  cooldownMs: 2000,
+  async execute(ctx: CommandContext<z.infer<typeof questionOptionalArgs>>) {
+    const question = ctx.args.question;
+    const answer = get42BallAnswer();
+
+    const embed = new EmbedBuilder()
+      .setColor(0x8b5cf6)
+      .setTitle("🔮 Oráculo Multiversal — 42Ball")
+      .setDescription(
+        (question ? `❓ **Pergunta:** *"${question}"*\n\n` : "") +
+          `🎱 **Resposta Dimensional:**\n${answer}`
+      );
+
+    await ctx.reply({ embeds: [embed] });
+  },
+};
+
+export const quoteCommand: AnyCommand = {
+  name: "quote",
+  aliases: ["frase", "animequote"],
+  category: "economy",
+  descriptionKey: "help.commands.arena",
+  cooldownMs: 2000,
+  async execute(ctx: CommandContext) {
+    const q = getRandomQuote();
+
+    const embed = new EmbedBuilder()
+      .setColor(0x3b82f6)
+      .setTitle(`📜 Frases Lendárias — ${q.series}`)
+      .setDescription(`*"${q.quote}"*\n\n— **${q.character}**`);
+
+    await ctx.reply({ embeds: [embed] });
+  },
+};
+
+export const beamCommand: AnyCommand = {
+  name: "beam",
+  aliases: ["kamehameha", "raio", "cero"],
+  category: "economy",
+  descriptionKey: "help.commands.arena",
+  args: targetOptionalArgs,
+  parseArgs: (tokens) => ({ target: tokens[0] }),
+  cooldownMs: 3000,
+  async execute(ctx: CommandContext<z.infer<typeof targetOptionalArgs>>) {
+    const rawTarget = ctx.args.target;
+    const targetId = parseUserId(rawTarget);
+    const targetUser = targetId ? await ctx.guild.client.users.fetch(targetId).catch(() => null) : null;
+    const targetName = targetUser?.displayName ?? targetUser?.username;
+
+    const targetText = targetName
+      ? `diretamente contra **${targetName}**!`
+      : `contra o tecido do multiverso!`;
+
+    const embed = new EmbedBuilder()
+      .setColor(0x06b6d4)
+      .setTitle("⚡ DISPARO DIMENSIONAL — AETHER BEAM!")
+      .setDescription(
+        `**${ctx.user.displayName ?? ctx.user.username}** concentrou toda a sua energia astral e disparou um feixe supermassivo de Éter ${targetText}\n\n` +
+          `\`\`\`\n` +
+          ` (•_•)       ( •_•)>⌐■-■       (⌐■_■)\n` +
+          `  <) )╯         / )              \\ \\ \n` +
+          `   / \\         / \\               / \\\n` +
+          `═══════════════════════════════════════════════════════💥\n` +
+          `>>> ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓💥💥\n` +
+          `═══════════════════════════════════════════════════════💥\n` +
+          `\`\`\`\n` +
+          `O impacto causou uma fenda temporal no servidor gerando ondas de pura energia cósmica!`
+      );
+
+    await ctx.reply({ embeds: [embed] });
   },
 };
 
@@ -693,6 +970,15 @@ export const commands: AnyCommand[] = [
   arenaCommand,
   slotCommand,
   blackTeaCommand,
+  greenTeaCommand,
+  redTeaCommand,
+  yellowTeaCommand,
+  mixTeaCommand,
+  pokeDuelCommand,
+  fateCommand,
+  ball42Command,
+  quoteCommand,
+  beamCommand,
   quizCommand,
   inviteCommand,
 ];

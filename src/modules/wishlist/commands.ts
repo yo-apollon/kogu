@@ -6,6 +6,7 @@
  * O autocomplete da opcao `entity` busca no catalogo (add/starwish) ou na propria lista (remove).
  */
 import {
+  EmbedBuilder,
   SlashCommandBuilder,
   type AutocompleteInteraction,
   type ChatInputCommandInteraction,
@@ -19,6 +20,7 @@ import { createPaginator } from "../../ui/components/paginator.js";
 import { escapeMarkdown } from "../../ui/format.js";
 import type { MemberRef } from "../economy/service.js";
 import {
+  addSeriesWishes,
   addWish,
   autocompleteEntities,
   autocompleteWishes,
@@ -26,6 +28,7 @@ import {
   findWishEntry,
   guildAllowsAdult,
   listWishes,
+  purgeClaimedWishes,
   removeWish,
   resolveEntity,
   toggleWish,
@@ -287,4 +290,127 @@ export const starwishCommand: CommandDefinition<typeof wishArgsSchema> = {
   execute: guarded(runWish),
 };
 
-export const wishlistCommands: AnyCommand[] = [wishCommand, wishlistCommand, starwishCommand];
+const wishseriesArgs = z.object({
+  query: z.string().trim().default(""),
+});
+
+export const wishseriesCommand: CommandDefinition<typeof wishseriesArgs> = {
+  name: "wishseries",
+  aliases: ["ws"],
+  category: "wishlist",
+  descriptionKey: "help.commands.wish",
+  args: wishseriesArgs,
+  cooldownMs: 3_000,
+  parseArgs: (tokens) => ({ query: tokens.join(" ").trim() }),
+  async execute(ctx) {
+    const { query } = ctx.args;
+    const p = ctx.guildConfig.prefix;
+    if (!query) {
+      await ctx.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(0x8b5cf6)
+            .setTitle("✨ Desejar Franquia / Série ($ws)")
+            .setDescription(
+              `Adicione todos os personagens principais de uma série à sua Lista de Desejos de uma só vez!\n\n` +
+                `▸ Uso: \`${p}ws <nome_da_obra>\` (ex.: \`${p}ws Jujutsu Kaisen\` ou \`${p}ws Naruto\`)\n` +
+                `*O bot adicionará os personagens mais populares até atingir o limite de slots da sua lista.*`
+            ),
+        ],
+      });
+      return;
+    }
+
+    try {
+      const res = await addSeriesWishes(
+        { guildId: ctx.guild.id, userId: ctx.user.id, username: ctx.user.username },
+        query
+      );
+      await ctx.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(0x10b981)
+            .setTitle("✨ Franquia Desejada!")
+            .setDescription(
+              `Adicionados **${res.added}** personagens da obra **${res.seriesTitle}** à sua Wishlist!\n` +
+                `Total atual na sua lista: **${res.total}** desejos.\nUse \`${p}wl\` para visualizar.`
+            ),
+        ],
+      });
+    } catch {
+      await ctx.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(0xef4444)
+            .setTitle("⚠️ Obra Não Encontrada")
+            .setDescription(
+              `Nenhuma série encontrada para a busca **"${query}"**.\nVerifique a ortografia ou use \`${p}wish <personagem>\`.`
+            ),
+        ],
+      });
+    }
+  },
+};
+
+export const wishdmCommand: AnyCommand = {
+  name: "wishdm",
+  aliases: ["wdm"],
+  category: "wishlist",
+  descriptionKey: "help.commands.wish",
+  cooldownMs: 2_000,
+  async execute(ctx) {
+    const kv = await getKV();
+    const key = `user:${ctx.user.id}:wishdm`;
+    const current = (await kv.get(key)) === "1";
+    const next = !current;
+    if (next) {
+      await kv.set(key, "1");
+    } else {
+      await kv.del(key);
+    }
+
+    const state = next ? "🟢 **ATIVADAS**" : "🔴 **DESATIVADAS**";
+    await ctx.reply({
+      embeds: [
+        new EmbedBuilder()
+          .setColor(next ? 0x10b981 : 0xef4444)
+          .setTitle("📬 Notificações de Wishlist por DM")
+          .setDescription(
+            `As notificações diretas no seu privado quando um personagem da sua Wishlist for sorteado no servidor estão agora ${state}!`
+          ),
+      ],
+    });
+  },
+};
+
+export const wishpurgeCommand: AnyCommand = {
+  name: "wishpurge",
+  aliases: ["wp"],
+  category: "wishlist",
+  descriptionKey: "help.commands.wish",
+  cooldownMs: 3_000,
+  async execute(ctx) {
+    const p = ctx.guildConfig.prefix;
+    const res = await purgeClaimedWishes(ctx.guild.id, ctx.user.id);
+    await ctx.reply({
+      embeds: [
+        new EmbedBuilder()
+          .setColor(0x10b981)
+          .setTitle("🧹 Limpeza de Desejos Concluída")
+          .setDescription(
+            `Foram removidos **${res.purgedCount}** personagens que você já casou do seu Panteão!\n` +
+              `Agora você tem mais slots livres na sua Wishlist (\`${p}wl\`).`
+          ),
+      ],
+    });
+  },
+};
+
+export const wishlistCommands: AnyCommand[] = [
+  wishCommand,
+  wishlistCommand,
+  starwishCommand,
+  wishseriesCommand,
+  wishdmCommand,
+  wishpurgeCommand,
+];

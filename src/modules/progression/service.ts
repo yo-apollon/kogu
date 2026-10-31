@@ -723,3 +723,121 @@ const TEA_ROUNDS: readonly TeaChallenge[] = [
 export function pickTeaChallenge(rng: () => number = Math.random): TeaChallenge {
   return TEA_ROUNDS[Math.floor(rng() * TEA_ROUNDS.length)] ?? TEA_ROUNDS[0];
 }
+
+/* ------------------------------------------------------------------ */
+/* Minijogos Sociais: Fate, 42ball, Quote                             */
+/* ------------------------------------------------------------------ */
+
+export interface AnimeQuote {
+  character: string;
+  quote: string;
+  series: string;
+}
+
+export const ANIME_QUOTES: readonly AnimeQuote[] = [
+  {
+    character: "Kamina",
+    series: "Tengen Toppa Gurren Lagann",
+    quote: "Não acredite em você. Acredite em mim! Acredite no Kamina que acredita em você!",
+  },
+  {
+    character: "Satoru Gojo",
+    series: "Jujutsu Kaisen",
+    quote: "Não se preocupe... afinal de contas, eu sou o mais forte.",
+  },
+  {
+    character: "Eren Yeager",
+    series: "Attack on Titan",
+    quote: "Se você não lutar, você não pode vencer. Lute! Lute!",
+  },
+  {
+    character: "Naruto Uzumaki",
+    series: "Naruto",
+    quote: "Eu nunca volto atrás na minha palavra... esse é o meu jeito ninja!",
+  },
+  {
+    character: "Lelouch vi Britannia",
+    series: "Code Geass",
+    quote: "Os únicos que devem atirar são aqueles que estão preparados para levar um tiro.",
+  },
+  {
+    character: "Roronoa Zoro",
+    series: "One Piece",
+    quote: "Uma cicatriz nas costas é a maior vergonha para um espadachim.",
+  },
+  {
+    character: "Sung Jin-woo",
+    series: "Solo Leveling",
+    quote: "Erga-se.",
+  },
+  {
+    character: "Levi Ackerman",
+    series: "Attack on Titan",
+    quote: "A única coisa que nos resta é acreditar que não vamos nos arrepender da escolha que fizemos.",
+  },
+  {
+    character: "Edward Elric",
+    series: "Fullmetal Alchemist",
+    quote: "Não existe essa coisa de lição sem dor; você não pode ganhar nada sem sacrificar algo em troca.",
+  },
+  {
+    character: "Gilgamesh",
+    series: "Fate/stay night",
+    quote: "Mestiço! Não ouse levantar os olhos na minha presença sem permissão.",
+  },
+];
+
+export function getRandomQuote(): AnimeQuote {
+  return ANIME_QUOTES[Math.floor(Math.random() * ANIME_QUOTES.length)] ?? ANIME_QUOTES[0]!;
+}
+
+export const BALL_42_ANSWERS: readonly string[] = [
+  "✨ Os astros confirmam sem sombra de dúvidas: SIM!",
+  "🔮 As correntes dimensionais dizem que é uma certeza absoluta.",
+  "⭐ Definitivamente sim, o destino já selou este caminho.",
+  "✨ Sinais claros apontam para o sucesso.",
+  "💫 A resposta é 42 — o sentido de tudo corrobora a sua vitória.",
+  "🌙 É provável, mantenha sua determinação.",
+  "✨ Uma luz cósmica favorável brilha sobre essa questão.",
+  "🔮 O Panteão hesita... pergunte novamente mais tarde.",
+  "⏳ As névoas dimensionais estão densas no momento; medite e retorne.",
+  "🌀 Melhor não revelar agora, o fluxo temporal está instável.",
+  "⚠️ Concentre-se e pergunte outra vez.",
+  "⛔ Minhas fontes cósmicas dizem: NÃO.",
+  "🌑 As perspectivas são sombrias, desista dessa loucura.",
+  "❌ Não conte com isso nem em um milhão de anos-luz.",
+  "⚠️ Muito duvidoso. As runas mostram colapso iminente.",
+  "🔥 O destino rejeita firmemente essa possibilidade.",
+  "🌌 Absolutamente NÃO.",
+  "🎲 As probabilidades estão em 1 em 10.000... você tem coragem?",
+  "💎 Se você possuir Éter suficiente, tudo é possível.",
+  "👑 Só se você casar com uma carta Mítica primeiro!",
+];
+
+export function get42BallAnswer(): string {
+  return BALL_42_ANSWERS[Math.floor(Math.random() * BALL_42_ANSWERS.length)] ?? BALL_42_ANSWERS[0]!;
+}
+
+export async function calculateCosmicFate(
+  guildId: string,
+  userA: string,
+  userB: string
+): Promise<{ score: number; verdict: string }> {
+  const today = new Date().toISOString().slice(0, 10);
+  const combined = [userA, userB].sort().join(":") + ":" + today;
+  let hash = 0;
+  for (let i = 0; i < combined.length; i++) {
+    hash = (hash << 5) - hash + combined.charCodeAt(i);
+    hash |= 0;
+  }
+  const score = Math.abs(hash) % 101; // 0 a 100
+
+  let verdict = "";
+  if (score >= 90) verdict = "💖 Alma Gêmea Cósmica! Alinhamento astral perfeito e harmonia divina!";
+  else if (score >= 70) verdict = "✨ Grande Sintonia Dimensional! Vocês formam uma dupla lendária!";
+  else if (score >= 50) verdict = "🤝 Bons Companheiros de Batalha! Afinidade moderada e respeito mútuo.";
+  else if (score >= 30) verdict = "⚡ Tensão Astral! Pequenas faíscas cósmicas e divergências de gostos.";
+  else verdict = "💥 Incompatibilidade Caótica! Distantes como galáxias opostas no vazio!";
+
+  return { score, verdict };
+}

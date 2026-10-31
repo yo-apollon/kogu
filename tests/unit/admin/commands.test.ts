@@ -43,7 +43,15 @@ beforeEach(() => {
 
 describe("registro do modulo", () => {
   it("exporta os comandos e registra aliases sem colisao", () => {
-    expect(commands.map((c) => c.name)).toEqual(["setvip", "adminreset", "cleanuser", "thanos"]);
+    expect(commands.map((c) => c.name)).toEqual([
+      "setvip",
+      "adminreset",
+      "cleanuser",
+      "thanos",
+      "bitesthedust",
+      "restore",
+      "restorelist",
+    ]);
     expect(components).toEqual([]);
     const registry = new CommandRegistry();
     for (const cmd of adminCommands) registry.register(cmd);
@@ -60,7 +68,13 @@ describe("registro do modulo", () => {
     const registry = new CommandRegistry();
     for (const cmd of adminCommands) registry.register(cmd);
     const payload = Object.fromEntries(registry.buildSlashPayload().map((p) => [p.name, p]));
-    expect(Object.keys(payload).sort()).toEqual(["adminreset", "cleanuser", "setvip", "thanos"]);
+    expect(Object.keys(payload).sort()).toEqual([
+      "adminreset",
+      "bitesthedust",
+      "cleanuser",
+      "setvip",
+      "thanos",
+    ]);
     expect((payload.setvip.options as any[]).map((o) => [o.name, o.required])).toEqual([
       ["user", true],
       ["tier", true],

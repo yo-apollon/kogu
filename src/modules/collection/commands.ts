@@ -43,16 +43,20 @@ import {
   dissolveOwnPact,
   findEntityId,
   findOwnPact,
+  getEntityImages,
   getEntityInfo,
   giveEntity,
   listPantheon,
   searchOwnPacts,
   setLeader,
   setPactCustomImage,
+  setPactEmbedColor,
   setPactText,
+  sortPactsBy,
   type OwnPact,
   type PantheonPage,
   type PantheonRow,
+  type SortMarryCriteria,
 } from "./service.js";
 import {
   buildInfoView,
@@ -904,7 +908,7 @@ const custompicArgs = z.object({
 
 export const custompicCommand: CommandDefinition<typeof custompicArgs> = {
   name: "custompic",
-  aliases: ["c", "customimage"],
+  aliases: ["c", "customimage", "ai", "addimg", "addimage"],
   category: "collection",
   descriptionKey: "help.commands.custompic",
   args: custompicArgs,
@@ -979,6 +983,382 @@ export const custompicCommand: CommandDefinition<typeof custompicArgs> = {
 };
 
 // ---------------------------------------------------------------------------
+// $ci / $changeimg / $changeimage
+// ---------------------------------------------------------------------------
+
+const changeimgArgs = z.object({
+  name: queryText,
+  selection: z.string().trim().default(""),
+});
+
+export const changeimgCommand: CommandDefinition<typeof changeimgArgs> = {
+  name: "changeimg",
+  aliases: ["ci", "changeimage"],
+  category: "collection",
+  descriptionKey: "help.commands.custompic",
+  args: changeimgArgs,
+  cooldownMs: 2_000,
+  parseArgs: (tokens) => {
+    if (tokens.length === 0) return { name: "", selection: "" };
+    const last = tokens[tokens.length - 1]!;
+    if (tokens.length > 1 && (/^\d+$/.test(last) || /^(reset|remover|padrao|default)$/i.test(last))) {
+      return {
+        name: tokens.slice(0, -1).join(" ").trim(),
+        selection: last.toLowerCase(),
+      };
+    }
+    return { name: tokens.join(" ").trim(), selection: "" };
+  },
+  slash: () =>
+    slashBase("changeimg", "help.commands.custompic")
+      .addStringOption((o) => describe(o, SLASH_TEXT.name).setRequired(true).setAutocomplete(true))
+      .addStringOption((o) =>
+        o
+          .setName("selecao")
+          .setDescription("Número da imagem oficial (ex: 2) ou 'reset' para voltar ao padrão.")
+          .setRequired(false)
+      ),
+  slashArgs: (interaction) => ({
+    name: optionValue(interaction, "name"),
+    selection: String(interaction.options.getString("selecao") ?? "").trim(),
+  }),
+  autocomplete: ownPactAutocomplete,
+  async execute(ctx) {
+    const { name, selection } = ctx.args;
+    const prefix = usagePrefix(ctx);
+    if (!name) {
+      throw new UserError("collection.custompic_usage", { prefix });
+    }
+
+    const pact = await requireOwnPact(ctx, name);
+    const imgs = await getEntityImages(pact.entityId);
+
+    // Reset para imagem primária
+    if (/^(reset|remover|padrao|default)$/i.test(selection)) {
+      await setPactCustomImage({
+        guildId: ctx.guild.id,
+        userId: ctx.user.id,
+        pactId: pact.pactId,
+        imageUrl: null,
+        label: safeText(name),
+      });
+      await ctx.reply({
+        embeds: [
+          successEmbed({
+            description: ctx.t("collection.custompic_removed", { entity: safeText(pact.name) }),
+            footer: false,
+          }),
+        ],
+      });
+      return;
+    }
+
+    // Seleção por índice numérico
+    if (/^\d+$/.test(selection)) {
+      const idx = parseInt(selection, 10);
+      if (imgs.length === 0) {
+        throw new UserError("errors.invalid_argument");
+      }
+      if (idx < 1 || idx > imgs.length) {
+        await ctx.reply({
+          embeds: [
+            infoEmbed({
+              title: `⚠️ Imagem Inválida`,
+              description: `**${safeText(pact.name)}** possui apenas **${imgs.length}** imagem(ns) oficial(is).\nEscolha um número entre **1** e **${imgs.length}**.`,
+            }),
+          ],
+        });
+        return;
+      }
+      const targetImg = imgs[idx - 1]!;
+      await setPactCustomImage({
+        guildId: ctx.guild.id,
+        userId: ctx.user.id,
+        pactId: pact.pactId,
+        imageUrl: targetImg.url,
+        label: safeText(name),
+      });
+      await ctx.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(0x10b981)
+            .setTitle(`🖼️ Imagem Atualizada — ${safeText(pact.name)}`)
+            .setDescription(`A imagem da sua carta agora foi definida para a foto oficial **#${idx}**!`)
+            .setImage(targetImg.url),
+        ],
+      });
+      return;
+    }
+
+    // Exibição da galeria de imagens oficiais
+    if (imgs.length === 0) {
+      await ctx.reply({
+        embeds: [
+          infoEmbed({
+            title: `🖼️ Galeria Oficial — ${safeText(pact.name)}`,
+            description: `Esta entidade possui apenas a imagem padrão do sistema.\nPara adicionar uma imagem externa (Imgur/Web), use:\n\`${prefix}ai ${safeText(pact.name)} <url>\``,
+          }),
+        ],
+      });
+      return;
+    }
+
+    const currentImg = pact.customImage ?? imgs[0]!.url;
+    const embed = new EmbedBuilder()
+      .setColor(0x8b5cf6)
+      .setTitle(`🖼️ Galeria Oficial — ${safeText(pact.name)}`)
+      .setDescription(
+        `Esta carta possui **${imgs.length}** imagem(ns) no banco de dados.\n\n` +
+          `▸ **Para escolher uma imagem:**\n\`${prefix}ci ${safeText(pact.name)} <número>\` (ex.: \`${prefix}ci ${safeText(pact.name)} 2\`)\n\n` +
+          `▸ **Para voltar à arte padrão:**\n\`${prefix}ci ${safeText(pact.name)} reset\`\n\n` +
+          `▸ **Para usar link externo:**\n\`${prefix}ai ${safeText(pact.name)} <link_imgur>\``
+      )
+      .setImage(currentImg)
+      .setFooter({ text: `Imagens disponíveis: 1 a ${imgs.length} • Kogu Mudae` });
+
+    await ctx.reply({ embeds: [embed] });
+  },
+};
+
+// ---------------------------------------------------------------------------
+// $ec / $embedcolor / $embedcolour
+// ---------------------------------------------------------------------------
+
+const COLOR_NAMES: Record<string, string> = {
+  gold: "#FFD700",
+  yellow: "#FFFF00",
+  red: "#EF4444",
+  blue: "#3B82F6",
+  green: "#10B981",
+  purple: "#8B5CF6",
+  pink: "#EC4899",
+  cyan: "#06B6D4",
+  orange: "#F97316",
+  white: "#FFFFFF",
+  black: "#111827",
+};
+
+const embedcolorArgs = z.object({
+  name: queryText,
+  color: z.string().trim().default(""),
+});
+
+export const embedcolorCommand: CommandDefinition<typeof embedcolorArgs> = {
+  name: "embedcolor",
+  aliases: ["ec", "embedcolour"],
+  category: "collection",
+  descriptionKey: "help.commands.custompic",
+  args: embedcolorArgs,
+  cooldownMs: 2_000,
+  parseArgs: (tokens) => {
+    if (tokens.length === 0) return { name: "", color: "" };
+    const first = tokens[0]!.toLowerCase();
+    const last = tokens[tokens.length - 1]!.toLowerCase();
+    const isColorToken = (tok: string) =>
+      /^#?[0-9a-f]{6}$/i.test(tok) ||
+      /^(reset|remover|padrao|default|none)$/i.test(tok) ||
+      tok in COLOR_NAMES;
+
+    if (tokens.length > 1 && isColorToken(last)) {
+      return { name: tokens.slice(0, -1).join(" ").trim(), color: last };
+    }
+    if (tokens.length > 1 && isColorToken(first)) {
+      return { name: tokens.slice(1).join(" ").trim(), color: first };
+    }
+    return { name: tokens.join(" ").trim(), color: "" };
+  },
+  slash: () =>
+    slashBase("embedcolor", "help.commands.custompic")
+      .addStringOption((o) => describe(o, SLASH_TEXT.name).setRequired(true).setAutocomplete(true))
+      .addStringOption((o) =>
+        o
+          .setName("cor")
+          .setDescription("Código hex (ex: #FF0055) ou nome da cor (gold, red, cyan) ou 'reset'.")
+          .setRequired(true)
+      ),
+  slashArgs: (interaction) => ({
+    name: optionValue(interaction, "name"),
+    color: String(interaction.options.getString("cor") ?? "").trim(),
+  }),
+  autocomplete: ownPactAutocomplete,
+  async execute(ctx) {
+    const { name, color } = ctx.args;
+    const prefix = usagePrefix(ctx);
+    if (!name || !color) {
+      await ctx.reply({
+        embeds: [
+          infoEmbed({
+            title: "🎨 Como Usar o Embed Color ($ec)",
+            description:
+              `Altere a cor da borda lateral do embed da sua carta pactada:\n\n` +
+              `▸ \`${prefix}ec <personagem> <#hex>\` (ex.: \`${prefix}ec Zero Two #FF007F\`)\n` +
+              `▸ \`${prefix}ec <personagem> <cor>\` (ex.: \`${prefix}ec Naruto gold\`)\n` +
+              `▸ \`${prefix}ec <personagem> reset\` (remove a cor personalizada)\n\n` +
+              `Cores pré-definidas: \`gold\`, \`red\`, \`blue\`, \`green\`, \`purple\`, \`pink\`, \`cyan\`, \`orange\``,
+          }),
+        ],
+      });
+      return;
+    }
+
+    const pact = await requireOwnPact(ctx, name);
+
+    if (/^(reset|remover|padrao|default|none)$/i.test(color)) {
+      await setPactEmbedColor({
+        guildId: ctx.guild.id,
+        userId: ctx.user.id,
+        pactId: pact.pactId,
+        embedColor: null,
+        label: safeText(name),
+      });
+      await ctx.reply({
+        embeds: [
+          successEmbed({
+            description: `🎨 A cor personalizada do embed de **${safeText(pact.name)}** foi removida.`,
+            footer: false,
+          }),
+        ],
+      });
+      return;
+    }
+
+    let resolvedHex = color.toLowerCase();
+    if (resolvedHex in COLOR_NAMES) {
+      resolvedHex = COLOR_NAMES[resolvedHex]!;
+    } else {
+      if (!resolvedHex.startsWith("#")) {
+        resolvedHex = `#${resolvedHex}`;
+      }
+      if (!/^#[0-9a-f]{6}$/i.test(resolvedHex)) {
+        await ctx.reply({
+          embeds: [
+            infoEmbed({
+              title: "⚠️ Cor Hexadecimal Inválida",
+              description: `Informe um código hexadecimal de 6 caracteres válido (ex: \`#FF0055\`) ou um nome de cor como \`gold\`, \`cyan\`, \`purple\`.`,
+            }),
+          ],
+        });
+        return;
+      }
+    }
+
+    await setPactEmbedColor({
+      guildId: ctx.guild.id,
+      userId: ctx.user.id,
+      pactId: pact.pactId,
+      embedColor: resolvedHex.toUpperCase(),
+      label: safeText(name),
+    });
+
+    const intColor = parseInt(resolvedHex.replace("#", ""), 16);
+    await ctx.reply({
+      embeds: [
+        new EmbedBuilder()
+          .setColor(intColor)
+          .setTitle("🎨 Cor do Embed Atualizada!")
+          .setDescription(
+            `A cor lateral de **${safeText(pact.name)}** agora é **${resolvedHex.toUpperCase()}**!\n` +
+              `Ela será exibida sempre que a carta for consultada com \`${prefix}im ${safeText(pact.name)}\`.`
+          ),
+      ],
+    });
+  },
+};
+
+// ---------------------------------------------------------------------------
+// $sm / $sortmarry
+// ---------------------------------------------------------------------------
+
+const sortmarryArgs = z.object({
+  criteria: z.string().trim().default(""),
+});
+
+export const sortmarryCommand: CommandDefinition<typeof sortmarryArgs> = {
+  name: "sortmarry",
+  aliases: ["sm"],
+  category: "collection",
+  descriptionKey: "help.commands.pantheon",
+  args: sortmarryArgs,
+  cooldownMs: 3_000,
+  parseArgs: (tokens) => ({ criteria: tokens.join(" ").trim() }),
+  slash: () =>
+    slashBase("sortmarry", "help.commands.pantheon").addStringOption((o) =>
+      o
+        .setName("criterio")
+        .setDescription("Critério para ordenar seu Panteão permanentemente.")
+        .setRequired(true)
+        .addChoices(
+          { name: "Éter / Kakera (maior valor primeiro)", value: "aether" },
+          { name: "Nome (A a Z)", value: "name" },
+          { name: "Série / Anime", value: "series" },
+          { name: "Rank de Popularidade", value: "rank" },
+          { name: "Data em que Casou", value: "date" },
+          { name: "Raridade / Tier (Mítico a Comum)", value: "tier" }
+        )
+    ),
+  slashArgs: (interaction) => ({
+    criteria: String(interaction.options.getString("criterio") ?? "").trim(),
+  }),
+  async execute(ctx) {
+    const { criteria } = ctx.args;
+    const prefix = usagePrefix(ctx);
+
+    const c = criteria.toLowerCase();
+    let mapped: SortMarryCriteria | null = null;
+    let label = "";
+
+    if (["k", "kakera", "aether", "eter", "valor"].includes(c)) {
+      mapped = "aether";
+      label = "Éter / Kakera (maior valor primeiro)";
+    } else if (["n", "name", "nome", "alfabetico", "az"].includes(c)) {
+      mapped = "name";
+      label = "Ordem Alfabética (A a Z)";
+    } else if (["s", "series", "serie", "obra", "anime"].includes(c)) {
+      mapped = "series";
+      label = "Série / Franquia";
+    } else if (["r", "rank", "ranking", "claim", "top"].includes(c)) {
+      mapped = "rank";
+      label = "Rank de Popularidade Global";
+    } else if (["d", "date", "data", "tempo"].includes(c)) {
+      mapped = "date";
+      label = "Data do Pacto (mais antigas primeiro)";
+    } else if (["t", "tier", "raridade"].includes(c)) {
+      mapped = "tier";
+      label = "Raridade / Tier (Mítico a Comum)";
+    }
+
+    if (!mapped) {
+      await ctx.reply({
+        embeds: [
+          infoEmbed({
+            title: "🗂️ Como Organizar seu Panteão ($sm)",
+            description:
+              `Reorganiza permanentemente as posições das suas cartas em \`${prefix}mm\` / \`${prefix}pt\`:\n\n` +
+              `▸ \`${prefix}sm kakera\` (ou \`k\`) — Ordena pelo valor de Éter\n` +
+              `▸ \`${prefix}sm name\` (ou \`n\`) — Ordem alfabética (A-Z)\n` +
+              `▸ \`${prefix}sm series\` (ou \`s\`) — Agrupa por série/anime\n` +
+              `▸ \`${prefix}sm rank\` (ou \`r\`) — Ordena por popularidade global\n` +
+              `▸ \`${prefix}sm date\` (ou \`d\`) — Ordena por data do casamento\n` +
+              `▸ \`${prefix}sm tier\` (ou \`t\`) — Ordena por raridade (Mítico a Comum)`,
+          }),
+        ],
+      });
+      return;
+    }
+
+    const count = await sortPactsBy(ctx.guild.id, ctx.user.id, mapped);
+    await ctx.reply({
+      embeds: [
+        successEmbed({
+          description: `🗂️ **Panteão Reorganizado com Sucesso!**\n**${count}** cartas foram reordenadas por **${label}**.\nSeus comandos \`${prefix}mm\` e \`${prefix}pt\` agora exibirão esta ordem como padrão!`,
+          footer: false,
+        }),
+      ],
+    });
+  },
+};
+
+// ---------------------------------------------------------------------------
 // Exportacao
 // ---------------------------------------------------------------------------
 
@@ -992,6 +1372,9 @@ export const commands: AnyCommand[] = [
   noteCommand,
   aliasCommand,
   custompicCommand,
+  changeimgCommand,
+  embedcolorCommand,
+  sortmarryCommand,
 ];
 
 /**
