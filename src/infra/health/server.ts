@@ -9,12 +9,13 @@ import http from "node:http";
 import type { AddressInfo } from "node:net";
 import { getEnv } from "../../config/env.js";
 import { childLogger } from "../../lib/logger.js";
+import { handlePortalRoute, type PortalQueryDeps } from "./portal.js";
 
 const log = childLogger("health");
 
 const CHECK_TIMEOUT_MS = 2_000;
 
-export interface HealthDeps {
+export interface HealthDeps extends PortalQueryDeps {
   /** Cliente Discord em estado READY. */
   isDiscordReady(): boolean;
   /** Deve rejeitar se o Postgres nao responder (ex.: `sql\`select 1\``). */
@@ -118,7 +119,13 @@ export async function startHealthServer(
       );
       return;
     }
-    sendJson(res, 404, { error: "not_found" });
+    handlePortalRoute(req, res, deps)
+      .then((handled) => {
+        if (!handled) sendJson(res, 404, { error: "not_found" });
+      })
+      .catch(() => {
+        sendJson(res, 500, { error: "internal_error" });
+      });
   });
   server.keepAliveTimeout = 5_000;
 

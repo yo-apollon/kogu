@@ -98,6 +98,47 @@ async function main(): Promise<void> {
     checkDb: () => sql`select 1`,
     pingKv: () => kv.ping(),
     isShuttingDown,
+    searchCatalog: async ({ q, universe, tier, limit }) => {
+      const [{ count: totalActive }] = await sql<{ count: number }[]>`
+        SELECT COUNT(*)::int AS count FROM entities WHERE status = 'ACTIVE'
+      `;
+      const pattern = q ? `%${q.toLowerCase()}%` : "%";
+      const rows = await sql<
+        Array<{
+          id: number;
+          name: string;
+          seriesTitle: string | null;
+          universe: string;
+          gender: string;
+          tier: string;
+          baseAether: number;
+          popularityRank: number | null;
+          imageUrl: string | null;
+        }>
+      >`
+        SELECT
+          e.id::int AS id,
+          e.name,
+          s.title AS "seriesTitle",
+          e.universe,
+          e.gender,
+          e.tier,
+          e.base_aether AS "baseAether",
+          e.popularity_rank AS "popularityRank",
+          img.url AS "imageUrl"
+        FROM entities e
+        LEFT JOIN entity_series es ON es.entity_id = e.id AND es.is_primary = true
+        LEFT JOIN series s ON s.id = es.series_id
+        LEFT JOIN entity_images img ON img.entity_id = e.id AND img.is_primary = true
+        WHERE e.status = 'ACTIVE'
+          AND (${q === ""} OR LOWER(e.name) LIKE ${pattern} OR LOWER(COALESCE(s.title, '')) LIKE ${pattern})
+          AND (${universe === ""} OR e.universe::text = ${universe})
+          AND (${tier === ""} OR e.tier::text = ${tier})
+        ORDER BY e.popularity_rank ASC NULLS LAST, e.base_aether DESC
+        LIMIT ${limit}
+      `;
+      return { totalActive: totalActive ?? 1372, items: rows };
+    },
   });
 
   // Ordem de encerramento: config -> gateway -> KV -> banco -> health (fica ate o fim para /readyz = 503).

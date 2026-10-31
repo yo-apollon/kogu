@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kogu — Portal Oficial, Comandos & Torre de Eter | Koru Anime</title>
+  <style>
+    :root { --bg: #08080e; --surface: #10111c; --surface-2: #161829; --border: #252842; --accent: #8b5cf6; --accent-cyan: #38bdf8; --text: #f1f5f9; --muted: #94a3b8; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: radial-gradient(circle at 50% 0%, #171432 0%, var(--bg) 55%); color: var(--text); min-height: 100vh; line-height: 1.6; }
+    a { color: var(--accent-cyan); text-decoration: none; }
+    header { border-bottom: 1px solid var(--border); background: rgba(16, 17, 28, 0.88); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 50; }
+    .nav-wrap { max-width: 1200px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 1.35rem; letter-spacing: 0.08em; color: #fff; }
+    .brand-badge { font-size: 0.7rem; padding: 3px 8px; border-radius: 999px; background: rgba(139, 92, 246, 0.18); border: 1px solid rgba(139, 92, 246, 0.45); color: #c4b5fd; }
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tab-btn { background: transparent; color: var(--muted); border: 1px solid transparent; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; }
+    .tab-btn.active { color: #fff; background: rgba(139, 92, 246, 0.18); border-color: rgba(139, 92, 246, 0.5); }
+    .btn-invite { background: linear-gradient(135deg, #7c3aed, #2563eb); color: #fff; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 0.88rem; }
+    main { max-width: 1200px; margin: 0 auto; padding: 36px 24px 80px; }
+    .hero { text-align: center; padding: 32px 16px 42px; border-bottom: 1px solid var(--border); margin-bottom: 32px; }
+    .hero h1 { font-size: 2.4rem; font-weight: 900; margin-bottom: 12px; color: #fff; }
+    .hero p { color: var(--muted); max-width: 720px; margin: 0 auto 24px; }
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; max-width: 880px; margin: 0 auto; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); padding: 16px; border-radius: 12px; }
+    .stat-val { font-size: 1.55rem; font-weight: 800; color: #fff; }
+    .stat-lbl { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .cmd-list { display: grid; gap: 10px; }
+    .cmd-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .cmd-syntax { font-family: monospace; color: var(--accent-cyan); font-weight: 700; font-size: 0.96rem; }
+    .cmd-cat { font-size: 0.72rem; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: var(--surface-2); color: var(--muted); }
+    footer { border-top: 1px solid var(--border); padding: 28px 24px; text-align: center; color: var(--muted); font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-wrap">
+      <div class="brand"><span>KOGU</span><span class="brand-badge">KORU ANIME</span></div>
+      <div class="tabs">
+        <a class="tab-btn active" href="./index.html">Comandos & Guia</a>
+        <a class="tab-btn" href="./terms.html">Termos de Serviço</a>
+        <a class="tab-btn" href="./privacy.html">Política de Privacidade</a>
+      </div>
+      <a class="btn-invite" href="https://discord.com/oauth2/authorize?client_id=1561074418250416178&permissions=412317240384&scope=bot%20applications.commands" target="_blank" rel="noopener">Adicionar ao Discord</a>
+    </div>
+  </header>
+  <main>
+    <section class="hero">
+      <h1>KOGU — MULTIVERSE GACHA & RPG</h1>
+      <p>Catálogo com mais de 1.370 personagens seriados (Tiragem 1/1 Mítica) de Animes, Games, Cinema, Doramas e Música. Integrado ao ecossistema Koru Anime.</p>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-val">1.372</div><div class="stat-lbl">Cartas Ativas</div></div>
+        <div class="stat-card"><div class="stat-val">1/1</div><div class="stat-lbl">Tiragem Mítica</div></div>
+        <div class="stat-card"><div class="stat-val">62</div><div class="stat-lbl">Comandos Híbridos</div></div>
+        <div class="stat-card"><div class="stat-val">12</div><div class="stat-lbl">Andares da Torre</div></div>
+      </div>
+    </section>
+    <div class="cmd-list">
+      <div class="cmd-item"><div><div class="cmd-syntax">$w / $h / $m / $wa / $wg / $wc / $ha / $hg / $hc</div><div style="color:var(--muted);font-size:0.88rem">Invocação de cartas por gênero e universo (Anime, Games, Cinema/Doramas/Idols).</div></div><span class="cmd-cat">Invocação</span></div>
+      <div class="cmd-item"><div><div class="cmd-syntax">$tuto / $skiptuto / $fc ($freeclaim) / $rt</div><div style="color:var(--muted);font-size:0.88rem">Tutorial inicial (+500 Éter, +5 Rolls) e carga de Pacto Livre ($fc) para casar em cooldown.</div></div><span class="cmd-cat">Progressão</span></div>
+      <div class="cmd-item"><div><div class="cmd-syntax">$ktower ($tower) / $build &lt;1-12&gt; / $destroy</div><div style="color:var(--muted);font-size:0.88rem">Obelisco Dimensional com 12 andares de bônus passivos e reembolso de 100%.</div></div><span class="cmd-cat">Economia</span></div>
+      <div class="cmd-item"><div><div class="cmd-syntax">$kl ($lootbox) / $relics / $daily / $givekakera</div><div style="color:var(--muted);font-size:0.88rem">Caixas Astrais, Relíquias Elementais, coleta diária e transferência de Éter.</div></div><span class="cmd-cat">Economia</span></div>
+      <div class="cmd-item"><div><div class="cmd-syntax">$arena [@user] / $slot ($pokemon) / $bt / $quiz</div><div style="color:var(--muted);font-size:0.88rem">Combate RPG em turnos, Cassino de Familiares (Shiny), Bomba de Palavras e Trivia.</div></div><span class="cmd-cat">Combate & Jogos</span></div>
+      <div class="cmd-item"><div><div class="cmd-syntax">$pt ($mm) / $im / $trade / $give / $divorce / $wish / $starwish</div><div style="color:var(--muted);font-size:0.88rem">Gestão completa do Panteão, trocas seguras e Lista de Desejos.</div></div><span class="cmd-cat">Coleção</span></div>
+    </div>
+  </main>
+  <footer>
+    Kogu Bot &bull; Ecossistema Koru Anime &bull; <a href="./terms.html">Termos de Serviço</a> &bull; <a href="./privacy.html">Política de Privacidade</a>
+  </footer>
+</body>
+</html>
