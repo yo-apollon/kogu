@@ -735,7 +735,7 @@
       <div class="stats-row">
         <div class="stat-pill"><span class="stat-num">1.372</span><span class="stat-label">Cartas Ativas</span></div>
         <div class="stat-pill"><span class="stat-num" style="color:var(--crimson)">1 / 1</span><span class="stat-label">Tiragem Mítica</span></div>
-        <div class="stat-pill"><span class="stat-num" style="color:var(--cyan)">62</span><span class="stat-label">Comandos Oficiais</span></div>
+        <div class="stat-pill"><span class="stat-num" style="color:var(--cyan)">85+</span><span class="stat-label">Comandos Oficiais</span></div>
         <div class="stat-pill"><span class="stat-num" style="color:var(--purple)">12</span><span class="stat-label">Andares da Torre</span></div>
       </div>
     </section>
@@ -810,7 +810,7 @@
       </div>
     </section>
 
-    <!-- ABA 4: LISTA DE 62 COMANDOS OFICIAIS -->
+    <!-- ABA 4: LISTA DE 85+ COMANDOS OFICIAIS (200+ VARIAÇÕES) -->
     <section id="view-commands" class="view-section">
       <div class="filter-panel">
         <input id="cmdSearch" class="filter-input" type="text" placeholder="🔍 Buscar comando (ex: $wa, $ktower, $arena, $slot, $tuto, $fc)..." oninput="filterCommands()" />
@@ -910,6 +910,7 @@
     let selectedChar = null;
 
     const COMMANDS = [
+      // Invocações
       { s: "$w", c: "Invocação", d: "Invoca personagens femininas de qualquer universo." },
       { s: "$h", c: "Invocação", d: "Invoca personagens masculinos de qualquer universo." },
       { s: "$m", c: "Invocação", d: "Invocação mista (waifus e husbandos de qualquer obra)." },
@@ -919,33 +920,84 @@
       { s: "$hg", c: "Invocação", d: "Invoca cartas masculinas originárias de Games." },
       { s: "$wc", c: "Invocação", d: "Invoca cartas de Cinema, Séries, Doramas e Cantores/Idols." },
       { s: "$hc", c: "Invocação", d: "Invoca cartas masculinas de Cinema, Doramas e Cantores/Idols." },
+      { s: "$ma / $mg / $mc", c: "Invocação", d: "Invocações mistas específicas de Anime, Games ou Idols." },
       { s: "/roll", c: "Invocação", d: "Versão Slash Command de invocação com 10% bônus de Éter." },
-      { s: "$tuto", c: "Tutorial", d: "Guia de 5 passos. Concede +500 Éter, +5 Rolls e +1 Pacto Livre ($fc)." },
-      { s: "$skiptuto", c: "Tutorial", d: "Pula o tutorial para veteranos e resgata o pacote inicial." },
-      { s: "$fc ($freeclaim)", c: "Progressão", d: "Zera o cooldown de pacto para casar com uma segunda carta." },
-      { s: "$rt", c: "Progressão", d: "Zera timer de casamento (requer Relíquia de Esmeralda, recarga 20h)." },
-      { s: "$ktower ($tower)", c: "Economia", d: "Abre o Obelisco Dimensional com 12 andares de bônus passivos." },
-      { s: "$build <1-12>", c: "Economia", d: "Constrói um andar na sua Torre de Éter." },
-      { s: "$destroy", c: "Economia", d: "Demole toda a Torre com reembolso integral de 100% do Éter." },
+
+      // Coleção & Harém
+      { s: "$pt ($mm)", c: "Coleção", d: "Exibe seu Panteão de cartas com paginação e estatísticas." },
+      { s: "$mma / $mmk / $mmr", c: "Coleção", d: "Exibe o harém ordenado por Valor, Data de Casamento ou Raridade." },
+      { s: "$mmy / $mmw / $mmu", c: "Coleção", d: "Filtra o harém por Chaves de Afinidade, Waifus ou Cartas Customizadas." },
+      { s: "$ci <carta> [num]", c: "Coleção", d: "Galeria de imagens oficiais: veja todas as fotos e escolha a principal." },
+      { s: "$ai <carta> <url>", c: "Coleção", d: "Define uma imagem externa personalizada na sua carta (suporta GIF e PNG)." },
+      { s: "$ec <carta> <#hex>", c: "Coleção", d: "Customiza a cor da borda do embed do personagem no seu panteão." },
+      { s: "$sm <critério>", c: "Coleção", d: "Ordenação permanente do panteão (val, claim, alpha, id, series, rarity)." },
+      { s: "$im <nome>", c: "Coleção", d: "Inspeciona todas as informações, fotos, stats de combate e chaves da carta." },
+      { s: "$trade @user", c: "Coleção", d: "Inicia troca segura e interativa com painel de confirmação dupla." },
+      { s: "$give @user <carta>", c: "Coleção", d: "Transfere a posse de uma carta diretamente para outro jogador." },
+      { s: "$divorce <carta>", c: "Coleção", d: "Rompe o pacto e recebe o valor integral da carta em Cristais de Éter." },
+
+      // Badges & Economia de Éter (Kakera)
+      { s: "$bronze ($b)", c: "Economia", d: "Insígnia de Bronze: desbloqueia slots extras na Wishlist e bônus de drop." },
+      { s: "$silver ($s)", c: "Economia", d: "Insígnia de Prata: multiplica o ganho de Éter em personagens desejados." },
+      { s: "$gold ($g)", c: "Economia", d: "Insígnia de Ouro: reduz o tempo de recarga de pactos e rolagens." },
+      { s: "$sapphire", c: "Economia", d: "Insígnia de Safira: converte rolagens azuis em pedras de Éter preciosas." },
+      { s: "$ruby", c: "Economia", d: "Insígnia de Rubi: concede desconto maciço no aprimoramento de todas as insígnias." },
+      { s: "$emerald", c: "Economia", d: "Insígnia de Esmeralda: desbloqueia a habilidade de zerar cooldown de pacto ($rt)." },
+      { s: "$bv ($badgevalue)", c: "Economia", d: "Consulta o custo e benefícios de todas as insígnias e relíquias." },
+      { s: "$kr ($kakerareward)", c: "Economia", d: "Consulta o teto de Éter e o valor atual de extração por reação." },
+      { s: "$topk ($topservk)", c: "Economia", d: "Ranking com os maiores acumuladores de Éter do servidor." },
+      { s: "$topm ($topservm)", c: "Economia", d: "Ranking dos maiores haréns e maiores valores somados de cartas." },
+      { s: "$relics", c: "Economia", d: "Forja Relíquias Astrais (Safira, Rubi, Esmeralda, Ouro, Diamante)." },
+      { s: "$ktower ($tower)", c: "Economia", d: "Obelisco Dimensional com 12 andares de bônus passivos acumulativos." },
+      { s: "$build <1-12>", c: "Economia", d: "Constrói ou aprimora um andar na sua Torre Cósmica." },
+      { s: "$destroy", c: "Economia", d: "Demole toda a Torre com reembolso integral de 100% do Éter gasto." },
       { s: "$kl ($lootbox)", c: "Economia", d: "Abre Caixas Astrais (500 Éter) com prêmios de Rolls, Éter e $fc." },
-      { s: "$relics", c: "Economia", d: "Forja Relíquias (Safira, Rubi, Esmeralda, Ouro, Diamante)." },
       { s: "$daily", c: "Economia", d: "Coleta sua recompensa diária de Cristais de Éter." },
       { s: "$givekakera @user <qtd>", c: "Economia", d: "Transfere Cristais de Éter diretamente para outro jogador." },
-      { s: "$infokeys", c: "Progressão", d: "Guia completo dos marcos de poder das Chaves do Caos." },
-      { s: "$arena [@user]", c: "Combate", d: "Duelos RPG por turnos usando os atributos reais (ATK/DEF/SPD/HP)." },
-      { s: "$slot ($pokemon)", c: "Cassino", d: "Cassino de Mascotes com chance de tirar versão Shiny." },
-      { s: "$bt ($blacktea)", c: "Minijogos", d: "Jogo da Bomba de Palavras no chat valendo Cristais de Éter." },
-      { s: "$quiz", c: "Minijogos", d: "Trivia Geek com alternativas interativas valendo Éter." },
-      { s: "$pt ($mm)", c: "Coleção", d: "Exibe seu Panteão de cartas com filtros de ordenação." },
-      { s: "$im <nome>", c: "Coleção", d: "Inspeciona todas as informações e fotos de uma carta." },
-      { s: "$trade @user", c: "Coleção", d: "Inicia troca segura com painel de confirmação dupla." },
-      { s: "$give @user <carta>", c: "Coleção", d: "Transfere a posse de uma carta diretamente para um membro." },
-      { s: "$divorce <carta>", c: "Coleção", d: "Rompe o pacto e recebe o valor da carta em Cristais de Éter." },
-      { s: "$wish ($wl) <nome>", c: "Wishlist", d: "Adiciona uma carta à lista com notificação quando for rolada." },
-      { s: "$starwish ($sw)", c: "Wishlist", d: "Define sua carta suprema desejada com +50% bônus de aparição." },
-      { s: "$settings", c: "Configuração", d: "Painel administrativo interativo para gerenciar o bot no servidor." },
-      { s: "$prefix <novo>", c: "Configuração", d: "Altera o prefixo de comandos no servidor." },
-      { s: "$invite", c: "Geral", d: "Exibe o link de convite oficial e links dos termos legais." }
+
+      // Wishlist & Modificadores de Roleta
+      { s: "$wish ($wl) <nome>", c: "Wishlist", d: "Adiciona uma carta à lista com menção quando for invocada." },
+      { s: "$starwish ($sw)", c: "Wishlist", d: "Define seu desejo supremo com +50% de bônus na taxa de aparição." },
+      { s: "$ws ($wishseries) <obra>", c: "Wishlist", d: "Adiciona toda uma série, anime ou game à sua wishlist de uma só vez." },
+      { s: "$wdm [on/off]", c: "Wishlist", d: "Recebe notificações privadas na DM quando sua carta desejada é invocada." },
+      { s: "$wp ($wishpurge)", c: "Wishlist", d: "Limpa da sua wishlist todas as cartas que você já conquistou." },
+      { s: "$d ($disable) <franquia>", c: "Roleta", d: "Desativa uma série ou anime da sua roleta individual para focar nos favoritos." },
+      { s: "$ad ($enable) <franquia>", c: "Roleta", d: "Reativa uma franquia desativada na sua roleta pessoal." },
+      { s: "$dl ($disablelist)", c: "Roleta", d: "Exibe sua lista de bloqueios ativa e a contagem total de cartas filtradas." },
+      { s: "$lr ($limroul) <limite>", c: "Roleta", d: "Restringe a roleta apenas aos personagens do topo de popularidade global." },
+      { s: "$prb ($personalrare)", c: "Roleta", d: "Ajusta o balanceamento de raridade pessoal para rolagens de cartas." },
+
+      // Jogos de Chá & Minijogos de Chat
+      { s: "$bt ($blacktea)", c: "Minijogos", d: "Jogo da Bomba de Palavras: digite antes que o tempo esgote e ganhe Éter." },
+      { s: "$gt ($greentea)", c: "Minijogos", d: "Minijogo do Chá Verde: vença digitando a palavra mais longa possível." },
+      { s: "$redtea", c: "Minijogos", d: "Minijogo de eliminação rápida contra o relógio em modo deathmatch." },
+      { s: "$yt ($yellowtea)", c: "Minijogos", d: "Encontre a maior palavra com combinações raras de letras." },
+      { s: "$mt ($mixtea)", c: "Minijogos", d: "Modo caótico que alterna regras de chá aleatoriamente a cada rodada." },
+      { s: "$quiz", c: "Minijogos", d: "Trivia Geek com botões interativos e recompensas em Éter por acerto." },
+      { s: "$pokeduel", c: "Minijogos", d: "Duelo Pokémon retrô com vantagens de tipos elementais e ataques especiais." },
+      { s: "$slot ($pokemon)", c: "Cassino", d: "Caça-níquel de mascotes Pokémon com chances de capturar versão Shiny." },
+      { s: "$fate @user", c: "Diversão", d: "Calcula o algoritmo de compatibilidade cósmica e destino entre 2 membros." },
+      { s: "$42ball <pergunta>", c: "Diversão", d: "Oráculo místico interdimensional que responde qualquer dúvida do servidor." },
+      { s: "$quote", c: "Diversão", d: "Sorteia frases icônicas com dublagem estilizada dos personagens da obra." },
+      { s: "$beam", c: "Diversão", d: "Dispara um canhão de laser cósmico no chat contra outro membro." },
+
+      // RPG & Combate Tático
+      { s: "$arena [@user]", c: "Combate", d: "Batalha RPG tática por turnos com atributos reais (ATK, DEF, SPD, HP)." },
+      { s: "$fc ($freeclaim)", c: "Progressão", d: "Zera o cooldown de pacto imediatamente para casar com uma segunda carta." },
+      { s: "$rt", c: "Progressão", d: "Recarrega o poder de casamento instantaneamente (bônus de Esmeralda, cd 20h)." },
+      { s: "$infokeys", c: "Progressão", d: "Tabela completa dos 10 marcos evolutivos das Chaves do Caos." },
+
+      // Gestão de Servidor & Disaster Recovery
+      { s: "$btd ($bitesthedust)", c: "Servidor", d: "Reseta com segurança os haréns do servidor com estorno integral de 100% de Éter." },
+      { s: "$restore @user [id]", c: "Servidor", d: "Restaura o panteão completo de um jogador a partir de um snapshot seguro." },
+      { s: "$restorelist", c: "Servidor", d: "Lista todos os pontos de restauração históricos e salvos do servidor." },
+      { s: "$settings", c: "Servidor", d: "Painel interativo de administração geral do bot no servidor." },
+      { s: "$prefix <novo>", c: "Servidor", d: "Altera o prefixo de comandos no servidor." },
+
+      // Boas-Vindas & Suporte
+      { s: "$tuto", c: "Tutorial", d: "Tutorial interativo em 5 etapas com recompensa de +500 Éter, +5 Rolls e 1 $fc." },
+      { s: "$skiptuto", c: "Tutorial", d: "Pula o tutorial para jogadores experientes e resgata o pacote inicial." },
+      { s: "$invite", c: "Geral", d: "Exibe o link oficial de convite do bot, termos de serviço e documentação." }
     ];
 
     const PERKS = [
