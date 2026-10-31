@@ -92,7 +92,7 @@ export const tutoCommand: AnyCommand = {
 
     const embed = new EmbedBuilder()
       .setColor(0x8b5cf6)
-      .setTitle("🎓 Guia de Iniciação Dimensional — Arqon")
+      .setTitle("🎓 Guia de Iniciação Dimensional — Kogu")
       .setDescription(
         `${statusLine}\n\n` +
           `### 📜 Como Jogar em 5 Passos:\n` +
@@ -601,19 +601,19 @@ export const inviteCommand: AnyCommand = {
   category: "help",
   descriptionKey: "help.commands.invite",
   cooldownMs: 3000,
-  slash: () => slashBase("invite", "Exibe o link de convite oficial do Arqon, Termos de Uso e Política de Privacidade.", "Shows Arqon's official invite link, Terms of Service and Privacy Policy."),
+  slash: () => slashBase("invite", "Exibe o link de convite oficial do Kogu, Termos de Uso e Política de Privacidade.", "Shows Kogu's official invite link, Terms of Service and Privacy Policy."),
   async execute(ctx: CommandContext) {
     const clientId = process.env.DISCORD_CLIENT_ID ?? "1561074418250416178";
     const inviteUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&permissions=412317240384&scope=bot%20applications.commands`;
 
     const embed = new EmbedBuilder()
       .setColor(0x5865f2)
-      .setTitle("🌌 Arqon — Convite Oficial & Links Públicos")
+      .setTitle("🌌 Kogu — Convite Oficial & Links Públicos")
       .setDescription(
-        `Traga o **Arqon** para o seu servidor Discord e desbloqueie o sistema completo de Gacha, Trocas, Arena RPG e Catálogo Multiverso!\n\n` +
-          `🔗 **[Adicionar o Arqon ao seu Servidor](${inviteUrl})**\n` +
-          `📜 **Termos de Serviço (ToS):** Consulte \`docs/TERMS.md\` no repositório oficial\n` +
-          `🔒 **Política de Privacidade:** Consulte \`docs/PRIVACY.md\` no repositório oficial`
+        `Traga o **Kogu** para o seu servidor Discord e desbloqueie o sistema completo de Gacha, Trocas, Arena RPG e Catálogo Multiverso!\n\n` +
+          `🔗 **[Adicionar o Kogu ao seu Servidor](${inviteUrl})**\n` +
+          `📜 **[Termos de Serviço (ToS)](https://github.com/yo-apollon/kogu/blob/main/docs/TERMS.md)**\n` +
+          `🔒 **[Política de Privacidade](https://github.com/yo-apollon/kogu/blob/main/docs/PRIVACY.md)**`
       );
 
     await ctx.reply({ embeds: [embed] });
