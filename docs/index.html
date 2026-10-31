@@ -3,69 +3,608 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Kogu — Portal Oficial, Comandos & Torre de Eter | Koru Anime</title>
+  <title>Kogu — Portal Oficial & Database de Personagens (Estilo Mudae)</title>
+  <meta name="description" content="Database de cartas, lista de comandos e simulador do bot Kogu para Discord." />
   <style>
-    :root { --bg: #08080e; --surface: #10111c; --surface-2: #161829; --border: #252842; --accent: #8b5cf6; --accent-cyan: #38bdf8; --text: #f1f5f9; --muted: #94a3b8; }
+    :root {
+      --bg: #07070d;
+      --surface: #10111d;
+      --surface-2: #161829;
+      --border: #23263e;
+      --accent: #ff6b35;
+      --accent-glow: rgba(255, 107, 53, 0.4);
+      --violet: #a855f7;
+      --cyan: #38bdf8;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --radius: 12px;
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: radial-gradient(circle at 50% 0%, #171432 0%, var(--bg) 55%); color: var(--text); min-height: 100vh; line-height: 1.6; }
-    a { color: var(--accent-cyan); text-decoration: none; }
-    header { border-bottom: 1px solid var(--border); background: rgba(16, 17, 28, 0.88); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 50; }
-    .nav-wrap { max-width: 1200px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-    .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 1.35rem; letter-spacing: 0.08em; color: #fff; }
-    .brand-badge { font-size: 0.7rem; padding: 3px 8px; border-radius: 999px; background: rgba(139, 92, 246, 0.18); border: 1px solid rgba(139, 92, 246, 0.45); color: #c4b5fd; }
-    .tabs { display: flex; gap: 8px; flex-wrap: wrap; }
-    .tab-btn { background: transparent; color: var(--muted); border: 1px solid transparent; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; }
-    .tab-btn.active { color: #fff; background: rgba(139, 92, 246, 0.18); border-color: rgba(139, 92, 246, 0.5); }
-    .btn-invite { background: linear-gradient(135deg, #7c3aed, #2563eb); color: #fff; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 0.88rem; }
-    main { max-width: 1200px; margin: 0 auto; padding: 36px 24px 80px; }
-    .hero { text-align: center; padding: 32px 16px 42px; border-bottom: 1px solid var(--border); margin-bottom: 32px; }
-    .hero h1 { font-size: 2.4rem; font-weight: 900; margin-bottom: 12px; color: #fff; }
-    .hero p { color: var(--muted); max-width: 720px; margin: 0 auto 24px; }
-    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; max-width: 880px; margin: 0 auto; }
-    .stat-card { background: var(--surface); border: 1px solid var(--border); padding: 16px; border-radius: 12px; }
-    .stat-val { font-size: 1.55rem; font-weight: 800; color: #fff; }
-    .stat-lbl { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at 50% 0%, #151329 0%, var(--bg) 60%);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    a { color: var(--cyan); text-decoration: none; }
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(16, 17, 29, 0.88);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .nav-wrap {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+      font-size: 1.4rem;
+      letter-spacing: 0.08em;
+      color: #fff;
+    }
+    .brand-badge {
+      font-size: 0.7rem;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(255, 107, 53, 0.14);
+      border: 1px solid rgba(255, 107, 53, 0.4);
+      color: var(--accent);
+      letter-spacing: 0.04em;
+    }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid transparent;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.18s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .tab-btn:hover { color: #fff; background: var(--surface-2); }
+    .tab-btn.active {
+      color: #fff;
+      background: rgba(255, 107, 53, 0.16);
+      border-color: var(--accent);
+    }
+    .btn-invite {
+      background: linear-gradient(135deg, #ff6b35, #7c3aed);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 16px rgba(255, 107, 53, 0.35);
+      border: none;
+      cursor: pointer;
+      transition: transform 0.16s, box-shadow 0.16s;
+    }
+    .btn-invite:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5);
+    }
+    main {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+    .hero {
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background-size: cover;
+      background-position: center;
+      padding: 40px 32px;
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-content {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .avatar-gif {
+      width: 124px;
+      height: 124px;
+      border-radius: 50%;
+      border: 3px solid var(--accent);
+      box-shadow: 0 0 25px var(--accent-glow);
+      object-fit: cover;
+    }
+    .hero-text {
+      flex: 1;
+      min-width: 280px;
+    }
+    .hero-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      background: rgba(255, 107, 53, 0.12);
+      border: 1px solid rgba(255, 107, 53, 0.35);
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+    .hero h1 {
+      font-size: 2.3rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+    .hero p {
+      color: var(--muted);
+      max-width: 680px;
+      font-size: 1rem;
+      line-height: 1.55;
+      margin-bottom: 20px;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn-secondary {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+    }
+    .btn-secondary:hover { border-color: var(--cyan); }
+    .stats-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .stat-box {
+      background: rgba(16, 17, 29, 0.7);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      padding: 14px 18px;
+      border-radius: var(--radius);
+      text-align: center;
+    }
+    .stat-val { font-size: 1.6rem; font-weight: 900; color: #fff; }
+    .stat-lbl { font-size: 0.74rem; text-transform: uppercase; color: var(--muted); letter-spacing: 0.06em; }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* FILTROS E BUSCA */
+    .filter-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 26px;
+      flex-wrap: wrap;
+    }
+    .input, .select {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+    }
+    .input { flex: 1; min-width: 260px; }
+    .select { min-width: 180px; }
+
+    /* CATALOGO GRID */
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 18px;
+    }
+    .card-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.18s, border-color 0.18s;
+    }
+    .card-item:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+    }
+    .card-thumb {
+      position: relative;
+      width: 100%;
+      height: 250px;
+      background: #0b0c14;
+    }
+    .card-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .card-pill {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(4px);
+    }
+    .tier-MYTHIC .card-pill { color: #f43f5e; border: 1px solid rgba(244,63,94,0.5); }
+    .tier-LEGENDARY .card-pill { color: #fbbf24; border: 1px solid rgba(251,191,36,0.5); }
+    .tier-EPIC .card-pill { color: #c084fc; border: 1px solid rgba(192,132,252,0.5); }
+    .tier-RARE .card-pill { color: #38bdf8; border: 1px solid rgba(56,189,248,0.5); }
+    .tier-COMMON .card-pill { color: #94a3b8; }
+    .card-body {
+      padding: 14px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card-title {
+      font-weight: 700;
+      font-size: 0.98rem;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 2px;
+    }
+    .card-series {
+      font-size: 0.82rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 8px;
+    }
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .card-rank { color: var(--muted); }
+    .card-aether { color: var(--accent); }
+
+    /* COMANDOS LIST */
     .cmd-list { display: grid; gap: 10px; }
-    .cmd-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
-    .cmd-syntax { font-family: monospace; color: var(--accent-cyan); font-weight: 700; font-size: 0.96rem; }
-    .cmd-cat { font-size: 0.72rem; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: var(--surface-2); color: var(--muted); }
-    footer { border-top: 1px solid var(--border); padding: 28px 24px; text-align: center; color: var(--muted); font-size: 0.85rem; }
+    .cmd-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .cmd-syntax {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 1rem;
+    }
+    .cmd-tag {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      background: var(--surface-2);
+      color: var(--muted);
+      padding: 3px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.04em;
+    }
+
+    /* SIMULADOR DE TORRE */
+    .tower-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .perk-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.16s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .perk-card.selected {
+      border-color: var(--accent);
+      background: rgba(255, 107, 53, 0.1);
+    }
+    .perk-title { font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .perk-desc { font-size: 0.86rem; color: var(--muted); margin-bottom: 12px; }
+    .perk-action { font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: var(--accent); }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
   </style>
 </head>
 <body>
   <header>
     <div class="nav-wrap">
-      <div class="brand"><span>KOGU</span><span class="brand-badge">KORU ANIME</span></div>
-      <div class="tabs">
-        <a class="tab-btn active" href="./index.html">Comandos & Guia</a>
-        <a class="tab-btn" href="./terms.html">Termos de Serviço</a>
-        <a class="tab-btn" href="./privacy.html">Política de Privacidade</a>
+      <div class="brand">
+        <span>KOGU</span>
+        <span class="brand-badge">PORTAL OFICIAL</span>
       </div>
-      <a class="btn-invite" href="https://discord.com/oauth2/authorize?client_id=1561074418250416178&permissions=412317240384&scope=bot%20applications.commands" target="_blank" rel="noopener">Adicionar ao Discord</a>
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('catalog', this)">🃏 Catálogo de Cartas</button>
+        <button class="tab-btn" onclick="switchTab('commands', this)">⌨️ Comandos (62)</button>
+        <button class="tab-btn" onclick="switchTab('tower', this)">🗼 Torre de Éter</button>
+        <a class="tab-btn" href="./terms.html">📜 Termos de Serviço</a>
+        <a class="tab-btn" href="./privacy.html">🔒 Privacidade</a>
+      </div>
+      <a class="btn-invite" href="https://discord.com/oauth2/authorize?client_id=1561074418250416178&permissions=412317240384&scope=bot%20applications.commands" target="_blank" rel="noopener">
+        ⚡ Adicionar ao Discord
+      </a>
     </div>
   </header>
+
   <main>
-    <section class="hero">
-      <h1>KOGU — MULTIVERSE GACHA & RPG</h1>
-      <p>Catálogo com mais de 1.370 personagens seriados (Tiragem 1/1 Mítica) de Animes, Games, Cinema, Doramas e Música. Integrado ao ecossistema Koru Anime.</p>
-      <div class="stats-row">
-        <div class="stat-card"><div class="stat-val">1.372</div><div class="stat-lbl">Cartas Ativas</div></div>
-        <div class="stat-card"><div class="stat-val">1/1</div><div class="stat-lbl">Tiragem Mítica</div></div>
-        <div class="stat-card"><div class="stat-val">62</div><div class="stat-lbl">Comandos Híbridos</div></div>
-        <div class="stat-card"><div class="stat-val">12</div><div class="stat-lbl">Andares da Torre</div></div>
+    <!-- HERO -->
+    <section class="hero" style="background-image: linear-gradient(180deg, rgba(7,7,13,0.55), rgba(7,7,13,0.92)), url('./assets/kogu_banner_animated.gif');">
+      <div class="hero-content">
+        <img class="avatar-gif" src="./assets/kogu_avatar_animated.gif" alt="Kogu Avatar" />
+        <div class="hero-text">
+          <div class="hero-badge">DATABASE & RPG DIMENSIONAL</div>
+          <h1>KOGU — MULTIVERSE GACHA & RPG</h1>
+          <p>Explore o catálogo oficial de cartas seriadas (Tiragem 1/1 Mítica), consulte a lista de comandos e simule os andares da sua Torre de Éter.</p>
+          <div class="hero-actions">
+            <a class="btn-invite" href="https://discord.com/oauth2/authorize?client_id=1561074418250416178&permissions=412317240384&scope=bot%20applications.commands" target="_blank" rel="noopener">
+              Adicionar ao Discord
+            </a>
+            <button class="btn-secondary" onclick="switchTab('commands', document.querySelectorAll('.tab-btn')[1])">Ver 62 Comandos</button>
+            <button class="btn-secondary" onclick="switchTab('tower', document.querySelectorAll('.tab-btn')[2])">Simulador de Torre</button>
+          </div>
+        </div>
+      </div>
+      <div class="stats-strip">
+        <div class="stat-box"><div class="stat-val">1.372</div><div class="stat-lbl">Cartas Ativas</div></div>
+        <div class="stat-box"><div class="stat-val" style="color:#f43f5e">1 / 1</div><div class="stat-lbl">Tiragem Mítica</div></div>
+        <div class="stat-box"><div class="stat-val" style="color:#38bdf8">62</div><div class="stat-lbl">Comandos Híbridos</div></div>
+        <div class="stat-box"><div class="stat-val" style="color:#c084fc">12</div><div class="stat-lbl">Andares da Torre</div></div>
       </div>
     </section>
-    <div class="cmd-list">
-      <div class="cmd-item"><div><div class="cmd-syntax">$w / $h / $m / $wa / $wg / $wc / $ha / $hg / $hc</div><div style="color:var(--muted);font-size:0.88rem">Invocação de cartas por gênero e universo (Anime, Games, Cinema/Doramas/Idols).</div></div><span class="cmd-cat">Invocação</span></div>
-      <div class="cmd-item"><div><div class="cmd-syntax">$tuto / $skiptuto / $fc ($freeclaim) / $rt</div><div style="color:var(--muted);font-size:0.88rem">Tutorial inicial (+500 Éter, +5 Rolls) e carga de Pacto Livre ($fc) para casar em cooldown.</div></div><span class="cmd-cat">Progressão</span></div>
-      <div class="cmd-item"><div><div class="cmd-syntax">$ktower ($tower) / $build &lt;1-12&gt; / $destroy</div><div style="color:var(--muted);font-size:0.88rem">Obelisco Dimensional com 12 andares de bônus passivos e reembolso de 100%.</div></div><span class="cmd-cat">Economia</span></div>
-      <div class="cmd-item"><div><div class="cmd-syntax">$kl ($lootbox) / $relics / $daily / $givekakera</div><div style="color:var(--muted);font-size:0.88rem">Caixas Astrais, Relíquias Elementais, coleta diária e transferência de Éter.</div></div><span class="cmd-cat">Economia</span></div>
-      <div class="cmd-item"><div><div class="cmd-syntax">$arena [@user] / $slot ($pokemon) / $bt / $quiz</div><div style="color:var(--muted);font-size:0.88rem">Combate RPG em turnos, Cassino de Familiares (Shiny), Bomba de Palavras e Trivia.</div></div><span class="cmd-cat">Combate & Jogos</span></div>
-      <div class="cmd-item"><div><div class="cmd-syntax">$pt ($mm) / $im / $trade / $give / $divorce / $wish / $starwish</div><div style="color:var(--muted);font-size:0.88rem">Gestão completa do Panteão, trocas seguras e Lista de Desejos.</div></div><span class="cmd-cat">Coleção</span></div>
-    </div>
+
+    <!-- ABA 1: CATALOGO -->
+    <section id="tab-catalog" class="section active">
+      <div class="filter-bar">
+        <input id="q-input" class="input" type="text" placeholder="Pesquisar personagem ou série (ex: Sung Jin-Woo, Gojo, Lisa, Jungkook, Round 6)..." oninput="onSearchChange()" />
+        <select id="u-select" class="select" onchange="filterCatalog()">
+          <option value="">Todos os Universos</option>
+          <option value="ANIME">Anime & Mangá</option>
+          <option value="GAME">Games</option>
+          <option value="CINEMA">Cinema, Doramas & Idols</option>
+        </select>
+        <select id="t-select" class="select" onchange="filterCatalog()">
+          <option value="">Todas as Raridades</option>
+          <option value="MYTHIC">MÍTICO (1/1 Exclusivo)</option>
+          <option value="LEGENDARY">LENDÁRIO (Máx 3)</option>
+          <option value="EPIC">ÉPICO (Máx 10)</option>
+          <option value="RARE">RARO</option>
+          <option value="COMMON">COMUM</option>
+        </select>
+      </div>
+      <div id="catalog-grid" class="grid-cards">
+        <div style="grid-column:1/-1; padding:40px; text-align:center; color:var(--muted)">Carregando catálogo de cartas...</div>
+      </div>
+    </section>
+
+    <!-- ABA 2: COMANDOS -->
+    <section id="tab-commands" class="section">
+      <div class="filter-bar">
+        <input id="cmd-input" class="input" type="text" placeholder="Filtrar comandos (ex: $wa, $ktower, $fc, $arena, $slot, $tuto)..." oninput="filterCommands()" />
+      </div>
+      <div id="cmd-grid" class="cmd-list"></div>
+    </section>
+
+    <!-- ABA 3: TORRE DE ETER -->
+    <section id="tab-tower" class="section">
+      <div class="stat-box" style="margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+        <div style="text-align:left">
+          <div class="stat-lbl">Andares Selecionados: <strong id="tw-count" style="color:#fff">0 / 12</strong></div>
+          <div class="stat-val" id="tw-cost">Custo Total: 0 Éter</div>
+        </div>
+        <button class="btn-secondary" onclick="resetTower()">Resetar Simulação ($destroy)</button>
+      </div>
+      <div id="tower-grid" class="tower-grid"></div>
+    </section>
   </main>
+
   <footer>
-    Kogu Bot &bull; Ecossistema Koru Anime &bull; <a href="./terms.html">Termos de Serviço</a> &bull; <a href="./privacy.html">Política de Privacidade</a>
+    Kogu Bot &bull; <a href="./terms.html">Termos de Serviço</a> &bull; <a href="./privacy.html">Política de Privacidade</a>
   </footer>
+
+  <script>
+    let catalog = [];
+    let selectedPerks = new Set();
+    let searchTimer = null;
+
+    const COMMANDS = [
+      { s: "$w / $h / $m", c: "Invocação", d: "Invoca cartas femininas ($w), masculinas ($h) ou mistas ($m) de qualquer universo." },
+      { s: "$wa / $wg / $wc", c: "Invocação", d: "Invoca cartas femininas por Anime ($wa), Games ($wg) ou Cinema/Doramas/Idols ($wc)." },
+      { s: "$ha / $hg / $hc", c: "Invocação", d: "Invoca cartas masculinas por Anime ($ha), Games ($hg) ou Cinema/Doramas/Idols ($hc)." },
+      { s: "$tuto / $skiptuto", c: "Tutorial", d: "Inicia o guia de 5 passos e concede +500 Éter, +5 Rolls e +1 Pacto Livre ($fc)." },
+      { s: "$fc ($freeclaim)", c: "Progressão", d: "Zera o cooldown de casamento para firmar um segundo pacto consecutivo." },
+      { s: "$rt", c: "Progressão", d: "Redefine o timer de casamento (requer Relíquia de Esmeralda, recarga de 20h)." },
+      { s: "$ktower ($tower)", c: "Economia", d: "Abre o Obelisco Dimensional com 12 andares de bônus passivos permanentes." },
+      { s: "$build <1-12> / $destroy", c: "Economia", d: "Constrói um andar na Torre de Éter ou demole com 100% de reembolso." },
+      { s: "$kl ($lootbox)", c: "Economia", d: "Abre Caixas Astrais (500 Éter) com prêmios de Rolls, Éter, Wishlist e cargas de $fc." },
+      { s: "$relics / $daily", c: "Economia", d: "Forja Relíquias (Safira, Rubi, Esmeralda, Ouro, Diamante) e resgata recompensa diária." },
+      { s: "$givekakera @user <qtd>", c: "Economia", d: "Transfere Cristais de Éter diretamente para outro jogador no servidor." },
+      { s: "$infokeys", c: "Progressão", d: "Exibe os marcos de poder das Chaves do Caos ao girar cartas repetidas." },
+      { s: "$arena [@user]", c: "Combate", d: "Duelo RPG em turnos com base nos atributos reais (ATK, DEF, SPD, HP) do seu Panteão." },
+      { s: "$slot ($pokemon)", c: "Cassino", d: "Gira a máquina de mascotes elementais com chance de versão Shiny exclusiva." },
+      { s: "$bt ($blacktea) / $quiz", c: "Jogos", d: "Minijogo da Bomba de Palavras ou Trivia Geek valendo Cristais de Éter." },
+      { s: "$pt ($mm) / $im <nome>", c: "Coleção", d: "Exibe seu Panteão de cartas ou inspeciona uma carta completa do catálogo." },
+      { s: "$trade @user / $give / $divorce", c: "Coleção", d: "Troca segura entre membros, doação direta ou divórcio de cartas por Éter." },
+      { s: "$wish ($wl) / $starwish ($sw)", c: "Wishlist", d: "Notificações automáticas no chat e maior chance de aparição de desejados." },
+      { s: "$settings / $prefix / $lang", c: "Configuração", d: "Painel interativo do servidor, alteração de prefixo e idioma (pt-BR / en-US)." }
+    ];
+
+    const PERKS = [
+      { id: 1, title: "Andar 1 — Santuário dos Desejos", desc: "+2 vagas adicionais na Lista de Desejos ($wish)" },
+      { id: 2, title: "Andar 2 — Ressonância Estelar", desc: "+50% de chance de spawn para o seu $starwish" },
+      { id: 3, title: "Andar 3 — Domínio de Bloqueio", desc: "+1 slot na $disablelist do jogador" },
+      { id: 4, title: "Andar 4 — Dupla Chave do Caos", desc: "+10% de chance de obter 2 Chaves ao girar desejados" },
+      { id: 5, title: "Andar 5 — Olho de Hórus", desc: "Revela +2 cristais de Éter ocultos em invocações" },
+      { id: 6, title: "Andar 6 — Colheita de Pacto", desc: "+30 Cristais de Éter bônus a cada pacto firmado" },
+      { id: 7, title: "Andar 7 — Reservatório Astral", desc: "Capacidade máxima de reação de Éter elevada para 110%" },
+      { id: 8, title: "Andar 8 — Canalização Eficiente", desc: "Reações de Éter consomem -4% de energia" },
+      { id: 9, title: "Andar 9 — Benção das Chaves de Ouro", desc: "+500 Éter de teto de ganhos a cada janela de 3h" },
+      { id: 10, title: "Andar 10 — Prisma da Luz", desc: "Cristais Supremos concedem +1 fragmento bônus" },
+      { id: 11, title: "Andar 11 — Fenda Temporal", desc: "+1 Invocação permanente por hora ($wa/$ha)" },
+      { id: 12, title: "Andar 12 — Soberania Cromática", desc: "Desbloqueia customização visual completa do Panteão" }
+    ];
+
+    function switchTab(name, btn) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + name).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    async function loadCatalog() {
+      try {
+        const res = await fetch('./catalog.json');
+        catalog = await res.json();
+      } catch (e) {
+        console.warn('Erro ao ler catalog.json local:', e);
+      }
+      filterCatalog();
+    }
+
+    function onSearchChange() {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(filterCatalog, 160);
+    }
+
+    function filterCatalog() {
+      const q = (document.getElementById('q-input')?.value || '').toLowerCase().trim();
+      const u = document.getElementById('u-select')?.value || '';
+      const t = document.getElementById('t-select')?.value || '';
+
+      const filtered = catalog.filter(item => {
+        const matchQ = !q || item.name.toLowerCase().includes(q) || (item.seriesTitle && item.seriesTitle.toLowerCase().includes(q));
+        const matchU = !u || item.universe === u;
+        const matchT = !t || item.tier === t;
+        return matchQ && matchU && matchT;
+      });
+
+      const grid = document.getElementById('catalog-grid');
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div style="grid-column:1/-1; padding:60px 20px; text-align:center; color:var(--muted)">Nenhuma carta encontrada para os filtros selecionados.</div>';
+        return;
+      }
+
+      grid.innerHTML = filtered.slice(0, 72).map(item => `
+        <div class="card-item tier-${item.tier}">
+          <div class="card-thumb">
+            <img src="${item.imageUrl || ''}" alt="${item.name}" loading="lazy" onerror="this.src='./assets/kogu_avatar_animated.gif'; this.style.opacity=0.35;" />
+            <span class="card-pill">${item.tier === 'MYTHIC' ? '👑 1/1 MÍTICO' : item.tier}</span>
+          </div>
+          <div class="card-body">
+            <div>
+              <div class="card-title" title="${item.name}">${item.name}</div>
+              <div class="card-series">${item.seriesTitle || item.universe}</div>
+            </div>
+            <div class="card-meta">
+              <span class="card-rank">#${item.popularityRank || '—'}</span>
+              <span class="card-aether">💎 ${item.baseAether} Éter</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterCommands() {
+      const q = (document.getElementById('cmd-input')?.value || '').toLowerCase().trim();
+      const filtered = COMMANDS.filter(c => c.s.toLowerCase().includes(q) || c.d.toLowerCase().includes(q) || c.c.toLowerCase().includes(q));
+      document.getElementById('cmd-grid').innerHTML = filtered.map(c => `
+        <div class="cmd-card">
+          <div>
+            <div class="cmd-syntax">${c.s}</div>
+            <div style="color:var(--muted); font-size:0.88rem; margin-top:4px;">${c.d}</div>
+          </div>
+          <span class="cmd-tag">${c.c}</span>
+        </div>
+      `).join('');
+    }
+
+    function renderTower() {
+      const count = selectedPerks.size;
+      let cost = 0;
+      for (let i = 1; i <= count; i++) cost += i * 5000;
+      document.getElementById('tw-count').textContent = count + ' / 12';
+      document.getElementById('tw-cost').textContent = 'Custo Total: ' + cost.toLocaleString('pt-BR') + ' Éter';
+
+      document.getElementById('tower-grid').innerHTML = PERKS.map(p => `
+        <div class="perk-card ${selectedPerks.has(p.id) ? 'selected' : ''}" onclick="togglePerk(${p.id})">
+          <div class="perk-title">${p.title}</div>
+          <div class="perk-desc">${p.desc}</div>
+          <div class="perk-action">${selectedPerks.has(p.id) ? '✓ Ativado' : '+ Selecionar'}</div>
+        </div>
+      `).join('');
+    }
+
+    function togglePerk(id) {
+      if (selectedPerks.has(id)) selectedPerks.delete(id);
+      else selectedPerks.add(id);
+      renderTower();
+    }
+
+    function resetTower() {
+      selectedPerks.clear();
+      renderTower();
+    }
+
+    loadCatalog();
+    filterCommands();
+    renderTower();
+  </script>
 </body>
 </html>
