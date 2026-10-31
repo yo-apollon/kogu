@@ -17,6 +17,15 @@ export const TIER_WEIGHT: Record<EntityTier, number> = {
   MYTHIC: 0.03,
 };
 
+/** Limite global de copias ativas por tier (Opcao A: MYTHIC 1/1, LEGENDARY 3, EPIC 10; null = ilimitado). */
+export const TIER_MAX_SUPPLY: Record<EntityTier, number | null> = {
+  MYTHIC: 1,
+  LEGENDARY: 3,
+  EPIC: 10,
+  RARE: null,
+  COMMON: null,
+};
+
 /** Corte de percentil (do topo) para cada tier; o restante e COMMON. */
 export const TIER_TOP_PERCENT: Record<Exclude<EntityTier, "COMMON">, number> = {
   MYTHIC: 0.01,

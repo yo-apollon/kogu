@@ -12,7 +12,7 @@ import {
   or,
   sql,
 } from "drizzle-orm";
-import type { CardVariant } from "../../config/gacha.js";
+import { TIER_MAX_SUPPLY, type CardVariant } from "../../config/gacha.js";
 import { db } from "../../infra/db/client.js";
 import {
   entities,
@@ -44,6 +44,7 @@ export const pactLockKey = (guildId: string, entityId: number) =>
 export const OFFER_ERROR = {
   taken: "summon.pact_failed_taken",
   alreadyBound: "summon.pact_already_bound",
+  supplyExhausted: "summon.pact_supply_exhausted",
   noCharges: "summon.pact_no_charges",
   expired: "errors.expired",
   protected: "summon.offer_protected",
@@ -311,7 +312,23 @@ export async function claimPact(
         });
       }
 
-      // (c) firma o pacto
+      // (c) verifica limite de tiragem (Opcao A: MYTHIC 1/1, LEGENDARY 3, EPIC 10) e firma o pacto
+      const [entTier] = await tx
+        .select({ tier: entities.tier })
+        .from(entities)
+        .where(eq(entities.id, offer.entityId))
+        .limit(1);
+      const maxSupply = entTier ? TIER_MAX_SUPPLY[entTier.tier] : null;
+      if (maxSupply !== null && maxSupply !== undefined) {
+        const [supplyRow] = await tx
+          .select({ count: sql<number>`count(*)::int` })
+          .from(pacts)
+          .where(eq(pacts.entityId, offer.entityId));
+        if ((supplyRow?.count ?? 0) >= maxSupply) {
+          throw new UserError(OFFER_ERROR.supplyExhausted, { max: maxSupply });
+        }
+      }
+
       const [pact] = await tx
         .insert(pacts)
         .values({

@@ -33,6 +33,8 @@ export const FALLBACK_TEXT: Record<Locale, Record<string, string>> = {
   "pt-BR": {
     "summon.offer_protected":
       "🛡️ Esta carta está protegida por mais **{seconds}s**: só quem a invocou pode reivindicá-la agora.",
+    "summon.pact_supply_exhausted":
+      "🔒 Tiragem esgotada! Todas as **{max}** cópias desta carta rara já foram reivindicadas. Negocie via `$trade`!",
     "summon.rolls_reset_at": "🕒 Suas invocações voltam às {time} ({when}).",
     "summon.pact_ready_at": "🕒 Seu próximo Pacto fica disponível às {time} ({when}).",
     "summon.like_already": "⭐ Você já favoritou **{entity}**.",
@@ -47,6 +49,8 @@ export const FALLBACK_TEXT: Record<Locale, Record<string, string>> = {
   "en-US": {
     "summon.offer_protected":
       "🛡️ This card is protected for **{seconds}s** more: only the summoner can claim it right now.",
+    "summon.pact_supply_exhausted":
+      "🔒 Supply exhausted! All **{max}** global copies of this rare card have been claimed. Trade via `$trade`!",
     "summon.rolls_reset_at": "🕒 Your summons come back at {time} ({when}).",
     "summon.pact_ready_at": "🕒 Your next Pact becomes available at {time} ({when}).",
     "summon.like_already": "⭐ You already favorited **{entity}**.",

@@ -15,6 +15,7 @@ import * as collection from "./collection/index.js";
 import * as config from "./config/index.js";
 import * as economy from "./economy/index.js";
 import * as help from "./help/index.js";
+import * as progression from "./progression/index.js";
 import * as summon from "./summon/index.js";
 import * as wishlist from "./wishlist/index.js";
 
@@ -26,6 +27,7 @@ export const allRegistrations: CommandRegistration[] = [
   ...wrap(summon.commands),
   ...collection.registrations,
   ...wrap(economy.commands),
+  ...wrap(progression.commands),
   ...wrap(wishlist.commands),
   ...wrap(config.commands),
   ...wrap(catalog.commands),
@@ -39,6 +41,7 @@ export const allComponentHandlers: ComponentHandler[] = [
   ...summon.components,
   ...collection.components,
   ...economy.components,
+  ...progression.components,
   ...wishlist.components,
   ...config.components,
   ...catalog.components,
