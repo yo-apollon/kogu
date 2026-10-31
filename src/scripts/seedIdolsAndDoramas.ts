@@ -290,22 +290,20 @@ async function main() {
       const slug = slugify(item.name);
       const norm = normalizeName(item.name);
       const franchiseSlug = slugify(item.franchise);
-      const franchiseNorm = normalizeName(item.franchise);
 
       // Garante franquia
       const [fr] = await tx<{ id: number }[]>`
-        INSERT INTO franchises (slug, name, name_normalized)
-        VALUES (${franchiseSlug}, ${item.franchise}, ${franchiseNorm})
+        INSERT INTO franchises (slug, name)
+        VALUES (${franchiseSlug}, ${item.franchise})
         ON CONFLICT (slug) DO UPDATE SET name = EXCLUDED.name
         RETURNING id::int
       `;
 
       // Garante série
       const seriesSlug = slugify(item.seriesTitle);
-      const seriesNorm = normalizeName(item.seriesTitle);
       const [sr] = await tx<{ id: number }[]>`
-        INSERT INTO series (slug, title, title_normalized, franchise_id, universe, media_type)
-        VALUES (${seriesSlug}, ${item.seriesTitle}, ${seriesNorm}, ${fr.id}, 'CINEMA', 'TV_SHOW')
+        INSERT INTO series (slug, title, franchise_id, universe, media_type)
+        VALUES (${seriesSlug}, ${item.seriesTitle}, ${fr.id}, 'CINEMA', 'TV_SHOW')
         ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title
         RETURNING id::int
       `;
