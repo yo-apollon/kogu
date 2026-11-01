@@ -31,6 +31,7 @@
     "site:publish": "tsx src/scripts/publishSite.ts",
     "deploy:commands": "tsx src/scripts/deployCommands.ts",
     "seed": "tsx src/scripts/seed.ts",
+    "seed:expanded": "tsx src/scripts/seedPopCultureExpanded.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write .",

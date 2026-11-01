@@ -1228,16 +1228,16 @@
   <div class="subnav-bar">
     <div class="subnav-container">
       
-      <!-- CATEGORIAS RÁPIDAS (ANIME, MANGA, GAMES, VNS...) -->
+      <!-- CATEGORIAS RÁPIDAS (ANIME, MANGA, GAMES, UFC, FUTEBOL, NBA, MÚSICA & TRAP) -->
       <div class="subnav-categories">
-        <button class="cat-btn active" onclick="setCategoryFilter('all', this)">All</button>
-        <button class="cat-btn" onclick="setCategoryFilter('ANIME', this)">Anime</button>
-        <button class="cat-btn" onclick="setCategoryFilter('MANGA', this)">Manga</button>
-        <button class="cat-btn" onclick="setCategoryFilter('GAMES', this)">Games</button>
-        <button class="cat-btn" onclick="setCategoryFilter('MANHWA', this)">Manhwa</button>
-        <button class="cat-btn" onclick="setCategoryFilter('SPORTS', this)">🥊 UFC & Esportes</button>
-        <button class="cat-btn" onclick="setCategoryFilter('MUSIC', this)">🎵 Música</button>
-        <button class="cat-btn" onclick="setCategoryFilter('CINEMA', this)">Cinema & Séries</button>
+        <button class="cat-btn active" onclick="setCategoryFilter('all', this)">🌟 Todos</button>
+        <button class="cat-btn" onclick="setCategoryFilter('UFC', this)">🥊 UFC & MMA</button>
+        <button class="cat-btn" onclick="setCategoryFilter('FOOTBALL', this)">⚽ Futebol Mundial</button>
+        <button class="cat-btn" onclick="setCategoryFilter('NBA', this)">🏀 NBA / Basquete</button>
+        <button class="cat-btn" onclick="setCategoryFilter('MUSIC', this)">🎤 Música & Trap</button>
+        <button class="cat-btn" onclick="setCategoryFilter('ANIME', this)">🎌 Anime & Mangá</button>
+        <button class="cat-btn" onclick="setCategoryFilter('GAMES', this)">🎮 Games</button>
+        <button class="cat-btn" onclick="setCategoryFilter('CINEMA', this)">🎬 Cinema & Séries</button>
       </div>
 
       <!-- SELETOR DE MODOS E FERRAMENTAS -->
@@ -1328,13 +1328,15 @@
       <!-- POPULAR CHARACTERS CAROUSEL SLIDER (IDENTICO AO MUDAE.NET) -->
       <section class="slider-container">
         <div class="section-header-row">
-          <h2 class="section-title">Popular Characters</h2>
+          <h2 class="section-title">Popular Characters & Legends</h2>
           <div class="section-sublinks">
-            <a href="javascript:void(0)" class="active" onclick="filterSlider('all', this)">All</a>
-            <a href="javascript:void(0)" onclick="filterSlider('ANIME', this)">Anime</a>
-            <a href="javascript:void(0)" onclick="filterSlider('SPORTS', this)">🥊 UFC/Esportes</a>
-            <a href="javascript:void(0)" onclick="filterSlider('MUSIC', this)">🎵 Música</a>
-            <a href="javascript:void(0)" onclick="filterSlider('GAMES', this)">Games</a>
+            <a href="javascript:void(0)" class="active" onclick="filterSlider('all', this)">Todos</a>
+            <a href="javascript:void(0)" onclick="filterSlider('UFC', this)">🥊 UFC</a>
+            <a href="javascript:void(0)" onclick="filterSlider('FOOTBALL', this)">⚽ Futebol</a>
+            <a href="javascript:void(0)" onclick="filterSlider('NBA', this)">🏀 NBA</a>
+            <a href="javascript:void(0)" onclick="filterSlider('MUSIC', this)">🎤 Música & Trap</a>
+            <a href="javascript:void(0)" onclick="filterSlider('ANIME', this)">🎌 Anime</a>
+            <a href="javascript:void(0)" onclick="filterSlider('GAMES', this)">🎮 Games</a>
           </div>
         </div>
 
@@ -1748,13 +1750,26 @@
           if (!nameMatch && !seriesMatch) return false;
         }
 
-        // Categoria superior
-        if (currentCategory === 'SPORTS') {
-          const isSport = c.seriesTitle.includes('UFC') || c.seriesTitle.includes('Futebol') || c.seriesTitle.includes('NBA') || c.seriesTitle.includes('MMA');
-          if (!isSport) return false;
+        // Categoria superior dedicada
+        if (currentCategory === 'UFC') {
+          const isUfc = c.niche === 'sport_mma' || (c.seriesTitle && (c.seriesTitle.includes('UFC') || c.seriesTitle.includes('MMA')));
+          if (!isUfc) return false;
+        } else if (currentCategory === 'FOOTBALL') {
+          const isFootball = c.niche === 'sport_football' || (c.seriesTitle && (c.seriesTitle.includes('Futebol') || c.seriesTitle.includes('Copa')));
+          if (!isFootball) return false;
+        } else if (currentCategory === 'NBA') {
+          const isNba = c.niche === 'sport_basketball' || (c.seriesTitle && (c.seriesTitle.includes('NBA') || c.seriesTitle.includes('Basquete')));
+          if (!isNba) return false;
         } else if (currentCategory === 'MUSIC') {
-          const isMusic = c.seriesTitle.includes('Música') || c.seriesTitle.includes('K-Pop') || c.seriesTitle.includes('BTS') || c.seriesTitle.includes('BLACKPINK') || c.seriesTitle.includes('Ado');
+          const isMusic = c.niche?.startsWith('music_') || c.niche === 'idol' || (c.seriesTitle && (c.seriesTitle.includes('Música') || c.seriesTitle.includes('Trap') || c.seriesTitle.includes('Hip-Hop') || c.seriesTitle.includes('Rock') || c.seriesTitle.includes('Pop') || c.seriesTitle.includes('K-Pop')));
           if (!isMusic) return false;
+        } else if (currentCategory === 'ANIME') {
+          if (c.universe !== 'ANIME' && c.niche !== 'anime') return false;
+        } else if (currentCategory === 'GAMES') {
+          if (c.universe !== 'GAME' && c.niche !== 'game') return false;
+        } else if (currentCategory === 'CINEMA') {
+          if (c.universe !== 'CINEMA' && c.niche !== 'cinema_tv') return false;
+          if (c.niche === 'sport_mma' || c.niche === 'sport_football' || c.niche === 'sport_basketball' || c.niche?.startsWith('music_')) return false;
         } else if (currentCategory !== 'all') {
           if (c.universe !== currentCategory) return false;
         }
@@ -1780,7 +1795,7 @@
         return 0;
       });
 
-      document.getElementById('dbCountText').innerHTML = `Mostrando <strong>${filteredChars.length}</strong> personagens de <strong>1.372</strong>`;
+      document.getElementById('dbCountText').innerHTML = `Mostrando <strong>${filteredChars.length.toLocaleString('pt-BR')}</strong> cartas de <strong>${catalog.length.toLocaleString('pt-BR')}</strong>`;
       renderTable();
       renderGrid();
     }
@@ -1798,12 +1813,19 @@
         const genderClass = c.gender === 'FEMALE' ? 'gender-female' : (c.gender === 'MALE' ? 'gender-male' : 'gender-other');
         const genderLabel = c.gender === 'FEMALE' ? '♀ Waifu' : (c.gender === 'MALE' ? '♂ Husbando' : '✦ Entidade');
 
-        // Stats fictícios gerados deterministicamente por id para a arena
-        const seed = c.id * 17;
-        const atk = 60 + (seed % 40);
-        const def = 55 + ((seed * 3) % 40);
-        const spd = 65 + ((seed * 7) % 35);
-        const hp = 600 + (seed % 400);
+        // Stats reais da entidade
+        const atk = c.stats?.atk ?? (60 + ((c.id * 17) % 40));
+        const def = c.stats?.def ?? (55 + (((c.id * 17) * 3) % 40));
+        const spd = c.stats?.spd ?? (65 + (((c.id * 17) * 7) % 35));
+        const hp = c.stats?.hp ?? (600 + ((c.id * 17) % 400));
+
+        const editionBadge = c.edition === 'MYTHIC'
+          ? '<span class="badge-tier tier-mythic">1/1 Mítica</span>'
+          : c.edition === 'EPIC'
+          ? '<span class="badge-tier" style="background:rgba(192,132,252,0.18); border-color:#c084fc; color:#c084fc;">Épica</span>'
+          : c.edition === 'LEGENDARY' || c.tier === 'LEGENDARY'
+          ? '<span class="badge-tier" style="background:rgba(251,191,36,0.18); border-color:#fbbf24; color:#fbbf24;">Lendária</span>'
+          : '<span class="badge-tier" style="background:rgba(56,189,248,0.18); border-color:#38bdf8; color:#38bdf8;">Básica</span>';
 
         tr.innerHTML = `
           <td class="td-rank">${rankNum}</td>
@@ -1814,14 +1836,14 @@
             <div class="char-title-wrap">
               <span class="char-name-link">${c.name}</span>
               <div class="char-badge-row">
-                <span class="badge-tier tier-mythic">1/1 Mítica</span>
+                ${editionBadge}
                 <span style="font-size:0.75rem; color:var(--text-muted)">ID #${c.id}</span>
               </div>
             </div>
           </td>
-          <td class="td-series">${c.seriesTitle}</td>
+          <td class="td-series">${c.seriesTitle || 'Lendas do Multiverso'}</td>
           <td class="td-gender"><span class="gender-pill ${genderClass}">${genderLabel}</span></td>
-          <td class="td-aether">💎 ${c.baseAether || 1300} Éter</td>
+          <td class="td-aether">💎 ${(c.baseAether || 1300).toLocaleString('pt-BR')} Éter</td>
           <td class="td-stats">⚔️ ${atk} · 🛡️ ${def} · ⚡ ${spd} · ❤️ ${hp}</td>
           <td class="td-actions">
             <button class="btn-inspect" onclick="event.stopPropagation(); openModal(catalog.find(x => x.id === ${c.id}))">
@@ -1844,6 +1866,8 @@
         card.onclick = () => openModal(c);
 
         const genderSymbol = c.gender === 'FEMALE' ? '♀' : (c.gender === 'MALE' ? '♂' : '✦');
+        const editionBadge = c.edition === 'MYTHIC' ? '1/1 Mítica' : c.edition === 'EPIC' ? 'Épica' : (c.edition || 'Padrão');
+
         card.innerHTML = `
           <div class="gacha-poster-wrap">
             <img class="gacha-poster" src="${c.imageUrl}" alt="${c.name}" loading="lazy" onerror="this.src='./assets/kogu_avatar_animated.gif'" />
@@ -1852,10 +1876,10 @@
           </div>
           <div class="gacha-card-body">
             <span class="gacha-card-name">${c.name}</span>
-            <span class="gacha-card-series">${c.seriesTitle}</span>
+            <span class="gacha-card-series">${c.seriesTitle || 'Lendas do Multiverso'}</span>
             <div class="gacha-card-footer">
-              <span style="font-weight:700; color:var(--accent);">💎 ${c.baseAether || 1300}</span>
-              <span class="badge-tier tier-mythic">1/1</span>
+              <span style="font-weight:700; color:var(--accent);">💎 ${(c.baseAether || 1300).toLocaleString('pt-BR')}</span>
+              <span class="badge-tier tier-mythic">${editionBadge}</span>
             </div>
           </div>
         `;
@@ -1896,11 +1920,23 @@
 
       if (universe === 'all') {
         renderPopularSlider(catalog);
-      } else if (universe === 'SPORTS') {
-        const filtered = catalog.filter(c => c.seriesTitle.includes('UFC') || c.seriesTitle.includes('Futebol') || c.seriesTitle.includes('NBA'));
+      } else if (universe === 'UFC') {
+        const filtered = catalog.filter(c => c.niche === 'sport_mma' || (c.seriesTitle && (c.seriesTitle.includes('UFC') || c.seriesTitle.includes('MMA'))));
+        renderPopularSlider(filtered);
+      } else if (universe === 'FOOTBALL') {
+        const filtered = catalog.filter(c => c.niche === 'sport_football' || (c.seriesTitle && (c.seriesTitle.includes('Futebol') || c.seriesTitle.includes('Copa'))));
+        renderPopularSlider(filtered);
+      } else if (universe === 'NBA') {
+        const filtered = catalog.filter(c => c.niche === 'sport_basketball' || (c.seriesTitle && (c.seriesTitle.includes('NBA') || c.seriesTitle.includes('Basquete'))));
         renderPopularSlider(filtered);
       } else if (universe === 'MUSIC') {
-        const filtered = catalog.filter(c => c.seriesTitle.includes('Música') || c.seriesTitle.includes('K-Pop') || c.seriesTitle.includes('BTS'));
+        const filtered = catalog.filter(c => c.niche?.startsWith('music_') || c.niche === 'idol' || (c.seriesTitle && (c.seriesTitle.includes('Música') || c.seriesTitle.includes('Trap') || c.seriesTitle.includes('Hip-Hop') || c.seriesTitle.includes('Rock'))));
+        renderPopularSlider(filtered);
+      } else if (universe === 'ANIME') {
+        const filtered = catalog.filter(c => c.universe === 'ANIME' || c.niche === 'anime');
+        renderPopularSlider(filtered);
+      } else if (universe === 'GAMES') {
+        const filtered = catalog.filter(c => c.universe === 'GAME' || c.niche === 'game');
         renderPopularSlider(filtered);
       } else {
         const filtered = catalog.filter(c => c.universe === universe);
@@ -1914,20 +1950,19 @@
       selectedImgIndex = 0;
 
       document.getElementById('modalName').textContent = char.name;
-      document.getElementById('modalSeries').textContent = `${char.seriesTitle} • Universo ${char.universe}`;
-      document.getElementById('modalTier').textContent = '1/1 Mítica Cósmica';
+      document.getElementById('modalSeries').textContent = `${char.seriesTitle || 'Lendas do Multiverso'} • Universo ${char.universe}`;
+      document.getElementById('modalTier').textContent = char.edition === 'MYTHIC' ? '1/1 Mítica Cósmica' : char.edition === 'EPIC' ? 'Edição Épica' : (char.edition || 'Edição Básica');
       document.getElementById('modalGender').textContent = char.gender === 'FEMALE' ? 'Feminino (Waifu)' : (char.gender === 'MALE' ? 'Masculino (Husbando)' : '✦ Entidade Cósmica');
-      document.getElementById('modalAether').textContent = `💎 ${char.baseAether || 1300} Éter`;
+      document.getElementById('modalAether').textContent = `💎 ${(char.baseAether || 1300).toLocaleString('pt-BR')} Éter`;
       document.getElementById('modalRank').textContent = `#${char.popularityRank || 1} Popularidade`;
       document.getElementById('modalImg').src = char.imageUrl;
       document.getElementById('modalCmdSnippet').textContent = `$im ${char.name}`;
 
-      // Stats
-      const seed = char.id * 17;
-      const atk = 60 + (seed % 40);
-      const def = 55 + ((seed * 3) % 40);
-      const spd = 65 + ((seed * 7) % 35);
-      const hp = 600 + (seed % 400);
+      // Stats reais
+      const atk = char.stats?.atk ?? (60 + ((char.id * 17) % 40));
+      const def = char.stats?.def ?? (55 + (((char.id * 17) * 3) % 40));
+      const spd = char.stats?.spd ?? (65 + (((char.id * 17) * 7) % 35));
+      const hp = char.stats?.hp ?? (600 + ((char.id * 17) % 400));
 
       document.getElementById('statAtk').textContent = atk;
       document.getElementById('statDef').textContent = def;
