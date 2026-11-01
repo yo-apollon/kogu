@@ -112,7 +112,7 @@ export const tutoCommand: AnyCommand = {
       .setDescription(
         `${statusLine}\n\n` +
           `### 📜 Como Jogar em 5 Passos:\n` +
-          `**1. Invocação de Cartas:** Digite \`${p}w\` (Waifus), \`${p}h\` (Husbandos), \`${p}wg\` (Games) ou \`${p}wc\` (Cinema/Doramas/Idols). Clique no botão de Pacto antes de 120s!\n` +
+          `**1. Invocação de Cartas:** Digite \`${p}w\` (Waifus), \`${p}h\` (Husbands), \`${p}wg\` (Games) ou \`${p}wc\` (Cinema/Doramas/Idols). Clique no botão de Pacto antes de 120s!\n` +
           `**2. Segundo Pacto Grátis (\`${p}fc\`):** Já casou nesta janela e tirou outra carta incrível? Digite \`${p}fc\` para zerar seu tempo de Pacto e pegar outra carta na hora!\n` +
           `**3. Coleção & Trocas:** Veja seu Panteão em \`${p}pt\` (\`${p}mm\`) e negocie com outros jogadores em \`${p}trade\`.\n` +
           `**4. Evolução de Éter:** Invista seu Éter em \`${p}relics\` (\`${p}k\`), construa sua Torre em \`${p}ktower\` e abra Caixas Astrais em \`${p}kl\`.\n` +

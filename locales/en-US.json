@@ -356,7 +356,7 @@
     "commands": {
       "summon": "Summons a random entity from the catalog.",
       "summon_waifu": "Summons a female character (waifu).",
-      "summon_husbando": "Summons a male character (husbando).",
+      "summon_husbando": "Summons a male character (husband).",
       "summon_mixed": "Summons an entity of any gender.",
       "summon_weapon": "Summons legendary weapons and equippable artifacts.",
       "pantheon": "Shows your Pantheon (or another player's).",

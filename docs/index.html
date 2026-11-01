@@ -348,78 +348,402 @@
     }
 
     /* ==========================================================================
-       SUBNAV BAR COM ABAS E CATEGORIAS (ESTILO MUDAE)
+       MAIN NAVIGATION BAR (LEVEL 1: MAIN PORTAL APPS & SECTIONS)
        ========================================================================== */
-    .subnav-bar {
-      background-color: var(--bg-darker);
+    .main-nav-bar {
+      background: #090d16;
       border-bottom: 1px solid var(--border);
       padding: 0 16px;
-      overflow-x: auto;
-      scrollbar-width: none;
+      position: sticky;
+      top: 56px;
+      z-index: 90;
+      backdrop-filter: blur(12px);
     }
-    .subnav-bar::-webkit-scrollbar { display: none; }
-
-    .subnav-container {
+    .main-nav-container {
       max-width: 1360px;
       margin: 0 auto;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      height: 44px;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      height: 48px;
+    }
+    .main-nav-container::-webkit-scrollbar { display: none; }
+    .nav-tab-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 14px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-radius: 6px;
+      white-space: nowrap;
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: transparent;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+    .nav-tab-btn:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.06);
+    }
+    .nav-tab-btn.active {
+      color: #fff;
+      background: rgba(56,189,248,0.12);
+      border-color: rgba(56,189,248,0.35);
+      font-weight: 700;
+      box-shadow: 0 0 12px rgba(56,189,248,0.15);
+    }
+    .nav-tab-btn .tab-badge {
+      font-size: 0.72rem;
+      padding: 2px 7px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.08);
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+    .nav-tab-btn.active .tab-badge {
+      background: var(--accent);
+      color: #000;
+    }
+    .nav-tab-btn .tab-badge.live-pulse {
+      background: #ef4444;
+      color: #fff;
+      animation: pulseGlow 1.5s infinite;
     }
 
-    .subnav-categories {
+    /* ==========================================================================
+       CATEGORY FILTER BAR (LEVEL 2: UNIVERSES & NICHES - INSIDE CATALOG)
+       ========================================================================== */
+    .category-filter-bar {
+      background: rgba(15,23,42,0.6);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 10px 14px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      margin: 14px 0 18px 0;
+    }
+    .category-filter-bar::-webkit-scrollbar { display: none; }
+    .category-pills-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .cat-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .cat-pill:hover {
+      color: #fff;
+      border-color: rgba(255,255,255,0.25);
+      transform: translateY(-1px);
+    }
+    .cat-pill.active {
+      color: #fff;
+      background: linear-gradient(135deg, rgba(56,189,248,0.2), rgba(168,85,247,0.2));
+      border-color: var(--accent);
+      box-shadow: 0 0 10px rgba(56,189,248,0.25);
+    }
+    .cat-pill .pill-count {
+      font-size: 0.72rem;
+      opacity: 0.75;
+      font-family: var(--font-mono);
+      background: rgba(0,0,0,0.3);
+      padding: 1px 6px;
+      border-radius: 8px;
+    }
+
+    /* ==========================================================================
+       PAGINAÇÃO COMPLETA & RESPONSIVA
+       ========================================================================== */
+    .pagination-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 10px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 14px 0;
+    }
+    .pagination-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+    .pagination-center {
       display: flex;
       align-items: center;
       gap: 4px;
-      white-space: nowrap;
+      flex-wrap: wrap;
     }
-    .cat-btn {
+    .page-btn {
+      min-width: 32px;
+      height: 32px;
+      padding: 0 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 6px;
+      background: var(--bg-darker);
+      border: 1px solid var(--border);
       color: var(--text-muted);
-      font-size: 0.85rem;
-      font-weight: 500;
-      padding: 6px 12px;
-      border-radius: 4px;
+      cursor: pointer;
       transition: all 0.15s ease;
     }
-    .cat-btn:hover {
+    .page-btn:hover:not(:disabled) {
       color: #fff;
+      border-color: rgba(255,255,255,0.3);
       background: rgba(255,255,255,0.06);
     }
-    .cat-btn.active {
-      color: #fff;
-      background: var(--bg-card);
+    .page-btn.active {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+      font-weight: 800;
+    }
+    .page-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .pagination-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .page-jump-input {
+      width: 50px;
+      height: 30px;
+      background: var(--bg-darker);
       border: 1px solid var(--border);
-      font-weight: 700;
+      border-radius: 4px;
+      color: #fff;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
     }
 
-    .subnav-views {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      white-space: nowrap;
+    /* TIERS DE RARIDADE & EDIÇÕES */
+    .badge-tier.tier-common {
+      background: rgba(148,163,184,0.15);
+      border: 1px solid #94a3b8;
+      color: #cbd5e1;
     }
-    .view-btn {
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      font-weight: 500;
-      padding: 6px 12px;
+    .badge-tier.tier-rare {
+      background: rgba(56,189,248,0.15);
+      border: 1px solid #38bdf8;
+      color: #38bdf8;
+    }
+    .badge-tier.tier-epic {
+      background: rgba(192,132,252,0.18);
+      border: 1px solid #c084fc;
+      color: #c084fc;
+    }
+    .badge-tier.tier-legendary {
+      background: rgba(251,191,36,0.18);
+      border: 1px solid #fbbf24;
+      color: #fbbf24;
+    }
+    .badge-tier.tier-mythic {
+      background: linear-gradient(135deg, rgba(239,68,68,0.25), rgba(168,85,247,0.25));
+      border: 1px solid #f87171;
+      color: #fca5a5;
+      box-shadow: 0 0 10px rgba(239,68,68,0.25);
+    }
+
+    .pill-edition {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 7px;
       border-radius: 4px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.15s ease;
+      letter-spacing: 0.3px;
     }
-    .view-btn:hover {
-      color: #fff;
-      background: rgba(255,255,255,0.06);
-    }
-    .view-btn.active {
-      color: var(--accent);
+    .pill-edition.edition-basic {
       background: rgba(56,189,248,0.1);
       border: 1px solid rgba(56,189,248,0.3);
+      color: #7dd3fc;
+    }
+    .pill-edition.edition-epic {
+      background: rgba(192,132,252,0.12);
+      border: 1px solid rgba(192,132,252,0.35);
+      color: #d8b4fe;
+    }
+    .pill-edition.edition-mythic {
+      background: rgba(239,68,68,0.15);
+      border: 1px solid rgba(239,68,68,0.4);
+      color: #fca5a5;
+    }
+
+    /* MODAL VARIATIONS BAR */
+    .modal-editions-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 12px 0;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      align-items: center;
+    }
+    .modal-editions-title {
+      font-size: 0.75rem;
       font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-right: 4px;
+    }
+    .modal-ed-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-darker);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .modal-ed-btn:hover {
+      color: #fff;
+      border-color: rgba(255,255,255,0.3);
+    }
+    .modal-ed-btn.active {
+      border-color: var(--accent);
+      background: rgba(56,189,248,0.15);
+      color: #fff;
+      box-shadow: 0 0 10px rgba(56,189,248,0.3);
+    }
+
+    /* SIMULADOR AVANÇADO */
+    .sim-modes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .btn-sim-mode {
+      padding: 10px 14px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+    }
+    .btn-sim-mode:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    }
+    .btn-sim-mode.mode-all { background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-color: transparent; }
+    .btn-sim-mode.mode-waifu { background: linear-gradient(135deg, #ec4899, #f43f5e); border-color: transparent; }
+    .btn-sim-mode.mode-husband { background: linear-gradient(135deg, #0284c7, #2563eb); border-color: transparent; }
+    .btn-sim-mode.mode-anime { background: linear-gradient(135deg, #8b5cf6, #d946ef); border-color: transparent; }
+    .btn-sim-mode.mode-games { background: linear-gradient(135deg, #10b981, #059669); border-color: transparent; }
+    .btn-sim-mode.mode-sports { background: linear-gradient(135deg, #f59e0b, #d97706); border-color: transparent; }
+    .btn-sim-mode.mode-weapon { background: linear-gradient(135deg, #ef4444, #b91c1c); border-color: transparent; }
+
+    .sim-pity-wrap {
+      max-width: 480px;
+      margin: 0 auto 20px auto;
+      background: var(--bg-card);
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .sim-pity-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .sim-pity-track {
+      width: 100%;
+      height: 8px;
+      background: #111;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .sim-pity-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #ec4899, #fbbf24);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .sim-history-wrap {
+      max-width: 900px;
+      margin: 24px auto 0 auto;
+      text-align: left;
+    }
+    .sim-history-list {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 10px 4px;
+      scrollbar-width: thin;
+    }
+    .sim-history-item {
+      flex: 0 0 100px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px;
+      cursor: pointer;
+      text-align: center;
+      transition: transform 0.15s ease;
+    }
+    .sim-history-item:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+    }
+    .sim-history-thumb {
+      width: 100%;
+      height: 110px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-bottom: 4px;
+    }
+    .sim-history-name {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #fff;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     /* FILTROS EXPANSÍVEIS (DROPDOWN) */
@@ -1151,7 +1475,7 @@
       transform: scale(1.03);
     }
     .btn-roll.waifu { background: var(--pink); color: #fff; box-shadow: 0 4px 14px rgba(236,72,153,0.3); }
-    .btn-roll.husbando { background: var(--blue); color: #fff; box-shadow: 0 4px 14px rgba(59,130,246,0.3); }
+    .btn-roll.husband, .btn-roll.husbando { background: var(--blue); color: #fff; box-shadow: 0 4px 14px rgba(59,130,246,0.3); }
 
     .sim-card-display {
       max-width: 320px;
@@ -1288,6 +1612,46 @@
       margin-bottom: 10px;
     }
 
+    /* SIMULATOR TOAST */
+    .sim-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      padding: 14px 20px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      font-size: 0.95rem;
+      z-index: 99999;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+    .sim-toast.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .page-size-select {
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .page-size-select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .pagination-size {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
@@ -1349,48 +1713,33 @@
   </header>
 
   <!-- ==========================================================================
-       SUBNAV BAR: CATEGORIAS & ABAS PRINCIPAIS
-       ========================================================================== */
-  -->
-  <div class="subnav-bar">
-    <div class="subnav-container">
-      
-      <!-- CATEGORIAS RÁPIDAS (ANIME, MANGA, GAMES, UFC, FUTEBOL, NBA, MÚSICA & TRAP) -->
-      <div class="subnav-categories">
-        <button class="cat-btn active" onclick="setCategoryFilter('all', this)">🌟 Todos</button>
-        <button class="cat-btn" onclick="setCategoryFilter('UFC', this)">🥊 UFC & MMA</button>
-        <button class="cat-btn" onclick="setCategoryFilter('FOOTBALL', this)">⚽ Futebol Mundial</button>
-        <button class="cat-btn" onclick="setCategoryFilter('NBA', this)">🏀 NBA / Basquete</button>
-        <button class="cat-btn" onclick="setCategoryFilter('MUSIC', this)">🎤 Música & Trap</button>
-        <button class="cat-btn" onclick="setCategoryFilter('ANIME', this)">🎌 Anime & Mangá</button>
-        <button class="cat-btn" onclick="setCategoryFilter('GAMES', this)">🎮 Games</button>
-        <button class="cat-btn" onclick="setCategoryFilter('CINEMA', this)">🎬 Cinema & Séries</button>
-      </div>
-
-      <!-- SELETOR DE MODOS E FERRAMENTAS -->
-      <div class="subnav-views">
-        <button id="viewBtn-database" class="view-btn active" onclick="switchView('database')">
-          <span>📊</span> Database
-        </button>
-        <button id="viewBtn-series" class="view-btn" onclick="switchView('series')">
-          <span>📺</span> Séries
-        </button>
-        <button id="viewBtn-simulator" class="view-btn" onclick="switchView('simulator')">
-          <span>🎲</span> Simulador Roll
-        </button>
-        <button id="viewBtn-commands" class="view-btn" onclick="switchView('commands')">
-          <span>📜</span> 85+ Comandos
-        </button>
-        <button id="viewBtn-tower" class="view-btn" onclick="switchView('tower')">
-          <span>🏛️</span> Torre de Éter
-        </button>
-        <button id="viewBtn-top100" class="view-btn" onclick="switchView('top100')">
-          <span>🏆</span> Top 100
-        </button>
-      </div>
-
+       BARRA DE NAVEGAÇÃO PRINCIPAL (ABAS DE NÍVEL 1)
+       ========================================================================== -->
+  <nav class="main-nav-bar">
+    <div class="main-nav-container">
+      <button id="viewBtn-database" class="nav-tab-btn active" onclick="switchView('database')">
+        <span>📊</span> <span>Catálogo Multiversal</span>
+        <span class="tab-badge" id="tabCountDatabase">7.379</span>
+      </button>
+      <button id="viewBtn-series" class="nav-tab-btn" onclick="switchView('series')">
+        <span>📺</span> <span>Obras & Franquias</span>
+        <span class="tab-badge" id="tabCountSeries">650+</span>
+      </button>
+      <button id="viewBtn-simulator" class="nav-tab-btn" onclick="switchView('simulator')">
+        <span>🎲</span> <span>Simulador de Roll</span>
+        <span class="tab-badge live-pulse">Ao Vivo</span>
+      </button>
+      <button id="viewBtn-top100" class="nav-tab-btn" onclick="switchView('top100')">
+        <span>🏆</span> <span>Top 100 Ranking</span>
+      </button>
+      <button id="viewBtn-tower" class="nav-tab-btn" onclick="switchView('tower')">
+        <span>🏰</span> <span>Torre de Éter ($ktower)</span>
+      </button>
+      <button id="viewBtn-commands" class="nav-tab-btn" onclick="switchView('commands')">
+        <span>📜</span> <span>85+ Comandos & Guia</span>
+      </button>
     </div>
-  </div>
+  </nav>
 
   <!-- GAVETA DE FILTROS AVANÇADOS -->
   <div id="filterDrawer" class="filter-drawer">
@@ -1404,7 +1753,7 @@
           </label>
           <label class="filter-check-item">
             <input type="checkbox" id="checkMale" checked onchange="applyFilters()" />
-            <span>Masculino (Husbandos)</span>
+            <span>Masculino (Husbands)</span>
           </label>
           <label class="filter-check-item">
             <input type="checkbox" id="checkOther" checked onchange="applyFilters()" />
@@ -1418,19 +1767,23 @@
         <div class="filter-checkboxes">
           <label class="filter-check-item">
             <input type="checkbox" id="checkMythic" checked onchange="applyFilters()" />
-            <span style="color:#f87171">1/1 Mítica Cósmica</span>
+            <span style="color:#f87171">👑 1/1 Mítica</span>
           </label>
           <label class="filter-check-item">
             <input type="checkbox" id="checkLegendary" checked onchange="applyFilters()" />
-            <span style="color:#fbbf24">Lendária</span>
+            <span style="color:#fbbf24">🟡 Lendária</span>
           </label>
           <label class="filter-check-item">
             <input type="checkbox" id="checkEpic" checked onchange="applyFilters()" />
-            <span style="color:#c084fc">Épica</span>
+            <span style="color:#c084fc">🟣 Épica</span>
           </label>
           <label class="filter-check-item">
             <input type="checkbox" id="checkRare" checked onchange="applyFilters()" />
-            <span style="color:#38bdf8">Rara</span>
+            <span style="color:#38bdf8">🔵 Rara</span>
+          </label>
+          <label class="filter-check-item">
+            <input type="checkbox" id="checkCommon" checked onchange="applyFilters()" />
+            <span style="color:#94a3b8">⚪ Comum</span>
           </label>
         </div>
       </div>
@@ -1451,6 +1804,36 @@
 
     <!-- VIEW 1: DATABASE DE PERSONAGENS (DEFAULT) -->
     <div id="panel-database" class="view-panel active">
+
+      <!-- BARRA DE CATEGORIAS & NICHOS (NÍVEL 2: FILTROS DO CATÁLOGO) -->
+      <div class="category-filter-bar">
+        <div class="category-pills-container">
+          <button class="cat-pill active" data-cat="all" onclick="setCategoryFilter('all', this)">
+            <span>🌟</span> <span>Todos</span> <span class="pill-count" id="countAll">7.379</span>
+          </button>
+          <button class="cat-pill" data-cat="UFC" onclick="setCategoryFilter('UFC', this)">
+            <span>🥊</span> <span>UFC & MMA</span> <span class="pill-count" id="countUFC">180</span>
+          </button>
+          <button class="cat-pill" data-cat="FOOTBALL" onclick="setCategoryFilter('FOOTBALL', this)">
+            <span>⚽</span> <span>Futebol Mundial</span> <span class="pill-count" id="countFootball">320</span>
+          </button>
+          <button class="cat-pill" data-cat="NBA" onclick="setCategoryFilter('NBA', this)">
+            <span>🏀</span> <span>NBA / Basquete</span> <span class="pill-count" id="countNBA">150</span>
+          </button>
+          <button class="cat-pill" data-cat="MUSIC" onclick="setCategoryFilter('MUSIC', this)">
+            <span>🎤</span> <span>Música & Trap</span> <span class="pill-count" id="countMusic">210</span>
+          </button>
+          <button class="cat-pill" data-cat="ANIME" onclick="setCategoryFilter('ANIME', this)">
+            <span>🎌</span> <span>Anime & Mangá</span> <span class="pill-count" id="countAnime">4.850</span>
+          </button>
+          <button class="cat-pill" data-cat="GAMES" onclick="setCategoryFilter('GAMES', this)">
+            <span>🎮</span> <span>Games & Jogos</span> <span class="pill-count" id="countGames">1.120</span>
+          </button>
+          <button class="cat-pill" data-cat="CINEMA" onclick="setCategoryFilter('CINEMA', this)">
+            <span>🎬</span> <span>Cinema & Séries</span> <span class="pill-count" id="countCinema">549</span>
+          </button>
+        </div>
+      </div>
       
       <!-- HERO BANNER DE INTEGRAÇÃO DISCORD <-> WEB -->
       <section class="discord-promo-card">
@@ -1541,6 +1924,9 @@
         </div>
       </div>
 
+      <!-- CONTROLE DE PAGINAÇÃO SUPERIOR -->
+      <div id="paginationTop" class="pagination-bar"></div>
+
       <!-- VISUALIZAÇÃO EM TABELA OFICIAL ESTILO MUDAE.NET -->
       <div id="tableViewWrap" class="table-container">
         <table class="mudae-table">
@@ -1567,6 +1953,9 @@
         <!-- Cards injetados via JavaScript -->
       </div>
 
+      <!-- CONTROLE DE PAGINAÇÃO INFERIOR -->
+      <div id="paginationBottom" class="pagination-bar"></div>
+
     </div>
 
     <!-- VIEW 2: SÉRIES & FRANQUIAS -->
@@ -1580,40 +1969,87 @@
       </div>
     </div>
 
-    <!-- VIEW 3: SIMULADOR DE INVOCACÃO ROLL ($w, $h, $m) -->
+    <!-- VIEW 3: SIMULADOR DE INVOCACÃO ROLL COM PROBABILIDADES REAIS -->
     <div id="panel-simulator" class="view-panel">
       <div class="simulator-stage">
-        <h2 style="font-size:1.8rem; font-weight:900; color:#fff; margin-bottom: 8px;">Simulador de Invocações ao Vivo</h2>
-        <p style="color:var(--text-muted); margin-bottom: 24px;">
-          Teste a roleta do bot com probabilidades exatas do Discord ($w, $h, $m). Cartas Míticas 1/1 concedem cristais de Éter adicionais.
+        <h2 style="font-size:1.9rem; font-weight:900; color:#fff; margin-bottom: 8px;">Simulador Multiversal de Invocações</h2>
+        <p style="color:var(--text-muted); margin-bottom: 20px; max-width: 650px; margin-left:auto; margin-right:auto;">
+          Simulador oficial com as 7.379 cartas cadastradas no Kogu Bot. Experimente rolagens por universo, ative o sistema de Pity garantido e simule pactos com cartas raras e míticas 1/1!
         </p>
 
-        <div class="sim-buttons-row">
-          <button class="btn-roll waifu" onclick="simulateRoll('waifu')">
-            ♀ Invocar Waifu ($w / $wa)
+        <!-- GRID DE MODOS DE ROLL -->
+        <div class="sim-modes-grid">
+          <button class="btn-sim-mode mode-all" onclick="simulateRoll('all')">
+            <span>🎲</span> $roll (Geral)
           </button>
-          <button class="btn-roll husbando" onclick="simulateRoll('husbando')">
-            ♂ Invocar Husbando ($h / $ha)
+          <button class="btn-sim-mode mode-waifu" onclick="simulateRoll('waifu')">
+            <span>♀</span> $w (Waifus)
           </button>
-          <button class="btn-roll" onclick="simulateRoll('all')">
-            🎲 Invocação Mista ($m / /roll)
+          <button class="btn-sim-mode mode-husband" onclick="simulateRoll('husband')">
+            <span>♂</span> $h (Husbands)
+          </button>
+          <button class="btn-sim-mode mode-anime" onclick="simulateRoll('anime')">
+            <span>🎌</span> $wa / $ha (Anime)
+          </button>
+          <button class="btn-sim-mode mode-games" onclick="simulateRoll('games')">
+            <span>🎮</span> $wg / $hg (Games)
+          </button>
+          <button class="btn-sim-mode mode-sports" onclick="simulateRoll('sports')">
+            <span>🥊</span> $we / $he (UFC/Futebol)
+          </button>
+          <button class="btn-sim-mode mode-weapon" onclick="simulateRoll('weapon')">
+            <span>⚔️</span> $ar (Armas/Artefatos)
           </button>
         </div>
 
+        <!-- PITY METER -->
+        <div class="sim-pity-wrap">
+          <div class="sim-pity-header">
+            <span>⚡ Medidor de Pity Multiversal</span>
+            <span id="simPityCount">0 / 10 para Mítica ou Lendária</span>
+          </div>
+          <div class="sim-pity-track">
+            <div id="simPityFill" class="sim-pity-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- DISPLAY DO CARD ROLADO -->
         <div id="simCard" class="sim-card-display">
           <div style="height: 380px; position:relative; overflow:hidden;">
             <img id="simImg" src="./assets/kogu_banner_animated.gif" style="width:100%; height:100%; object-fit:cover;" alt="Roll Card" />
-            <div id="simBadge" class="slider-rank" style="top:10px; left:10px; font-size:0.8rem;">1/1 MÍTICO</div>
+            <div id="simBadge" class="slider-rank" style="top:10px; left:10px; font-size:0.8rem;">1/1 MÍTICA</div>
           </div>
           <div style="padding:16px; text-align:left; background:var(--bg-darker);">
-            <div id="simName" style="font-size:1.15rem; font-weight:800; color:#fff;">Clique para Rolar</div>
-            <div id="simSeries" style="color:var(--text-muted); font-size:0.85rem; margin-bottom:10px;">Multiverso Kogu</div>
-            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:10px;">
-              <span id="simAether" style="font-family:var(--font-mono); font-weight:700; color:var(--accent);">💎 1.300 Éter</span>
-              <span id="simGender" class="gender-pill gender-other">♀ 1/1</span>
+            <div id="simName" style="font-size:1.2rem; font-weight:800; color:#fff;">Clique em um Botão para Invocar</div>
+            <div id="simSeries" style="color:var(--text-muted); font-size:0.85rem; margin-bottom:12px;">Multiverso Kogu</div>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:12px; margin-bottom:12px;">
+              <span id="simAether" style="font-family:var(--font-mono); font-weight:700; color:var(--accent); font-size:1.05rem;">💎 1.300 Éter</span>
+              <span id="simGender" class="gender-pill gender-other">✦ Multiverso</span>
+            </div>
+
+            <div style="display:flex; gap:8px;">
+              <button id="btnSimClaim" class="btn-discord" style="flex:1; justify-content:center; padding:8px 12px; font-size:0.85rem;" onclick="simulateClaim()">
+                💍 Firmar Pacto ($claim)
+              </button>
+              <button class="btn-inspect" style="padding:8px 14px;" onclick="if(lastRolledChar) openModal(lastRolledChar)">
+                Ver Ficha
+              </button>
             </div>
           </div>
         </div>
+
+        <!-- HISTÓRICO DA SESSÃO -->
+        <div class="sim-history-wrap">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-weight:700; font-size:0.9rem; color:#fff;">📜 Histórico da Sessão (<span id="simHistoryCount">0</span> cartas)</span>
+            <span style="font-size:0.8rem; color:var(--accent); font-family:var(--font-mono);">Total: <span id="simHistoryAether">0</span> Éter</span>
+          </div>
+          <div id="simHistoryList" class="sim-history-list">
+            <span style="font-size:0.8rem; color:var(--text-muted); padding:10px;">Role cartas acima para construir o histórico da sua sessão.</span>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -1691,6 +2127,9 @@
           <div id="modalSeries" class="modal-series-badge">Série de Origem</div>
         </div>
 
+        <!-- SELETOR DE EDIÇÕES / VARIAÇÕES (BÁSICA, ÉPICA, MÍTICA) -->
+        <div id="modalEditionsBar" class="modal-editions-bar" style="margin-bottom: 14px;"></div>
+
         <div class="modal-meta-grid">
           <div class="meta-item">
             <span class="meta-label">Raridade</span>
@@ -1766,12 +2205,24 @@
     let currentViewMode = 'table';
     let selectedChar = null;
     let selectedImgIndex = 0;
+    let modalGalleryImages = [];
+
+    // Paginação
+    let currentPage = 1;
+    let pageSize = 100;
+
+    // Simulador de Invocação
+    let simRollCount = 0;
+    let simPityCount = 0;
+    let lastRolledChar = null;
+    let simTotalAether = 0;
+    const simHistory = [];
 
     const COMMANDS = [
       // Invocação Multiversal
       { s: "$w", c: "Invocação", d: "Invoca personagens femininas (waifus) de qualquer franquia." },
-      { s: "$h", c: "Invocação", d: "Invoca personagens masculinos (husbandos) de qualquer franquia." },
-      { s: "$m", c: "Invocação", d: "Invocação mista (waifus e husbandos de qualquer universo)." },
+      { s: "$h", c: "Invocação", d: "Invoca personagens masculinos (husbands) de qualquer franquia." },
+      { s: "$m", c: "Invocação", d: "Invocação mista (waifus e husbands de qualquer universo)." },
       { s: "$wa", c: "Invocação", d: "Invoca apenas personagens femininas de Anime & Mangá." },
       { s: "$ha", c: "Invocação", d: "Invoca apenas personagens masculinos de Anime & Mangá." },
       { s: "$ma", c: "Invocação", d: "Invocação mista restrita ao universo Anime & Mangá." },
@@ -1873,6 +2324,166 @@
       { id: 12, title: "Andar 12 — Soberania Cromática", desc: "Desbloqueia customização visual completa do Panteão" }
     ];
 
+    // Helper: Badge de Tier da Carta
+    function getTierBadge(c) {
+      const tier = (c.tier || '').toUpperCase();
+      const ed = (c.edition || '').toUpperCase();
+      if (tier === 'MYTHIC' || ed === 'MYTHIC') {
+        return '<span class="badge-tier tier-mythic">👑 1/1 Mítica</span>';
+      }
+      if (tier === 'LEGENDARY' || ed === 'LEGENDARY') {
+        return '<span class="badge-tier tier-legendary">⭐ Lendária</span>';
+      }
+      if (tier === 'EPIC' || ed === 'EPIC') {
+        return '<span class="badge-tier tier-epic">🟣 Épica</span>';
+      }
+      if (tier === 'RARE') {
+        return '<span class="badge-tier tier-rare">🔷 Rara</span>';
+      }
+      return '<span class="badge-tier tier-common">⚪ Comum</span>';
+    }
+
+    // Helper: Pill de Edição da Carta
+    function getEditionPill(c) {
+      const ed = (c.edition || '').toUpperCase();
+      if (ed === 'MYTHIC') return '<span class="pill-edition edition-mythic">Edição 1/1 Mítica</span>';
+      if (ed === 'EPIC') return '<span class="pill-edition edition-epic">Edição Épica</span>';
+      return '<span class="pill-edition edition-basic">Edição Básica</span>';
+    }
+
+    // Helper: Encontra todas as variações/edições irmãs
+    function findCharacterEditions(char) {
+      if (!char) return [];
+      const rootId = char.anchorId || char.id;
+      const matches = catalog.filter(c => c.id === rootId || c.anchorId === rootId);
+      if (matches.length > 0) {
+        const order = { 'BASIC': 1, 'EPIC': 2, 'MYTHIC': 3 };
+        matches.sort((a, b) => (order[a.edition || 'BASIC'] || 1) - (order[b.edition || 'BASIC'] || 1));
+        return matches;
+      }
+      return [char];
+    }
+
+    // SPA Hash Router & State Sync
+    const VALID_VIEWS = ['database', 'series', 'simulator', 'top100', 'tower', 'commands'];
+    const CATEGORY_HASH_MAP = {
+      'ufc': 'UFC',
+      'futebol': 'FOOTBALL',
+      'football': 'FOOTBALL',
+      'nba': 'NBA',
+      'musica': 'MUSIC',
+      'music': 'MUSIC',
+      'trap': 'MUSIC',
+      'anime': 'ANIME',
+      'games': 'GAMES',
+      'cinema': 'CINEMA',
+      'todos': 'all'
+    };
+
+    function parseHash() {
+      const hash = (window.location.hash || '').replace(/^#/, '').toLowerCase().trim();
+      if (!hash) return null;
+      if (VALID_VIEWS.includes(hash)) return { view: hash };
+      if (CATEGORY_HASH_MAP[hash]) {
+        return { view: 'database', category: CATEGORY_HASH_MAP[hash] };
+      }
+      return null;
+    }
+
+    function syncFromHashOrStorage() {
+      const hashState = parseHash();
+      let targetView = 'database';
+      let targetCat = 'all';
+
+      if (hashState) {
+        targetView = hashState.view;
+        if (hashState.category) targetCat = hashState.category;
+      } else {
+        targetView = localStorage.getItem('kogu_active_view') || 'database';
+        targetCat = localStorage.getItem('kogu_active_category') || 'all';
+      }
+
+      if (!VALID_VIEWS.includes(targetView)) targetView = 'database';
+
+      switchView(targetView, false);
+      setCategoryFilter(targetCat, null, false);
+    }
+
+    function switchView(viewName, updateHash = true) {
+      if (!VALID_VIEWS.includes(viewName)) viewName = 'database';
+
+      document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+
+      const target = document.getElementById('panel-' + viewName);
+      const btn = document.getElementById('viewBtn-' + viewName);
+      if (target) target.classList.add('active');
+      if (btn) btn.classList.add('active');
+
+      localStorage.setItem('kogu_active_view', viewName);
+      if (updateHash) {
+        history.replaceState(null, '', '#' + viewName);
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function setCategoryFilter(cat, btn, updateHash = true) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-pill').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-cat') === cat);
+      });
+      if (btn) btn.classList.add('active');
+
+      localStorage.setItem('kogu_active_category', cat);
+      if (updateHash && cat !== 'all') {
+        const hashName = Object.keys(CATEGORY_HASH_MAP).find(k => CATEGORY_HASH_MAP[k] === cat) || cat.toLowerCase();
+        history.replaceState(null, '', '#' + hashName);
+      } else if (updateHash && cat === 'all') {
+        const curView = localStorage.getItem('kogu_active_view') || 'database';
+        history.replaceState(null, '', '#' + curView);
+      }
+
+      currentPage = 1;
+      applyFilters(true);
+    }
+
+    function updateCategoryBadgeCounts() {
+      const counts = {
+        all: catalog.length,
+        ufc: 0,
+        football: 0,
+        nba: 0,
+        music: 0,
+        anime: 0,
+        games: 0,
+        cinema: 0
+      };
+
+      catalog.forEach(c => {
+        if (c.niche === 'sport_mma' || (c.seriesTitle && (c.seriesTitle.includes('UFC') || c.seriesTitle.includes('MMA')))) counts.ufc++;
+        if (c.niche === 'sport_football' || (c.seriesTitle && (c.seriesTitle.includes('Futebol') || c.seriesTitle.includes('Copa')))) counts.football++;
+        if (c.niche === 'sport_basketball' || (c.seriesTitle && (c.seriesTitle.includes('NBA') || c.seriesTitle.includes('Basquete')))) counts.nba++;
+        if (c.niche?.startsWith('music_') || c.niche === 'idol' || (c.seriesTitle && (c.seriesTitle.includes('Música') || c.seriesTitle.includes('Trap') || c.seriesTitle.includes('Hip-Hop') || c.seriesTitle.includes('Rock') || c.seriesTitle.includes('Pop') || c.seriesTitle.includes('K-Pop')))) counts.music++;
+        if (c.universe === 'ANIME' || c.niche === 'anime') counts.anime++;
+        if (c.universe === 'GAME' || c.niche === 'game') counts.games++;
+        if ((c.universe === 'CINEMA' || c.niche === 'cinema_tv') && !(c.niche === 'sport_mma' || c.niche === 'sport_football' || c.niche === 'sport_basketball' || c.niche?.startsWith('music_'))) counts.cinema++;
+      });
+
+      const setEl = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val.toLocaleString('pt-BR');
+      };
+
+      setEl('countAll', counts.all);
+      setEl('countUFC', counts.ufc);
+      setEl('countFootball', counts.football);
+      setEl('countNBA', counts.nba);
+      setEl('countMusic', counts.music);
+      setEl('countAnime', counts.anime);
+      setEl('countGames', counts.games);
+      setEl('countCinema', counts.cinema);
+    }
+
     async function init() {
       try {
         const res = await fetch('./catalog.json');
@@ -1882,18 +2493,26 @@
       }
 
       populateSeriesDropdown();
+      updateCategoryBadgeCounts();
       renderPopularSlider(catalog);
-      applyFilters();
       renderCommands();
       renderTower();
       renderSeriesView();
       renderTop100();
+
+      // Sincroniza estado de hash ou storage ao inicializar
+      syncFromHashOrStorage();
+
+      window.addEventListener('hashchange', () => {
+        syncFromHashOrStorage();
+      });
     }
 
     function populateSeriesDropdown() {
       const select = document.getElementById('seriesFilterSelect');
+      if (!select) return;
       const seriesSet = new Set(catalog.map(c => c.seriesTitle));
-      const sorted = Array.from(seriesSet).sort();
+      const sorted = Array.from(seriesSet).filter(Boolean).sort();
       sorted.forEach(s => {
         const opt = document.createElement('option');
         opt.value = s;
@@ -1909,13 +2528,6 @@
       btn.classList.toggle('active');
     }
 
-    function setCategoryFilter(cat, btn) {
-      currentCategory = cat;
-      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-      applyFilters();
-    }
-
     function setViewMode(mode) {
       currentViewMode = mode;
       document.getElementById('btnModeTable').classList.toggle('active', mode === 'table');
@@ -1924,31 +2536,31 @@
       document.getElementById('gridViewWrap').style.display = mode === 'grid' ? 'grid' : 'none';
     }
 
-    function switchView(viewName) {
-      document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+    function applyFilters(resetPage = false) {
+      if (resetPage) currentPage = 1;
 
-      const target = document.getElementById('panel-' + viewName);
-      const btn = document.getElementById('viewBtn-' + viewName);
-      if (target) target.classList.add('active');
-      if (btn) btn.classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+      const search = (document.getElementById('mainSearchInput')?.value || '').trim().toLowerCase();
+      const female = document.getElementById('checkFemale')?.checked ?? true;
+      const male = document.getElementById('checkMale')?.checked ?? true;
+      const other = document.getElementById('checkOther')?.checked ?? true;
 
-    function applyFilters() {
-      const search = (document.getElementById('mainSearchInput').value || '').trim().toLowerCase();
-      const female = document.getElementById('checkFemale').checked;
-      const male = document.getElementById('checkMale').checked;
-      const other = document.getElementById('checkOther').checked;
-      const selectedSeries = document.getElementById('seriesFilterSelect').value;
-      const sortBy = document.getElementById('sortSelect').value;
+      // Rarity Checkboxes
+      const mythic = document.getElementById('checkMythic')?.checked ?? true;
+      const legendary = document.getElementById('checkLegendary')?.checked ?? true;
+      const epic = document.getElementById('checkEpic')?.checked ?? true;
+      const rare = document.getElementById('checkRare')?.checked ?? true;
+      const common = document.getElementById('checkCommon')?.checked ?? true;
+
+      const selectedSeries = document.getElementById('seriesFilterSelect')?.value || 'all';
+      const sortBy = document.getElementById('sortSelect')?.value || 'rank';
 
       filteredChars = catalog.filter(c => {
         // Busca texto
         if (search) {
-          const nameMatch = c.name.toLowerCase().includes(search);
-          const seriesMatch = c.seriesTitle.toLowerCase().includes(search);
-          if (!nameMatch && !seriesMatch) return false;
+          const nameMatch = (c.name || '').toLowerCase().includes(search);
+          const seriesMatch = (c.seriesTitle || '').toLowerCase().includes(search);
+          const idMatch = String(c.id) === search || `id:${c.id}` === search;
+          if (!nameMatch && !seriesMatch && !idMatch) return false;
         }
 
         // Categoria superior dedicada
@@ -1980,6 +2592,21 @@
         if (c.gender === 'MALE' && !male) return false;
         if (c.gender === 'OTHER' && !other) return false;
 
+        // Raridade / Tier Checkboxes
+        const tier = (c.tier || '').toUpperCase();
+        const ed = (c.edition || '').toUpperCase();
+        const isMythic = tier === 'MYTHIC' || ed === 'MYTHIC';
+        const isLegendary = (tier === 'LEGENDARY' || ed === 'LEGENDARY') && !isMythic;
+        const isEpic = (tier === 'EPIC' || ed === 'EPIC') && !isMythic && !isLegendary;
+        const isRare = tier === 'RARE' && !isMythic && !isLegendary && !isEpic;
+        const isCommon = (tier === 'COMMON' || (!isMythic && !isLegendary && !isEpic && !isRare));
+
+        if (isMythic && !mythic) return false;
+        if (isLegendary && !legendary) return false;
+        if (isEpic && !epic) return false;
+        if (isRare && !rare) return false;
+        if (isCommon && !common) return false;
+
         // Série
         if (selectedSeries !== 'all' && c.seriesTitle !== selectedSeries) return false;
 
@@ -1990,46 +2617,140 @@
       filteredChars.sort((a, b) => {
         if (sortBy === 'rank') return (a.popularityRank || 9999) - (b.popularityRank || 9999);
         if (sortBy === 'name') return a.name.localeCompare(b.name);
-        if (sortBy === 'series') return a.seriesTitle.localeCompare(b.seriesTitle);
+        if (sortBy === 'series') return (a.seriesTitle || '').localeCompare(b.seriesTitle || '');
         if (sortBy === 'aether-desc') return (b.baseAether || 0) - (a.baseAether || 0);
         if (sortBy === 'aether-asc') return (a.baseAether || 0) - (b.baseAether || 0);
         return 0;
       });
 
-      document.getElementById('dbCountText').innerHTML = `Mostrando <strong>${filteredChars.length.toLocaleString('pt-BR')}</strong> cartas de <strong>${catalog.length.toLocaleString('pt-BR')}</strong>`;
-      renderTable();
-      renderGrid();
+      // Paginação
+      const totalPages = Math.max(1, Math.ceil(filteredChars.length / pageSize));
+      if (currentPage > totalPages) currentPage = totalPages;
+      if (currentPage < 1) currentPage = 1;
+
+      const startIdx = (currentPage - 1) * pageSize;
+      const endIdx = startIdx + pageSize;
+      const pageItems = filteredChars.slice(startIdx, endIdx);
+
+      const countMsg = filteredChars.length === 0
+        ? `Nenhuma carta encontrada com os filtros selecionados`
+        : `Mostrando <strong>${startIdx + 1}–${Math.min(endIdx, filteredChars.length)}</strong> de <strong>${filteredChars.length.toLocaleString('pt-BR')}</strong> cartas filtradas (Catálogo Total: <strong>${catalog.length.toLocaleString('pt-BR')}</strong>)`;
+
+      const countEl = document.getElementById('dbCountText');
+      if (countEl) countEl.innerHTML = countMsg;
+
+      renderTable(pageItems, startIdx);
+      renderGrid(pageItems);
+      renderPaginationControls(totalPages);
     }
 
-    function renderTable() {
+    function renderPaginationControls(totalPages) {
+      const topContainer = document.getElementById('paginationTop');
+      const bottomContainer = document.getElementById('paginationBottom');
+      if (!topContainer && !bottomContainer) return;
+
+      if (totalPages <= 1) {
+        if (topContainer) topContainer.innerHTML = '';
+        if (bottomContainer) bottomContainer.innerHTML = '';
+        return;
+      }
+
+      const buildHtml = () => {
+        let pagesHtml = '';
+        const range = [];
+        const delta = 2;
+        for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+          range.push(i);
+        }
+
+        pagesHtml += `<button class="page-btn ${currentPage === 1 ? 'active' : ''}" onclick="goToPage(1)">1</button>`;
+
+        if (range.length > 0 && range[0] > 2) {
+          pagesHtml += `<span class="page-ellipsis">...</span>`;
+        }
+
+        range.forEach(p => {
+          pagesHtml += `<button class="page-btn ${currentPage === p ? 'active' : ''}" onclick="goToPage(${p})">${p}</button>`;
+        });
+
+        if (range.length > 0 && range[range.length - 1] < totalPages - 1) {
+          pagesHtml += `<span class="page-ellipsis">...</span>`;
+        }
+
+        if (totalPages > 1) {
+          pagesHtml += `<button class="page-btn ${currentPage === totalPages ? 'active' : ''}" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+        }
+
+        return `
+          <div class="pagination-info">Página <strong>${currentPage}</strong> de <strong>${totalPages}</strong></div>
+          <div class="pagination-actions">
+            <button class="page-btn page-arrow" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">❮ Anterior</button>
+            <div class="page-numbers">${pagesHtml}</div>
+            <button class="page-btn page-arrow" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">Próxima ❯</button>
+          </div>
+          <div class="pagination-size">
+            <label style="font-size:0.8rem; color:var(--text-muted);">Exibir:</label>
+            <select class="page-size-select" onchange="changePageSize(this.value)">
+              <option value="50" ${pageSize === 50 ? 'selected' : ''}>50 / pág</option>
+              <option value="100" ${pageSize === 100 ? 'selected' : ''}>100 / pág</option>
+              <option value="250" ${pageSize === 250 ? 'selected' : ''}>250 / pág</option>
+              <option value="500" ${pageSize === 500 ? 'selected' : ''}>500 / pág</option>
+            </select>
+          </div>
+        `;
+      };
+
+      const html = buildHtml();
+      if (topContainer) topContainer.innerHTML = html;
+      if (bottomContainer) bottomContainer.innerHTML = html;
+    }
+
+    function goToPage(page) {
+      currentPage = page;
+      applyFilters(false);
+      const tableWrap = document.getElementById('tableViewWrap');
+      if (tableWrap) tableWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function changePageSize(newSize) {
+      pageSize = parseInt(newSize, 10) || 100;
+      currentPage = 1;
+      applyFilters(false);
+    }
+
+    function renderTable(items, startIdx = 0) {
       const tbody = document.getElementById('charactersTableBody');
+      if (!tbody) return;
       tbody.innerHTML = '';
 
-      const items = filteredChars.slice(0, 100);
+      if (!items || items.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:40px; color:var(--text-muted)">Nenhuma carta encontrada com esses filtros. Tente expandir sua busca.</td></tr>`;
+        return;
+      }
+
       items.forEach((c, idx) => {
         const tr = document.createElement('tr');
         tr.onclick = () => openModal(c);
 
-        const rankNum = String(c.popularityRank || (idx + 1)).padStart(2, '0');
+        const globalIdx = startIdx + idx + 1;
+        const rankNum = String(c.popularityRank || globalIdx).padStart(2, '0');
         const genderClass = c.gender === 'FEMALE' ? 'gender-female' : (c.gender === 'MALE' ? 'gender-male' : 'gender-other');
-        const genderLabel = c.gender === 'FEMALE' ? '♀ Waifu' : (c.gender === 'MALE' ? '♂ Husbando' : '✦ Entidade');
+        const genderLabel = c.gender === 'FEMALE' ? '♀ Waifu' : (c.gender === 'MALE' ? '♂ Husband' : '✦ Entidade');
 
-        // Stats reais da entidade
         const atk = c.stats?.atk ?? (60 + ((c.id * 17) % 40));
         const def = c.stats?.def ?? (55 + (((c.id * 17) * 3) % 40));
         const spd = c.stats?.spd ?? (65 + (((c.id * 17) * 7) % 35));
         const hp = c.stats?.hp ?? (600 + ((c.id * 17) % 400));
 
-        const editionBadge = c.edition === 'MYTHIC'
-          ? '<span class="badge-tier tier-mythic">1/1 Mítica</span>'
-          : c.edition === 'EPIC'
-          ? '<span class="badge-tier" style="background:rgba(192,132,252,0.18); border-color:#c084fc; color:#c084fc;">Épica</span>'
-          : c.edition === 'LEGENDARY' || c.tier === 'LEGENDARY'
-          ? '<span class="badge-tier" style="background:rgba(251,191,36,0.18); border-color:#fbbf24; color:#fbbf24;">Lendária</span>'
-          : '<span class="badge-tier" style="background:rgba(56,189,248,0.18); border-color:#38bdf8; color:#38bdf8;">Básica</span>';
+        const tierBadge = getTierBadge(c);
+        const editionPill = getEditionPill(c);
+        const editions = findCharacterEditions(c);
+        const versionsBadge = editions.length > 1
+          ? `<span class="badge-tier" style="background:rgba(124,58,237,0.18); border-color:#8b5cf6; color:#c084fc;">✨ ${editions.length} Versões</span>`
+          : '';
 
         tr.innerHTML = `
-          <td class="td-rank">${rankNum}</td>
+          <td class="td-rank">#${rankNum}</td>
           <td class="td-thumb">
             <img class="char-thumb-img" src="${c.imageUrl}" alt="${c.name}" loading="lazy" onerror="this.src='./assets/kogu_avatar_animated.gif'" />
           </td>
@@ -2037,7 +2758,9 @@
             <div class="char-title-wrap">
               <span class="char-name-link">${c.name}</span>
               <div class="char-badge-row">
-                ${editionBadge}
+                ${tierBadge}
+                ${editionPill}
+                ${versionsBadge}
                 <span style="font-size:0.75rem; color:var(--text-muted)">ID #${c.id}</span>
               </div>
             </div>
@@ -2056,18 +2779,27 @@
       });
     }
 
-    function renderGrid() {
+    function renderGrid(items) {
       const grid = document.getElementById('gridViewWrap');
+      if (!grid) return;
       grid.innerHTML = '';
 
-      const items = filteredChars.slice(0, 60);
+      if (!items || items.length === 0) {
+        grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted)">Nenhuma carta encontrada.</div>`;
+        return;
+      }
+
       items.forEach(c => {
         const card = document.createElement('div');
         card.className = 'gacha-card';
         card.onclick = () => openModal(c);
 
         const genderSymbol = c.gender === 'FEMALE' ? '♀' : (c.gender === 'MALE' ? '♂' : '✦');
-        const editionBadge = c.edition === 'MYTHIC' ? '1/1 Mítica' : c.edition === 'EPIC' ? 'Épica' : (c.edition || 'Padrão');
+        const tierBadge = getTierBadge(c);
+        const editions = findCharacterEditions(c);
+        const versionsBadge = editions.length > 1
+          ? `<span style="font-size:0.7rem; color:#c084fc; font-weight:700;">✨ ${editions.length} Versões</span>`
+          : '';
 
         card.innerHTML = `
           <div class="gacha-poster-wrap">
@@ -2080,8 +2812,9 @@
             <span class="gacha-card-series">${c.seriesTitle || 'Lendas do Multiverso'}</span>
             <div class="gacha-card-footer">
               <span style="font-weight:700; color:var(--accent);">💎 ${(c.baseAether || 1300).toLocaleString('pt-BR')}</span>
-              <span class="badge-tier tier-mythic">${editionBadge}</span>
+              ${tierBadge}
             </div>
+            ${versionsBadge ? `<div style="margin-top:4px; text-align:right;">${versionsBadge}</div>` : ''}
           </div>
         `;
         grid.appendChild(card);
@@ -2090,6 +2823,7 @@
 
     function renderPopularSlider(list) {
       const slider = document.getElementById('popularSlider');
+      if (!slider) return;
       slider.innerHTML = '';
       const topPopular = list.slice(0, 18);
 
@@ -2150,33 +2884,90 @@
       selectedChar = char;
       selectedImgIndex = 0;
 
-      document.getElementById('modalName').textContent = char.name;
-      document.getElementById('modalSeries').textContent = `${char.seriesTitle || 'Lendas do Multiverso'} • Universo ${char.universe}`;
-      document.getElementById('modalTier').textContent = char.edition === 'MYTHIC' ? '1/1 Mítica Cósmica' : char.edition === 'EPIC' ? 'Edição Épica' : (char.edition || 'Edição Básica');
-      document.getElementById('modalGender').textContent = char.gender === 'FEMALE' ? 'Feminino (Waifu)' : (char.gender === 'MALE' ? 'Masculino (Husbando)' : '✦ Entidade Cósmica');
-      document.getElementById('modalAether').textContent = `💎 ${(char.baseAether || 1300).toLocaleString('pt-BR')} Éter`;
-      document.getElementById('modalRank').textContent = `#${char.popularityRank || 1} Popularidade`;
-      document.getElementById('modalImg').src = char.imageUrl;
-      document.getElementById('modalCmdSnippet').textContent = `$im ${char.name}`;
+      // Localiza variações de edições irmãs (Básica, Épica, Mítica)
+      const siblingEditions = findCharacterEditions(char);
+      renderModalEditionsBar(siblingEditions, char.id);
 
-      // Stats reais
-      const atk = char.stats?.atk ?? (60 + ((char.id * 17) % 40));
-      const def = char.stats?.def ?? (55 + (((char.id * 17) * 3) % 40));
-      const spd = char.stats?.spd ?? (65 + (((char.id * 17) * 7) % 35));
-      const hp = char.stats?.hp ?? (600 + ((char.id * 17) % 400));
+      // Galeria de artes
+      modalGalleryImages = [char.imageUrl];
+      siblingEditions.forEach(ed => {
+        if (ed.imageUrl && !modalGalleryImages.includes(ed.imageUrl)) {
+          modalGalleryImages.push(ed.imageUrl);
+        }
+      });
+      if (modalGalleryImages.length === 1 && char.bannerUrl) {
+        modalGalleryImages.push(char.bannerUrl);
+      }
+
+      applyModalCardData(char);
+      document.getElementById('charModal').classList.add('open');
+    }
+
+    function renderModalEditionsBar(editions, activeId) {
+      const container = document.getElementById('modalEditionsBar');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (editions.length <= 1) {
+        container.style.display = 'none';
+        return;
+      }
+
+      container.style.display = 'flex';
+      editions.forEach(ed => {
+        const btn = document.createElement('button');
+        const edName = (ed.edition || 'BASIC').toUpperCase();
+        const label = edName === 'MYTHIC' ? '👑 Edição Mítica (1/1)' : (edName === 'EPIC' ? '⭐ Edição Épica' : '🔹 Edição Básica');
+        btn.className = `modal-edition-tab ${ed.id === activeId ? 'active' : ''}`;
+        btn.innerHTML = `${label} <span style="font-size:0.75rem; opacity:0.8;">(💎 ${(ed.baseAether || 1300).toLocaleString('pt-BR')})</span>`;
+        btn.onclick = (e) => {
+          e.stopPropagation();
+          selectedChar = ed;
+          document.querySelectorAll('.modal-edition-tab').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          applyModalCardData(ed);
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    function applyModalCardData(c) {
+      document.getElementById('modalName').textContent = c.name;
+      document.getElementById('modalSeries').textContent = `${c.seriesTitle || 'Lendas do Multiverso'} • Universo ${c.universe}`;
+
+      const edName = (c.edition || '').toUpperCase();
+      const tierName = (c.tier || '').toUpperCase();
+      let tierLabel = 'Edição Básica';
+      if (edName === 'MYTHIC' || tierName === 'MYTHIC') tierLabel = '👑 1/1 Mítica Cósmica';
+      else if (edName === 'EPIC' || tierName === 'EPIC') tierLabel = '⭐ Edição Épica';
+      else if (tierName === 'LEGENDARY') tierLabel = '🌟 Lendária';
+      else if (tierName === 'RARE') tierLabel = '🔷 Rara';
+
+      document.getElementById('modalTier').textContent = tierLabel;
+      document.getElementById('modalGender').textContent = c.gender === 'FEMALE' ? 'Feminino (Waifu)' : (c.gender === 'MALE' ? 'Masculino (Husband)' : '✦ Entidade Cósmica');
+      document.getElementById('modalAether').textContent = `💎 ${(c.baseAether || 1300).toLocaleString('pt-BR')} Éter`;
+      document.getElementById('modalRank').textContent = `#${c.popularityRank || 1} Popularidade`;
+      document.getElementById('modalImg').src = c.imageUrl;
+      document.getElementById('modalCmdSnippet').textContent = `$im ${c.name}`;
+
+      const atk = c.stats?.atk ?? (60 + ((c.id * 17) % 40));
+      const def = c.stats?.def ?? (55 + (((c.id * 17) * 3) % 40));
+      const spd = c.stats?.spd ?? (65 + (((c.id * 17) * 7) % 35));
+      const hp = c.stats?.hp ?? (600 + ((c.id * 17) % 400));
 
       document.getElementById('statAtk').textContent = atk;
       document.getElementById('statDef').textContent = def;
       document.getElementById('statSpd').textContent = spd;
       document.getElementById('statHp').textContent = hp;
 
-      document.getElementById('barAtk').style.width = atk + '%';
-      document.getElementById('barDef').style.width = def + '%';
-      document.getElementById('barSpd').style.width = spd + '%';
+      document.getElementById('barAtk').style.width = Math.min(100, atk) + '%';
+      document.getElementById('barDef').style.width = Math.min(100, def) + '%';
+      document.getElementById('barSpd').style.width = Math.min(100, spd) + '%';
       document.getElementById('barHp').style.width = Math.min(100, Math.floor(hp / 10)) + '%';
 
-      document.getElementById('modalImgCounter').textContent = 'Foto 1 de 3';
-      document.getElementById('charModal').classList.add('open');
+      const foundIdx = modalGalleryImages.indexOf(c.imageUrl);
+      selectedImgIndex = foundIdx >= 0 ? foundIdx : 0;
+      updateModalGalleryIndicator();
     }
 
     function closeModal() {
@@ -2190,14 +2981,23 @@
     }
 
     function cycleGallery(dir) {
-      if (!selectedChar) return;
-      selectedImgIndex = (selectedImgIndex + dir + 3) % 3;
-      document.getElementById('modalImgCounter').textContent = `Foto ${selectedImgIndex + 1} de 3`;
-      // Feedback visual rápido de troca
-      document.getElementById('modalImg').style.opacity = '0.7';
+      if (!modalGalleryImages || modalGalleryImages.length <= 1) return;
+      selectedImgIndex = (selectedImgIndex + dir + modalGalleryImages.length) % modalGalleryImages.length;
+      const targetSrc = modalGalleryImages[selectedImgIndex];
+      const imgEl = document.getElementById('modalImg');
+      imgEl.style.opacity = '0.5';
       setTimeout(() => {
-        document.getElementById('modalImg').style.opacity = '1';
-      }, 100);
+        imgEl.src = targetSrc;
+        imgEl.style.opacity = '1';
+      }, 120);
+      updateModalGalleryIndicator();
+    }
+
+    function updateModalGalleryIndicator() {
+      const counter = document.getElementById('modalImgCounter');
+      if (counter) {
+        counter.textContent = `Foto ${selectedImgIndex + 1} de ${Math.max(1, modalGalleryImages.length)}`;
+      }
     }
 
     function copyDiscordCommand() {
@@ -2205,13 +3005,15 @@
       const cmd = `$im ${selectedChar.name}`;
       navigator.clipboard.writeText(cmd);
       const btn = document.querySelector('.btn-copy-cmd');
-      btn.textContent = 'Copiado!';
-      setTimeout(() => btn.textContent = 'Copiar Comando', 1500);
+      if (btn) {
+        btn.textContent = 'Copiado!';
+        setTimeout(() => btn.textContent = 'Copiar Comando', 1500);
+      }
     }
 
     function handleSearchInput() {
       switchView('database');
-      applyFilters();
+      applyFilters(true);
     }
 
     function handleTypeChange() {
@@ -2223,6 +3025,7 @@
 
     function renderSeriesView() {
       const container = document.getElementById('seriesGrid');
+      if (!container) return;
       container.innerHTML = '';
 
       const map = {};
@@ -2231,15 +3034,17 @@
       });
 
       const sorted = Object.entries(map).sort((a,b) => b[1] - a[1]);
-      document.getElementById('seriesCountBadge').textContent = `${sorted.length} Obras Cadastradas`;
+      const countBadge = document.getElementById('seriesCountBadge');
+      if (countBadge) countBadge.textContent = `${sorted.length} Obras Cadastradas`;
 
       sorted.forEach(([seriesName, count]) => {
         const item = document.createElement('div');
         item.className = 'series-card';
         item.onclick = () => {
-          document.getElementById('seriesFilterSelect').value = seriesName;
+          const select = document.getElementById('seriesFilterSelect');
+          if (select) select.value = seriesName;
           switchView('database');
-          applyFilters();
+          applyFilters(true);
         };
         item.innerHTML = `
           <span class="series-name">${seriesName}</span>
@@ -2251,6 +3056,7 @@
 
     function renderCommands() {
       const container = document.getElementById('commandsGrid');
+      if (!container) return;
       container.innerHTML = '';
       COMMANDS.forEach(cmd => {
         const el = document.createElement('div');
@@ -2273,6 +3079,7 @@
 
     function renderTower() {
       const container = document.getElementById('towerGrid');
+      if (!container) return;
       container.innerHTML = '';
       TOWER_PERKS.forEach(p => {
         const card = document.createElement('div');
@@ -2288,20 +3095,21 @@
 
     function renderTop100() {
       const tbody = document.getElementById('top100TableBody');
+      if (!tbody) return;
       tbody.innerHTML = '';
       const top100 = catalog.slice(0, 100);
 
       top100.forEach((c, idx) => {
         const tr = document.createElement('tr');
         tr.onclick = () => openModal(c);
-        const genderLabel = c.gender === 'FEMALE' ? '♀ Waifu' : '♂ Husbando';
+        const genderLabel = c.gender === 'FEMALE' ? '♀ Waifu' : (c.gender === 'MALE' ? '♂ Husband' : '✦ Entidade');
         tr.innerHTML = `
           <td class="td-rank">#${idx + 1}</td>
           <td class="td-thumb"><img class="char-thumb-img" src="${c.imageUrl}" alt="${c.name}" onerror="this.src='./assets/kogu_avatar_animated.gif'" /></td>
           <td class="td-name"><span class="char-name-link">${c.name}</span></td>
           <td class="td-series">${c.seriesTitle}</td>
           <td class="td-gender">${genderLabel}</td>
-          <td class="td-aether">💎 ${c.baseAether || 1300} Éter</td>
+          <td class="td-aether">💎 ${(c.baseAether || 1300).toLocaleString('pt-BR')} Éter</td>
           <td class="td-actions">
             <button class="btn-inspect" onclick="event.stopPropagation(); openModal(catalog.find(x => x.id === ${c.id}))">Ver</button>
           </td>
@@ -2311,22 +3119,128 @@
     }
 
     function simulateRoll(mode) {
-      if (!catalog.length) return;
-      let pool = catalog;
-      if (mode === 'waifu') pool = catalog.filter(c => c.gender === 'FEMALE');
-      else if (mode === 'husbando') pool = catalog.filter(c => c.gender === 'MALE');
+      if (!catalog || !catalog.length) return;
 
-      const rolled = pool[Math.floor(Math.random() * pool.length)];
+      let pool = catalog;
+      if (mode === 'waifu') {
+        pool = catalog.filter(c => c.gender === 'FEMALE');
+      } else if (mode === 'husband') {
+        pool = catalog.filter(c => c.gender === 'MALE');
+      } else if (mode === 'anime') {
+        pool = catalog.filter(c => c.universe === 'ANIME' || c.niche === 'anime');
+      } else if (mode === 'games') {
+        pool = catalog.filter(c => c.universe === 'GAME' || c.niche === 'game');
+      } else if (mode === 'sports') {
+        pool = catalog.filter(c => c.niche?.startsWith('sport_') || c.niche?.startsWith('music_') || (c.seriesTitle && (c.seriesTitle.includes('UFC') || c.seriesTitle.includes('Futebol') || c.seriesTitle.includes('NBA') || c.seriesTitle.includes('Música'))));
+      } else if (mode === 'weapon') {
+        pool = catalog.filter(c => c.niche === 'weapon' || c.seriesTitle?.includes('Armas'));
+        if (!pool.length) pool = catalog.filter(c => (c.tier || '').toUpperCase() === 'MYTHIC');
+      }
+
+      if (!pool.length) pool = catalog;
+
+      simRollCount++;
+      simPityCount++;
+
+      let rolled;
+      let isPityTrigger = false;
+      if (simPityCount >= 10) {
+        const highTierPool = pool.filter(c => (c.tier || '').toUpperCase() === 'MYTHIC' || (c.tier || '').toUpperCase() === 'LEGENDARY');
+        if (highTierPool.length) {
+          rolled = highTierPool[Math.floor(Math.random() * highTierPool.length)];
+          isPityTrigger = true;
+          simPityCount = 0;
+        } else {
+          rolled = pool[Math.floor(Math.random() * pool.length)];
+        }
+      } else {
+        rolled = pool[Math.floor(Math.random() * pool.length)];
+        const t = (rolled.tier || '').toUpperCase();
+        if (t === 'MYTHIC' || t === 'LEGENDARY') {
+          simPityCount = 0;
+        }
+      }
+
+      lastRolledChar = rolled;
+      simTotalAether += (rolled.baseAether || 1300);
+
       const display = document.getElementById('simCard');
       display.classList.remove('flip');
-      void display.offsetWidth; // force reflow
+      void display.offsetWidth;
       display.classList.add('flip');
 
       document.getElementById('simImg').src = rolled.imageUrl;
       document.getElementById('simName').textContent = rolled.name;
-      document.getElementById('simSeries').textContent = rolled.seriesTitle;
-      document.getElementById('simAether').textContent = `💎 ${rolled.baseAether || 1300} Éter`;
-      document.getElementById('simGender').textContent = rolled.gender === 'FEMALE' ? '♀ Waifu' : '♂ Husbando';
+      document.getElementById('simSeries').textContent = rolled.seriesTitle || 'Lendas do Multiverso';
+      document.getElementById('simAether').textContent = `💎 ${(rolled.baseAether || 1300).toLocaleString('pt-BR')} Éter`;
+      document.getElementById('simGender').textContent = rolled.gender === 'FEMALE' ? '♀ Waifu' : (rolled.gender === 'MALE' ? '♂ Husband' : '✦ Entidade');
+
+      const badgeEl = document.getElementById('simBadge');
+      if (badgeEl) {
+        const edName = (rolled.edition || '').toUpperCase();
+        const tierName = (rolled.tier || '').toUpperCase();
+        badgeEl.textContent = edName === 'MYTHIC' || tierName === 'MYTHIC' ? '1/1 MÍTICA' : (edName === 'EPIC' || tierName === 'EPIC' ? 'ÉPICA' : (tierName === 'LEGENDARY' ? 'LENDÁRIA' : 'BÁSICA'));
+      }
+
+      const pityPct = Math.min(100, (simPityCount / 10) * 100);
+      const fillEl = document.getElementById('simPityFill');
+      const pityCountEl = document.getElementById('simPityCount');
+      if (fillEl) fillEl.style.width = pityPct + '%';
+      if (pityCountEl) {
+        pityCountEl.textContent = isPityTrigger
+          ? '🌟 PITY ACIONADO! DROP LENDÁRIO GARANTIDO!'
+          : `${simPityCount} / 10 para Mítica ou Lendária`;
+      }
+
+      simHistory.unshift({
+        card: rolled,
+        time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        mode: mode
+      });
+      if (simHistory.length > 25) simHistory.pop();
+      renderSimHistory();
+    }
+
+    function renderSimHistory() {
+      const container = document.getElementById('simHistoryList');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const countEl = document.getElementById('simHistoryCount');
+      const aetherEl = document.getElementById('simHistoryAether');
+      if (countEl) countEl.textContent = simHistory.length;
+      if (aetherEl) aetherEl.textContent = simTotalAether.toLocaleString('pt-BR');
+
+      simHistory.forEach(item => {
+        const el = document.createElement('div');
+        el.className = 'sim-history-item';
+        el.onclick = () => openModal(item.card);
+        el.innerHTML = `
+          <img class="sim-history-thumb" src="${item.card.imageUrl}" alt="${item.card.name}" onerror="this.src='./assets/kogu_avatar_animated.gif'" />
+          <div class="sim-history-info">
+            <span class="sim-history-name">${item.card.name}</span>
+            <span class="sim-history-meta">${item.time} · 💎 ${(item.card.baseAether || 1300).toLocaleString('pt-BR')}</span>
+          </div>
+          ${getTierBadge(item.card)}
+        `;
+        container.appendChild(el);
+      });
+    }
+
+    function simulateClaim() {
+      if (!lastRolledChar) {
+        alert('Faça uma invocação primeiro antes de reivindicar!');
+        return;
+      }
+      const toast = document.createElement('div');
+      toast.className = 'sim-toast';
+      toast.innerHTML = `💍 <strong>PACTO FIRMADO!</strong> Você adicionou <strong>${lastRolledChar.name}</strong> ao seu Panteão! (+${(lastRolledChar.baseAether || 1300).toLocaleString('pt-BR')} Éter)`;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.classList.add('visible'), 50);
+      setTimeout(() => {
+        toast.classList.remove('visible');
+        setTimeout(() => toast.remove(), 400);
+      }, 3500);
     }
 
     // Atalho tecla ESC para fechar modal

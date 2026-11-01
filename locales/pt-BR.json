@@ -356,7 +356,7 @@
     "commands": {
       "summon": "Invoca uma entidade aleatória do catálogo.",
       "summon_waifu": "Invoca uma personagem feminina (waifu).",
-      "summon_husbando": "Invoca um personagem masculino (husbando).",
+      "summon_husbando": "Invoca um personagem masculino (husband).",
       "summon_mixed": "Invoca uma entidade de qualquer gênero.",
       "summon_weapon": "Invoca armas lendárias e artefatos equipáveis.",
       "pantheon": "Mostra o seu Panteão (ou o de outro jogador).",

@@ -139,7 +139,7 @@ function getCategoryGuides(category: string, locale: Locale, prefix: string): Ca
             `O Kogu possui um acervo colossal com mais de **7.379 cartas ativas** divididas entre Animes, Games, Filmes, Séries, Esportes e Música!\n\n` +
             `### 🎲 Comandos de Rolagem & Sufixos de Universo\n` +
             `> • **\`${prefix}w\`** (\`${prefix}wa\`, \`${prefix}wg\`, \`${prefix}wc\`, \`${prefix}we\`) — Invoca waifus (feminino).\n` +
-            `> • **\`${prefix}h\`** (\`${prefix}ha\`, \`${prefix}hg\`, \`${prefix}hc\`, \`${prefix}he\`) — Invoca husbandos (masculino).\n` +
+            `> • **\`${prefix}h\`** (\`${prefix}ha\`, \`${prefix}hg\`, \`${prefix}hc\`, \`${prefix}he\`) — Invoca husbands (masculino).\n` +
             `> • **\`${prefix}m\`** (\`${prefix}mx\`, \`${prefix}ma\`, \`${prefix}mg\`, \`${prefix}mc\`, \`${prefix}me\`) — Invocação mista (qualquer gênero).\n` +
             `> • **\`${prefix}roll\`** (\`${prefix}s\`, \`/roll\`) — Invocação aleatória geral de todo o catálogo.\n` +
             `> • **\`${prefix}ar\`** — Forja armas místicas e artefatos de combate para o RPG.\n\n` +
@@ -185,7 +185,7 @@ function getCategoryGuides(category: string, locale: Locale, prefix: string): Ca
             `Kogu features a colossal roster of over **7,379 active cards** across Anime, Gaming, Cinema, Sports, and Music!\n\n` +
             `### 🎲 Summon Commands & Universe Suffixes\n` +
             `> • **\`${prefix}w\`** (\`${prefix}wa\`, \`${prefix}wg\`, \`${prefix}wc\`, \`${prefix}we\`) — Summons waifus (female characters).\n` +
-            `> • **\`${prefix}h\`** (\`${prefix}ha\`, \`${prefix}hg\`, \`${prefix}hc\`, \`${prefix}he\`) — Summons husbandos (male characters).\n` +
+            `> • **\`${prefix}h\`** (\`${prefix}ha\`, \`${prefix}hg\`, \`${prefix}hc\`, \`${prefix}he\`) — Summons husbands (male characters).\n` +
             `> • **\`${prefix}m\`** (\`${prefix}mx\`, \`${prefix}ma\`, \`${prefix}mg\`, \`${prefix}mc\`, \`${prefix}me\`) — Mixed summon (any gender).\n` +
             `> • **\`${prefix}roll\`** (\`${prefix}s\`, \`/roll\`) — General random summon across the entire multiverse.\n` +
             `> • **\`${prefix}ar\`** — Forges mythical weapons and combat artifacts for RPG battles.\n\n` +

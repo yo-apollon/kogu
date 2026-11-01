@@ -316,7 +316,7 @@ export async function handleMessage(message: Message) {
           name: "🎲 Roleta de Invocação (Rolls)",
           value:
             "`$wa` / `$wg` / `$w` — Invocar Waifus (Anime, Games, Geral)\n" +
-            "`$ha` / `$hg` / `$h` — Invocar Husbandos (Anime, Games, Geral)\n" +
+            "`$ha` / `$hg` / `$h` — Invocar Husbands (Anime, Games, Geral)\n" +
             "`$ma` / `$mg` / `$m` — Invocar Ambos (Anime, Games, Geral)\n" +
             "`$ar` — Invocar Armas Lendárias & Artefatos Equipáveis",
           inline: false,
