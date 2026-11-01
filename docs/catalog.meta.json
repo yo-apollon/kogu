@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-01T04:15:36.777Z",
-  "total": 7041,
-  "hash": "288cd79715a07588886af1018533b93c69ca17a76130aeb2aa55220816ff5644",
+  "generatedAt": "2026-11-01T15:52:37.171Z",
+  "total": 7379,
+  "hash": "419f979a6021885f85a09d66291ce0829df713c364df321b1ae562939d9d4b1e",
   "counts": {
     "byTier": {
-      "COMMON": 3240,
-      "LEGENDARY": 313,
-      "EPIC": 1295,
-      "RARE": 1918,
-      "MYTHIC": 275
+      "COMMON": 3361,
+      "LEGENDARY": 307,
+      "EPIC": 1416,
+      "RARE": 1899,
+      "MYTHIC": 396
     },
     "byNiche": {
       "anime": 6107,
@@ -17,18 +17,18 @@
       "game": 466,
       "idol": 17,
       "manhwa_vn": 51,
-      "music_hiphop": 7,
+      "music_hiphop": 28,
       "music_other": 2,
-      "music_pop": 16,
-      "music_rock": 4,
-      "sport_basketball": 15,
-      "sport_football": 18,
-      "sport_mma": 23,
-      "none": 248
+      "music_pop": 20,
+      "music_rock": 8,
+      "sport_basketball": 34,
+      "sport_football": 42,
+      "sport_mma": 47,
+      "none": 490
     },
     "byUniverse": {
       "ANIME": 6408,
-      "CINEMA": 167,
+      "CINEMA": 505,
       "GAME": 466
     }
   },
