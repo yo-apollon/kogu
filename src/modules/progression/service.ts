@@ -1,3 +1,5 @@
+import fs from "node:fs/promises";
+import path from "node:path";
 import { and, desc, eq, gte, sql } from "drizzle-orm";
 import { db } from "../../infra/db/client.js";
 import { entities, entityImages, franchises, guildMembers, pacts, series, entitySeries } from "../../infra/db/schema/index.js";
@@ -193,22 +195,68 @@ export function totalTowerCost(count: number): number {
   return sum;
 }
 
+export const TOWER_DIR = path.resolve(process.cwd(), "data", "towers");
+
+async function ensureTowerDir(): Promise<void> {
+  try {
+    await fs.mkdir(TOWER_DIR, { recursive: true });
+  } catch {}
+}
+
+function towerFilePath(guildId: string, userId: string): string {
+  return path.join(TOWER_DIR, `${guildId}_${userId}.json`);
+}
+
+async function readTowerFloors(guildId: string, userId: string): Promise<number[]> {
+  const kv = await getKV();
+  const rawKv = await kv.get(towerKey(guildId, userId));
+  if (rawKv) {
+    try {
+      const parsed = JSON.parse(rawKv);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        // Asynchronously persist to disk
+        ensureTowerDir()
+          .then(() => fs.writeFile(towerFilePath(guildId, userId), JSON.stringify(parsed), "utf-8"))
+          .catch(() => {});
+        return parsed.filter((n) => typeof n === "number" && n >= 1 && n <= 12);
+      }
+    } catch {}
+  }
+
+  // Fallback to disk file if KV is empty (e.g. after process restart)
+  try {
+    const rawDisk = await fs.readFile(towerFilePath(guildId, userId), "utf-8");
+    const parsed = JSON.parse(rawDisk);
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      const floors = parsed.filter((n) => typeof n === "number" && n >= 1 && n <= 12);
+      await kv.set(towerKey(guildId, userId), JSON.stringify(floors));
+      return floors;
+    }
+  } catch {}
+
+  return [];
+}
+
+async function writeTowerFloors(guildId: string, userId: string, floors: number[]): Promise<void> {
+  const kv = await getKV();
+  if (floors.length === 0) {
+    await kv.del(towerKey(guildId, userId));
+    try {
+      await fs.unlink(towerFilePath(guildId, userId));
+    } catch {}
+  } else {
+    await kv.set(towerKey(guildId, userId), JSON.stringify(floors));
+    await ensureTowerDir();
+    await fs.writeFile(towerFilePath(guildId, userId), JSON.stringify(floors), "utf-8");
+  }
+}
+
 export async function getTowerState(
   guildId: string,
   userId: string,
   username?: string
 ): Promise<TowerState> {
-  const kv = await getKV();
-  const raw = await kv.get(towerKey(guildId, userId));
-  let floors: number[] = [];
-  if (raw) {
-    try {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) floors = parsed.filter((n) => typeof n === "number" && n >= 1 && n <= 12);
-    } catch {
-      floors = [];
-    }
-  }
+  const floors = await readTowerFloors(guildId, userId);
 
   const [m] = await db.transaction(async (tx) => {
     await ensureMember(tx, { guildId, userId, username });
@@ -278,8 +326,7 @@ export async function buildTowerFloor(
   });
 
   const nextFloors = [...state.floors, targetPerkId];
-  const kv = await getKV();
-  await kv.set(towerKey(guildId, userId), JSON.stringify(nextFloors));
+  await writeTowerFloors(guildId, userId, nextFloors);
 
   return {
     floors: nextFloors,
@@ -288,6 +335,39 @@ export async function buildTowerFloor(
     totalInvested: totalTowerCost(nextFloors.length),
     balance: updatedBalance,
     builtPerk: perk,
+  };
+}
+
+export async function destroyTowerSingleFloor(
+  guildId: string,
+  userId: string,
+  username?: string
+): Promise<{ refunded: number; balance: number; removedPerk: TowerPerk; floors: number[]; level: number }> {
+  const state = await getTowerState(guildId, userId, username);
+  if (state.level === 0) {
+    throw new UserError("progression.tower_empty");
+  }
+
+  const lastPerkId = state.floors[state.floors.length - 1];
+  const lastPerk = TOWER_PERKS.find((p) => p.id === lastPerkId) ?? {
+    id: lastPerkId,
+    namePt: `Andar ${state.level}`,
+    nameEn: `Floor ${state.level}`,
+    descPt: "",
+    descEn: "",
+  };
+
+  const refund = floorCost(state.level - 1);
+  const balance = await credit(guildId, userId, refund, { username });
+  const nextFloors = state.floors.slice(0, -1);
+  await writeTowerFloors(guildId, userId, nextFloors);
+
+  return {
+    refunded: refund,
+    balance,
+    removedPerk: lastPerk,
+    floors: nextFloors,
+    level: nextFloors.length,
   };
 }
 
@@ -303,8 +383,7 @@ export async function destroyTower(
 
   const refund = state.totalInvested;
   const balance = await credit(guildId, userId, refund, { username });
-  const kv = await getKV();
-  await kv.del(towerKey(guildId, userId));
+  await writeTowerFloors(guildId, userId, []);
 
   return { refunded: refund, balance };
 }

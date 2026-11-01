@@ -19,7 +19,7 @@ import {
 const levels = (o: Partial<RelicLevels> = {}): RelicLevels => ({ ...emptyRelicLevels(), ...o });
 
 describe("relicUpgradeCost (porte de handleRelicsCommand)", () => {
-  it("custo = base * (nivel + 1) sem desconto", () => {
+  it("custo = base * (nivel + 1) sem desconto para niveis base 0..3", () => {
     const base = {
       bronze: 500,
       silver: 1000,
@@ -30,7 +30,7 @@ describe("relicUpgradeCost (porte de handleRelicsCommand)", () => {
     };
     expect(RELIC_BASE_COST).toEqual(base);
     for (const key of RELIC_KEYS) {
-      for (let level = 0; level < RELIC_MAX_LEVEL; level++) {
+      for (let level = 0; level < 4; level++) {
         expect(relicUpgradeCost(key, level, 0)).toBe(base[key] * (level + 1));
       }
     }
@@ -39,6 +39,9 @@ describe("relicUpgradeCost (porte de handleRelicsCommand)", () => {
       500, 1000, 1500, 2000,
     ]);
     expect(relicUpgradeCost("emerald", 3, 0)).toBe(20000);
+    // Ascensao Cosmica (Tier II: 4 -> 5)
+    expect(relicUpgradeCost("bronze", 4, 0)).toBe(4000);
+    expect(relicUpgradeCost("emerald", 4, 0)).toBe(40000);
   });
 
   it("nivel maximo nao tem proximo custo", () => {
@@ -49,16 +52,17 @@ describe("relicUpgradeCost (porte de handleRelicsCommand)", () => {
   it("Rubi no nivel maximo da -25% em todas as evolucoes", () => {
     expect(relicDiscount(3)).toBe(1);
     expect(relicDiscount(4)).toBe(0.75);
+    expect(relicDiscount(8)).toBe(0.65);
     expect(relicUpgradeCost("bronze", 0, 3)).toBe(500);
     expect(relicUpgradeCost("bronze", 0, 4)).toBe(375);
     expect(relicUpgradeCost("emerald", 3, 4)).toBe(15000);
     expect(relicUpgradeCost("silver", 1, 4)).toBe(1500);
   });
 
-  it("niveis invalidos sao limitados a 0..4", () => {
+  it("niveis invalidos sao limitados a 0..8", () => {
     expect(clampRelicLevel(-3)).toBe(0);
     expect(clampRelicLevel(2.9)).toBe(2);
-    expect(clampRelicLevel(99)).toBe(4);
+    expect(clampRelicLevel(99)).toBe(8);
     expect(clampRelicLevel("abc")).toBe(0);
     expect(clampRelicLevel(null)).toBe(0);
     expect(relicUpgradeCost("bronze", -1, 0)).toBe(500);
@@ -93,9 +97,9 @@ describe("planRelicUpgrade", () => {
   });
 
   it("max tem prioridade mesmo com saldo sobrando", () => {
-    expect(planRelicUpgrade(levels({ ruby: 4 }), 1_000_000, "ruby")).toEqual({
+    expect(planRelicUpgrade(levels({ ruby: 8 }), 1_000_000, "ruby")).toEqual({
       kind: "max",
-      level: 4,
+      level: 8,
     });
   });
 
@@ -116,7 +120,7 @@ describe("relicLevelsOf / totalRelicLevels", () => {
         relicRuby: 0,
         relicEmerald: 9,
       })
-    ).toEqual({ bronze: 4, silver: 3, gold: 2, sapphire: 1, ruby: 0, emerald: 4 });
+    ).toEqual({ bronze: 4, silver: 3, gold: 2, sapphire: 1, ruby: 0, emerald: 8 });
     expect(relicLevelsOf(null)).toEqual(emptyRelicLevels());
     expect(relicLevelsOf({ relicGold: 2 }).gold).toBe(2);
     expect(totalRelicLevels(levels({ bronze: 4, gold: 2 }))).toBe(6);
@@ -144,11 +148,12 @@ describe("parseRelicKey", () => {
 });
 
 describe("apresentacao", () => {
-  it("relicBar mostra nivel/4 com emojis centralizados", () => {
-    expect(relicBar(0)).toBe("⬛⬛⬛⬛");
-    expect(relicBar(2)).toBe("🟩🟩⬛⬛");
-    expect(relicBar(4)).toBe("🟩🟩🟩🟩");
-    expect(relicBar(7)).toBe("🟩🟩🟩🟩");
+  it("relicBar mostra nivel/8 com emojis centralizados", () => {
+    expect(relicBar(0)).toBe("⬛⬛⬛⬛⬛⬛⬛⬛");
+    expect(relicBar(2)).toBe("🟩🟩⬛⬛⬛⬛⬛⬛");
+    expect(relicBar(4)).toBe("🟩🟩🟩🟩⬛⬛⬛⬛");
+    expect(relicBar(6)).toBe("🟩🟩🟩🟩🟪🟪⬛⬛");
+    expect(relicBar(8)).toBe("🟩🟩🟩🟩🟪🟪🟪🟪");
   });
 
   it("relicLabel junta emoji e nome traduzido", () => {

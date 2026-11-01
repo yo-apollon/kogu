@@ -80,7 +80,8 @@ describe("shared/relics", () => {
     expect(relics.relicUpgradeCost("bronze", 0, 0)).toBe(500);
     expect(relics.relicUpgradeCost("emerald", 3, 0)).toBe(20000);
     expect(relics.relicUpgradeCost("emerald", 3, 4)).toBe(15000);
-    expect(relics.relicUpgradeCost("gold", 4, 0)).toBeNull();
+    expect(relics.relicUpgradeCost("gold", 4, 0)).toBe(12000);
+    expect(relics.relicUpgradeCost("gold", 8, 0)).toBeNull();
     const levels = { ...relics.emptyRelicLevels(), ruby: 4, gold: 1 };
     expect(relics.planRelicUpgrade(levels, 10_000, "gold")).toEqual({
       kind: "ok",
@@ -90,7 +91,7 @@ describe("shared/relics", () => {
       balanceAfter: 7750,
     });
     expect(relics.planRelicUpgrade(levels, 10, "gold").kind).toBe("insufficient");
-    expect(relics.planRelicUpgrade(levels, 10, "ruby").kind).toBe("max");
+    expect(relics.planRelicUpgrade({ ...levels, ruby: 8 }, 10, "ruby").kind).toBe("max");
     expect(relics.totalRelicLevels(levels)).toBe(5);
   });
 });

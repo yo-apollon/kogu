@@ -1,10 +1,16 @@
+import { and, eq } from "drizzle-orm";
+import { db } from "../../infra/db/client.js";
+import { guildMembers } from "../../infra/db/schema/index.js";
 import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
   EmbedBuilder,
   MessageFlags,
+  ModalBuilder,
   SlashCommandBuilder,
+  TextInputBuilder,
+  TextInputStyle,
 } from "discord.js";
 import { z } from "zod";
 import type { AnyCommand, CommandContext, ComponentHandler } from "../../core/contracts.js";
@@ -21,7 +27,9 @@ import {
   calculateCosmicFate,
   claimTutorialRewards,
   destroyTower,
+  destroyTowerSingleFloor,
   doubleBlackjack,
+  floorCost,
   formatCards,
   generateAetherBeam,
   generateQuizQuestion,
@@ -234,18 +242,40 @@ function renderTowerEmbed(
 }
 
 function buildTowerButtons(userId: string, level: number): ActionRowBuilder<ButtonBuilder> {
-  return new ActionRowBuilder<ButtonBuilder>().addComponents(
+  const row = new ActionRowBuilder<ButtonBuilder>();
+  const nextCost = floorCost(level);
+
+  row.addComponents(
     new ButtonBuilder()
       .setCustomId(`${PROGRESSION_NS}:tbuild:${userId}`)
-      .setLabel("🔼 Construir Próximo Andar")
+      .setLabel(level >= 12 ? "🏆 Torre Completa (12/12)" : `🔼 Construir Andar (${formatNumber(nextCost, "pt-BR")} Éter)`)
       .setStyle(ButtonStyle.Primary)
-      .setDisabled(level >= 12),
-    new ButtonBuilder()
-      .setCustomId(`${PROGRESSION_NS}:tdestroy:${userId}`)
-      .setLabel("💥 Demolir (100% Reembolso)")
-      .setStyle(ButtonStyle.Danger)
-      .setDisabled(level === 0)
+      .setDisabled(level >= 12)
   );
+
+  if (level > 0) {
+    const lastCost = floorCost(level - 1);
+    row.addComponents(
+      new ButtonBuilder()
+        .setCustomId(`${PROGRESSION_NS}:tdestroy_single:${userId}`)
+        .setLabel(`🔻 Demolir 1 Andar (+${formatNumber(lastCost, "pt-BR")} Éter)`)
+        .setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder()
+        .setCustomId(`${PROGRESSION_NS}:tdestroy_all:${userId}`)
+        .setLabel("💥 Demolir Tudo (100% Reembolso)")
+        .setStyle(ButtonStyle.Danger)
+    );
+  } else {
+    row.addComponents(
+      new ButtonBuilder()
+        .setCustomId(`${PROGRESSION_NS}:tdestroy_all:${userId}`)
+        .setLabel("💥 Demolir (100% Reembolso)")
+        .setStyle(ButtonStyle.Danger)
+        .setDisabled(true)
+    );
+  }
+
+  return row;
 }
 
 export const ktowerCommand: AnyCommand = {
@@ -298,21 +328,40 @@ export const buildCommand: AnyCommand = {
   },
 };
 
+const destroyArgs = z.object({ target: z.string().optional() });
+
 export const destroyCommand: AnyCommand = {
   name: "destroy",
   aliases: ["demolir", "towerdestroy"],
   category: "economy",
   descriptionKey: "help.commands.destroy",
+  args: destroyArgs,
+  parseArgs: (tokens) => ({ target: tokens[0]?.toLowerCase() }),
   cooldownMs: 3000,
   async execute(ctx: CommandContext) {
     const p = ctx.guildConfig.prefix;
+    const target = (ctx.args as { target?: string } | undefined)?.target;
     try {
+      if (target === "1" || target === "single" || target === "um" || target === "andar") {
+        const res = await destroyTowerSingleFloor(ctx.guild.id, ctx.user.id, ctx.user.username);
+        const embed = new EmbedBuilder()
+          .setColor(0xf59e0b)
+          .setTitle(`🔻 Andar ${res.level + 1} Demolido!`)
+          .setDescription(
+            `Você desmontou o andar com **[${res.removedPerk.id}] ${res.removedPerk.namePt}** e recuperou **+${formatNumber(res.refunded, ctx.locale)}** ${emoji("aether")} Éter!\n` +
+              `🗼 Andares restantes: \`${res.level} / 12\`\n` +
+              `💰 Saldo atualizado: **${formatNumber(res.balance, ctx.locale)}** ${emoji("aether")}`
+          );
+        await ctx.reply({ embeds: [embed] });
+        return;
+      }
+
       const res = await destroyTower(ctx.guild.id, ctx.user.id, ctx.user.username);
       const embed = new EmbedBuilder()
         .setColor(0xf59e0b)
         .setTitle("💥 Torre Demolida & Éter Reembolsado!")
         .setDescription(
-          `Todos os andares foram desmontados e você recebeu **+${formatNumber(res.refunded, ctx.locale)}** ${emoji("aether")} de volta!\n` +
+          `Todos os andares foram desmontados e você recebeu **+${formatNumber(res.refunded, ctx.locale)}** ${emoji("aether")} de volta (100% de reembolso)!\n` +
             `💰 Novo saldo: **${formatNumber(res.balance, ctx.locale)}** ${emoji("aether")}`
         );
       await ctx.reply({ embeds: [embed] });
@@ -640,6 +689,53 @@ export function buildSlotRow(userId: string, bet: number, currentBalance?: numbe
   return row;
 }
 
+export function buildBetOptionsRow(
+  userId: string,
+  game: "slot" | "bj" | "cf",
+  currentBalance?: number,
+  extra: string = "none"
+): ActionRowBuilder<ButtonBuilder> {
+  const row = new ActionRowBuilder<ButtonBuilder>();
+
+  row.addComponents(
+    new ButtonBuilder()
+      .setCustomId(`${PROGRESSION_NS}:btn_modal_bet:${game}:${userId}:${extra}`)
+      .setLabel("✏️ Mudar Aposta")
+      .setStyle(ButtonStyle.Secondary)
+  );
+
+  const chips = [
+    { label: "🪙 100", amount: "100" },
+    { label: "💎 500", amount: "500" },
+    { label: "🔥 1.000", amount: "1000" },
+    { label: "💀 ALL-IN", amount: "allin" },
+  ];
+
+  for (const chip of chips) {
+    const num = chip.amount === "allin" ? 10 : parseInt(chip.amount, 10);
+    const disabled = currentBalance !== undefined && currentBalance < num;
+    let customId = "";
+    if (game === "slot") {
+      customId = `${PROGRESSION_NS}:slot_spin:${userId}:${chip.amount}`;
+    } else if (game === "bj") {
+      customId = `${PROGRESSION_NS}:bj_again:${chip.amount}:${userId}`;
+    } else {
+      const choice = extra === "coroa" ? "coroa" : "cara";
+      customId = `${PROGRESSION_NS}:cf_replay:${userId}:${chip.amount}:${choice}`;
+    }
+
+    row.addComponents(
+      new ButtonBuilder()
+        .setCustomId(customId)
+        .setLabel(chip.label)
+        .setStyle(chip.amount === "allin" ? ButtonStyle.Danger : ButtonStyle.Secondary)
+        .setDisabled(disabled)
+    );
+  }
+
+  return row;
+}
+
 const slotArgs = z.object({
   bet: z.number().int().min(10).max(10000).default(50),
 });
@@ -665,7 +761,8 @@ export const slotCommand: AnyCommand = {
       const res = await spinSlotMachine(ctx.guild.id, ctx.user.id, ctx.user.username, bet);
       const embed = renderSlotEmbed(res, ctx.locale);
       const row = buildSlotRow(ctx.user.id, bet, res.newBalance);
-      await ctx.reply({ embeds: [embed], components: [row] });
+      const betRow = buildBetOptionsRow(ctx.user.id, "slot", res.newBalance);
+      await ctx.reply({ embeds: [embed], components: [row, betRow] });
     } catch (err) {
       const msg = mapProgressionError(err, ctx.guildConfig.prefix);
       if (msg) {
@@ -1158,7 +1255,8 @@ export const blackjackCommand: AnyCommand = {
         await ctx.reply({ embeds: [embed], components: [row] });
       } else {
         const replayRow = buildBlackjackReplayRow(ctx.user.id, game.bet, game.newBalance);
-        await ctx.reply({ embeds: [embed], components: [replayRow] });
+        const betRow = buildBetOptionsRow(ctx.user.id, "bj", game.newBalance);
+        await ctx.reply({ embeds: [embed], components: [replayRow, betRow] });
       }
     } catch (err) {
       const msg = mapProgressionError(err, ctx.guildConfig.prefix);
@@ -1279,7 +1377,8 @@ export const coinflipCommand: AnyCommand = {
       const res = await runCoinflip(ctx.guild.id, ctx.user.id, ctx.user.username, bet, choice);
       const embed = renderCoinflipEmbed(res, ctx.locale);
       const replayRow = buildCoinflipReplayRow(ctx.user.id, bet, choice);
-      await ctx.reply({ embeds: [embed], components: [replayRow] });
+      const betRow = buildBetOptionsRow(ctx.user.id, "cf", res.newBalance, choice);
+      await ctx.reply({ embeds: [embed], components: [replayRow, betRow] });
     } catch (err) {
       const msg = mapProgressionError(err, ctx.guildConfig.prefix);
       if (msg) {
@@ -1355,12 +1454,142 @@ export const inviteCommand: AnyCommand = {
 export const progressionComponentHandler: ComponentHandler = {
   namespace: PROGRESSION_NS,
   async handle(interaction, parts) {
-    if (!interaction.isButton()) return;
     const [action, arg1] = parts;
     const guildId = interaction.guildId;
     if (!guildId) return;
 
-    if (action === "tbuild" || action === "tdestroy") {
+    if (interaction.isModalSubmit()) {
+      if (action === "modal_bet_sub") {
+        const game = arg1;
+        const ownerId = parts[2];
+        const extra = parts[3] ?? "none";
+        if (interaction.user.id !== ownerId) {
+          await interaction.reply({
+            content: "⛔ Apenas o jogador desta partida pode enviar a aposta.",
+            flags: MessageFlags.Ephemeral,
+          });
+          return;
+        }
+
+        const rawInput = interaction.fields.getTextInputValue("bet_input").trim().toLowerCase();
+        const [member] = await db
+          .select({ balance: guildMembers.aetherBalance })
+          .from(guildMembers)
+          .where(and(eq(guildMembers.guildId, guildId), eq(guildMembers.userId, interaction.user.id)))
+          .limit(1);
+
+        const currentBalance = member ? Number(member.balance) : 0;
+        let bet = 0;
+        const isAllIn = rawInput === "all" || rawInput === "allin" || rawInput === "all-in" || rawInput === "tudo" || rawInput === "max";
+
+        if (isAllIn) {
+          const maxLimit = game === "slot" ? 10000 : 50000;
+          bet = Math.min(currentBalance, maxLimit);
+        } else {
+          bet = parseInt(rawInput.replace(/[^0-9]/g, ""), 10);
+        }
+
+        if (!bet || isNaN(bet) || bet < 10) {
+          await interaction.reply({
+            content: "⚠️ Valor de aposta inválido. O valor mínimo é **10 Éter**.",
+            flags: MessageFlags.Ephemeral,
+          });
+          return;
+        }
+
+        if (currentBalance < bet) {
+          await interaction.reply({
+            content: `❌ Saldo insuficiente! Você possui **${formatNumber(currentBalance, "pt-BR")} Éter**, mas tentou apostar **${formatNumber(bet, "pt-BR")} Éter**.\n💡 Dica: Use \`$daily\` para ganhar mais Éter.`,
+            flags: MessageFlags.Ephemeral,
+          });
+          return;
+        }
+
+        if (game === "slot") {
+          try {
+            const res = await spinSlotMachine(guildId, interaction.user.id, interaction.user.username, bet);
+            const embed = renderSlotEmbed(res, "pt-BR");
+            const row = buildSlotRow(interaction.user.id, bet, res.newBalance);
+            const betRow = buildBetOptionsRow(interaction.user.id, "slot", res.newBalance);
+            await interaction.reply({ embeds: [embed], components: [row, betRow] });
+          } catch (err) {
+            const msg = mapProgressionError(err, "$") ?? "⚠️ Erro ao girar o caça-níqueis.";
+            await interaction.reply({ content: msg, flags: MessageFlags.Ephemeral });
+          }
+          return;
+        }
+
+        if (game === "bj") {
+          try {
+            const bj = await startBlackjack(guildId, interaction.user.id, interaction.user.username, bet);
+            const isOver = bj.gameOver;
+            const embed = renderBlackjackEmbed(bj, isOver, "pt-BR");
+            if (!isOver) {
+              const row = buildBlackjackPlayingRow(bj.sessionId, interaction.user.id, bj.playerCards.length === 2);
+              await interaction.reply({ embeds: [embed], components: [row] });
+            } else {
+              const replayRow = buildBlackjackReplayRow(interaction.user.id, bj.bet, bj.newBalance);
+              const betRow = buildBetOptionsRow(interaction.user.id, "bj", bj.newBalance);
+              await interaction.reply({ embeds: [embed], components: [replayRow, betRow] });
+            }
+          } catch (err) {
+            const msg = mapProgressionError(err, "$") ?? "⚠️ Erro ao iniciar Blackjack.";
+            await interaction.reply({ content: msg, flags: MessageFlags.Ephemeral });
+          }
+          return;
+        }
+
+        if (game === "cf") {
+          try {
+            const choice = extra === "coroa" ? "coroa" : "cara";
+            const res = await runCoinflip(guildId, interaction.user.id, interaction.user.username, bet, choice);
+            const embed = renderCoinflipEmbed(res, "pt-BR");
+            const replayRow = buildCoinflipReplayRow(interaction.user.id, bet, choice);
+            const betRow = buildBetOptionsRow(interaction.user.id, "cf", res.newBalance, choice);
+            await interaction.reply({ embeds: [embed], components: [replayRow, betRow] });
+          } catch (err) {
+            const msg = mapProgressionError(err, "$") ?? "⚠️ Erro ao lançar a moeda.";
+            await interaction.reply({ content: msg, flags: MessageFlags.Ephemeral });
+          }
+          return;
+        }
+      }
+      return;
+    }
+
+    if (!interaction.isButton()) return;
+
+    if (action === "btn_modal_bet") {
+      const game = arg1; // "slot" | "bj" | "cf"
+      const ownerId = parts[2];
+      const extra = parts[3] ?? "none";
+      if (interaction.user.id !== ownerId) {
+        await interaction.reply({
+          content: "⛔ Apenas o jogador desta partida pode alterar a aposta.",
+          flags: MessageFlags.Ephemeral,
+        });
+        return;
+      }
+
+      const modal = new ModalBuilder()
+        .setCustomId(`${PROGRESSION_NS}:modal_bet_sub:${game}:${ownerId}:${extra}`)
+        .setTitle("🎰 Definir Valor da Aposta");
+
+      const input = new TextInputBuilder()
+        .setCustomId("bet_input")
+        .setLabel("Valor da aposta em Éter:")
+        .setPlaceholder("Ex: 250, 1500, ou ALL-IN")
+        .setStyle(TextInputStyle.Short)
+        .setRequired(true)
+        .setMinLength(1)
+        .setMaxLength(10);
+
+      modal.addComponents(new ActionRowBuilder<TextInputBuilder>().addComponents(input));
+      await interaction.showModal(modal);
+      return;
+    }
+
+    if (action === "tbuild" || action === "tdestroy" || action === "tdestroy_single" || action === "tdestroy_all") {
       if (interaction.user.id !== arg1) {
         await interaction.reply({
           content: "⛔ Apenas o dono deste painel pode interagir com a própria Torre.",
@@ -1371,6 +1600,8 @@ export const progressionComponentHandler: ComponentHandler = {
       try {
         if (action === "tbuild") {
           await buildTowerFloor(guildId, interaction.user.id, undefined, interaction.user.username);
+        } else if (action === "tdestroy_single") {
+          await destroyTowerSingleFloor(guildId, interaction.user.id, interaction.user.username);
         } else {
           await destroyTower(guildId, interaction.user.id, interaction.user.username);
         }
@@ -1414,13 +1645,24 @@ export const progressionComponentHandler: ComponentHandler = {
         });
         return;
       }
-      const bet = parseInt(parts[2] ?? "50", 10) || 50;
+      let bet = 50;
+      if (parts[2] === "allin") {
+        const [member] = await db
+          .select({ balance: guildMembers.aetherBalance })
+          .from(guildMembers)
+          .where(and(eq(guildMembers.guildId, guildId), eq(guildMembers.userId, interaction.user.id)))
+          .limit(1);
+        bet = Math.max(10, Math.min(Number(member?.balance ?? 0), 10000));
+      } else {
+        bet = parseInt(parts[2] ?? "50", 10) || 50;
+      }
 
       try {
         const res = await spinSlotMachine(guildId, interaction.user.id, interaction.user.username, bet);
         const embed = renderSlotEmbed(res, "pt-BR");
-        const row = buildSlotRow(interaction.user.id, bet);
-        await interaction.update({ embeds: [embed], components: [row] });
+        const row = buildSlotRow(interaction.user.id, bet, res.newBalance);
+        const betRow = buildBetOptionsRow(interaction.user.id, "slot", res.newBalance);
+        await interaction.update({ embeds: [embed], components: [row, betRow] });
       } catch (err) {
         const msg = mapProgressionError(err, "$") ?? "⚠️ Não foi possível girar o Pokéslot.";
         await interaction.reply({ content: msg, flags: MessageFlags.Ephemeral });
@@ -1553,7 +1795,8 @@ export const progressionComponentHandler: ComponentHandler = {
           await interaction.update({ embeds: [embed], components: [row] });
         } else {
           const replayRow = buildBlackjackReplayRow(interaction.user.id, game.bet, game.newBalance);
-          await interaction.update({ embeds: [embed], components: [replayRow] });
+          const betRow = buildBetOptionsRow(interaction.user.id, "bj", game.newBalance);
+          await interaction.update({ embeds: [embed], components: [replayRow, betRow] });
         }
       } catch (err) {
         const msg = mapProgressionError(err, "$") ?? "⚠️ Não foi possível processar a jogada.";
@@ -1563,7 +1806,6 @@ export const progressionComponentHandler: ComponentHandler = {
     }
 
     if (action === "bj_again") {
-      const bet = parseInt(arg1 ?? "50", 10) || 50;
       const ownerId = parts[2];
       if (interaction.user.id !== ownerId) {
         await interaction.reply({
@@ -1571,6 +1813,18 @@ export const progressionComponentHandler: ComponentHandler = {
           flags: MessageFlags.Ephemeral,
         });
         return;
+      }
+
+      let bet = 50;
+      if (arg1 === "allin") {
+        const [member] = await db
+          .select({ balance: guildMembers.aetherBalance })
+          .from(guildMembers)
+          .where(and(eq(guildMembers.guildId, guildId), eq(guildMembers.userId, interaction.user.id)))
+          .limit(1);
+        bet = Math.max(10, Math.min(Number(member?.balance ?? 0), 50000));
+      } else {
+        bet = parseInt(arg1 ?? "50", 10) || 50;
       }
 
       try {
@@ -1583,7 +1837,8 @@ export const progressionComponentHandler: ComponentHandler = {
           await interaction.update({ embeds: [embed], components: [row] });
         } else {
           const replayRow = buildBlackjackReplayRow(interaction.user.id, game.bet, game.newBalance);
-          await interaction.update({ embeds: [embed], components: [replayRow] });
+          const betRow = buildBetOptionsRow(interaction.user.id, "bj", game.newBalance);
+          await interaction.update({ embeds: [embed], components: [replayRow, betRow] });
         }
       } catch (err) {
         const msg = mapProgressionError(err, "$") ?? "⚠️ Não foi possível iniciar uma nova rodada de Blackjack.";
@@ -1606,7 +1861,17 @@ export const progressionComponentHandler: ComponentHandler = {
 
     if (action === "cf_pick" || action === "cf_replay") {
       const ownerId = arg1;
-      const bet = parseInt(parts[2] ?? "50", 10) || 50;
+      let bet = 50;
+      if (parts[2] === "allin") {
+        const [member] = await db
+          .select({ balance: guildMembers.aetherBalance })
+          .from(guildMembers)
+          .where(and(eq(guildMembers.guildId, guildId), eq(guildMembers.userId, interaction.user.id)))
+          .limit(1);
+        bet = Math.max(10, Math.min(Number(member?.balance ?? 0), 50000));
+      } else {
+        bet = parseInt(parts[2] ?? "50", 10) || 50;
+      }
       const choice = parts[3] as "cara" | "coroa";
 
       if (interaction.user.id !== ownerId) {
@@ -1621,7 +1886,8 @@ export const progressionComponentHandler: ComponentHandler = {
         const res = await runCoinflip(guildId, interaction.user.id, interaction.user.username, bet, choice);
         const embed = renderCoinflipEmbed(res, "pt-BR");
         const replayRow = buildCoinflipReplayRow(interaction.user.id, bet, choice);
-        await interaction.update({ embeds: [embed], components: [replayRow] });
+        const betRow = buildBetOptionsRow(interaction.user.id, "cf", res.newBalance, choice);
+        await interaction.update({ embeds: [embed], components: [replayRow, betRow] });
       } catch (err) {
         const msg = mapProgressionError(err, "$") ?? "⚠️ Não foi possível lançar a moeda.";
         await interaction.reply({ content: msg, flags: MessageFlags.Ephemeral });

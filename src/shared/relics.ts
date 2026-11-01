@@ -10,9 +10,9 @@
 export const RELIC_KEYS = ["bronze", "silver", "gold", "sapphire", "ruby", "emerald"] as const;
 export type RelicKey = (typeof RELIC_KEYS)[number];
 
-export const RELIC_MAX_LEVEL = 4;
+export const RELIC_MAX_LEVEL = 8;
 
-/** Custo base em Eter; o custo real multiplica pelo proximo nivel (1..4). */
+/** Custo base em Eter; o custo real multiplica pelo proximo nivel (1..4) e escala exponencialmente na Ascensao (5..8). */
 export const RELIC_BASE_COST: Readonly<Record<RelicKey, number>> = {
   bronze: 500,
   silver: 1000,
@@ -22,9 +22,19 @@ export const RELIC_BASE_COST: Readonly<Record<RelicKey, number>> = {
   emerald: 5000,
 };
 
-/** Rubi neste nivel (ou acima) da -25% em todas as evolucoes. */
+/** Multiplicadores de nivel para a Ascensao Astral (Tier II: niveis 5 a 8). */
+export const ASCENSION_MULTIPLIERS: Readonly<Record<number, number>> = {
+  4: 8,   // 4 -> 5 (ex: Bronze 4.000, Esmeralda 40.000)
+  5: 14,  // 5 -> 6 (ex: Bronze 7.000, Esmeralda 70.000)
+  6: 22,  // 6 -> 7 (ex: Bronze 11.000, Esmeralda 110.000)
+  7: 35,  // 7 -> 8 (ex: Bronze 17.500, Esmeralda 175.000)
+};
+
+/** Rubi no nivel 4..7 da -25% em todas as evolucoes; no nivel 8 (maximo cosmico) da -35%. */
 export const RUBY_DISCOUNT_LEVEL = 4;
 export const RUBY_DISCOUNT_FACTOR = 0.75;
+export const RUBY_COSMIC_DISCOUNT_LEVEL = 8;
+export const RUBY_COSMIC_DISCOUNT_FACTOR = 0.65;
 
 /** Colunas de `guild_members` que guardam o nivel de cada reliquia. */
 export interface RelicColumns {
@@ -70,9 +80,12 @@ export function isMaxLevel(level: number): boolean {
   return level >= RELIC_MAX_LEVEL;
 }
 
-/** Multiplicador de preco: 0.75 com Rubi no maximo, senao 1. */
+/** Multiplicador de preco: 0.65 com Rubi no nivel 8 (maximo), 0.75 no nivel 4..7, senao 1. */
 export function relicDiscount(rubyLevel: number): number {
-  return rubyLevel >= RUBY_DISCOUNT_LEVEL ? RUBY_DISCOUNT_FACTOR : 1;
+  const lvl = clampRelicLevel(rubyLevel);
+  if (lvl >= RUBY_COSMIC_DISCOUNT_LEVEL) return RUBY_COSMIC_DISCOUNT_FACTOR;
+  if (lvl >= RUBY_DISCOUNT_LEVEL) return RUBY_DISCOUNT_FACTOR;
+  return 1;
 }
 
 /**
@@ -86,7 +99,8 @@ export function relicUpgradeCost(
 ): number | null {
   const level = clampRelicLevel(currentLevel);
   if (isMaxLevel(level)) return null;
-  return Math.round(RELIC_BASE_COST[key] * (level + 1) * relicDiscount(clampRelicLevel(rubyLevel)));
+  const multiplier = level < 4 ? level + 1 : (ASCENSION_MULTIPLIERS[level] ?? (level + 1) * 3);
+  return Math.round(RELIC_BASE_COST[key] * multiplier * relicDiscount(clampRelicLevel(rubyLevel)));
 }
 
 export type RelicUpgradePlan =

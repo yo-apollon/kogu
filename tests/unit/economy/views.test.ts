@@ -180,16 +180,16 @@ describe("dailyEmbed", () => {
 });
 
 describe("reliquias", () => {
-  const levels = { ...emptyRelicLevels(), bronze: 2, ruby: 4, emerald: 4 };
+  const levels = { ...emptyRelicLevels(), bronze: 2, ruby: 8, emerald: 8 };
 
   it("lista as 6 reliquias com barra, comando e efeito", () => {
     const lines = relicLines(levels, "pt-BR", "!");
     expect(lines).toHaveLength(6);
     expect(lines[0]).toContain("Relíquia de Bronze");
     expect(lines[0]).toContain("🟩🟩⬛⬛");
-    expect(lines[0]).toContain("Nv.2/4");
+    expect(lines[0]).toContain("Nv.2/8");
     expect(lines[0]).toContain("`!k bronze`");
-    expect(lines[5]).toContain("🟩🟩🟩🟩");
+    expect(lines[5]).toContain("🟩🟩🟩🟩🟪🟪🟪🟪");
   });
 
   it("embed do altar traz saldo e a introducao; somente leitura omite a introducao", () => {
@@ -218,14 +218,14 @@ describe("reliquias", () => {
     );
     for (const b of buttons) expect(b.custom_id.length).toBeLessThanOrEqual(100);
 
-    // ruby 4 => -25%: bronze nivel 2 custa 1500 * .75 = 1125 (sem saldo: Secondary)
+    // ruby 8 => -35%: bronze nivel 2 custa 1500 * .65 = 975 (sem saldo: Secondary)
     const bronze = buttons[0];
-    expect(bronze.label).toContain("1.125");
-    expect(bronze.style).toBe(2); // Secondary (saldo 700 < 1125)
+    expect(bronze.label).toContain("975");
+    expect(bronze.style).toBe(2); // Secondary (saldo 700 < 975)
     expect(bronze.disabled).toBe(false);
-    // silver nivel 0: 1000 * .75 = 750 > 700; prata tambem Secondary
-    expect(buttons[1].label).toContain("750");
-    // ruby e esmeralda no maximo: desligados e com MAX
+    // silver nivel 0: 1000 * .65 = 650 <= 700; prata fica Success
+    expect(buttons[1].label).toContain("650");
+    // ruby e esmeralda no maximo (8): desligados e com MAX
     expect(buttons[4]).toMatchObject({ label: "MAX", disabled: true });
     expect(buttons[5]).toMatchObject({ label: "MAX", disabled: true });
   });
@@ -247,7 +247,7 @@ describe("reliquias", () => {
       relicUpgradedEmbed({ key: "gold", toLevel: 3, balance: 4200, locale: "pt-BR" })
     );
     expect(text).toContain("Relíquia de Ouro");
-    expect(text).toContain("Nível 3/4");
+    expect(text).toContain("Nível 3/8");
     expect(text).toContain("4.200");
   });
 });

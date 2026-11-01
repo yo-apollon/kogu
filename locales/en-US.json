@@ -218,36 +218,36 @@
     "daily_cooldown": "⏳ You already claimed your daily bonus. Come back {when}.",
     "relics_title": "🏺 {user}'s Relic Altar",
     "relics_intro": "💰 **Available Balance:** **{balance} Aether 💠**\n*Upgrade your relics by clicking the buttons or using `{prefix}k <name>` (e.g. `{prefix}k bronze`).*",
-    "relics_line": "{name} • {bar} **`[Lv.{level}/4]`**\n> *{desc}* ᛫ **`{prefix}k {key}`**",
+    "relics_line": "{name} • {bar} **`[Lv.{level}/8]`**\n> *{desc}* ᛫ **`{prefix}k {key}`**",
     "relic": {
       "bronze": {
         "name": "Bronze Relic",
-        "desc": "+25% Aether when rolling wishes"
+        "desc": "+25% Aether on wishes (Lv 1-4) • +30% extra and Prismatic Orbs (Lv 5-8)"
       },
       "silver": {
         "name": "Silver Relic",
-        "desc": "+2 Wishlist slots"
+        "desc": "+2 Wishlist slots/level (Lv 1-4) • +3 Slots and Starwish priority (Lv 5-8)"
       },
       "gold": {
         "name": "Gold Relic",
-        "desc": "Reduces the Orb recharge cost"
+        "desc": "Reduces Orb recharge (Lv 1-4) • 2x Golden Orbs & +20% frequency (Lv 5-8)"
       },
       "sapphire": {
         "name": "Sapphire Relic",
-        "desc": "Turns Blue Orbs into Yellow ones (+500 Aether)"
+        "desc": "Turns Blue Orbs Yellow (Lv 1-4) • Royal (+1.5k) & Cosmic Orbs (Lv 5-8)"
       },
       "ruby": {
         "name": "Ruby Relic",
-        "desc": "-25% price on all other Relics"
+        "desc": "-25% price on Relics (Lv 1-4) • -35% general & -20% on Tower (Lv 5-8)"
       },
       "emerald": {
         "name": "Emerald Relic",
-        "desc": "Makes every Pact instantly yield the card's value in Aether!"
+        "desc": "Full Pact cashback (Lv 1-4) • Cosmic Transmutation on duplicates (Lv 5-8)"
       }
     },
-    "relic_max": "🌟 Your **{name}** is already at Max Level (**Lv. 4**)!",
+    "relic_max": "🌟 Your **{name}** has reached **Max Astral Ascension (Lv. 8)**!",
     "relic_insufficient": "❌ Not enough Aether! You need **{cost} Aether 💠**, but you have **{balance} Aether**.\n💡 Tip: use `{prefix}daily` to earn Aether right now!",
-    "relic_upgraded": "🏺 **Relic Upgraded!** Your **{name}** rose to **Level {level}/4**!\n✨ Effect: *{effect}*\n💠 Remaining Balance: **{balance} Aether**",
+    "relic_upgraded": "🏺 **Relic Upgraded!** Your **{name}** rose to **Level {level}/8**!\n✨ Effect: *{effect}*\n💠 Remaining Balance: **{balance} Aether**",
     "timers_title": "⏳ Dimensional Timers Panel ({user})",
     "timers_pact_title": "📜 Pact Charges",
     "timers_pact_ready": "✅ **Available to forge a Pact right now!**",

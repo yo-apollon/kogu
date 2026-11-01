@@ -218,36 +218,36 @@
     "daily_cooldown": "⏳ Você já resgatou o bônus diário. Volte {when}.",
     "relics_title": "🏺 Altar de Relíquias de {user}",
     "relics_intro": "💰 **Saldo Disponível:** **{balance} Éter 💠**\n*Evolua suas relíquias clicando nos botões ou usando `{prefix}k <nome>` (ex.: `{prefix}k bronze`).*",
-    "relics_line": "{name} • {bar} **`[Nv.{level}/4]`**\n> *{desc}* ᛫ **`{prefix}k {key}`**",
+    "relics_line": "{name} • {bar} **`[Nv.{level}/8]`**\n> *{desc}* ᛫ **`{prefix}k {key}`**",
     "relic": {
       "bronze": {
         "name": "Relíquia de Bronze",
-        "desc": "+25% Éter ao rolar desejos"
+        "desc": "+25% Éter em desejos (Nv 1-4) • +30% Éter extra e Orbes Prismáticos (Nv 5-8)"
       },
       "silver": {
         "name": "Relíquia de Prata",
-        "desc": "+2 Slots na Lista de Desejos"
+        "desc": "+2 Slots Wishlist/nível (Nv 1-4) • +3 Slots e Prioridade Starwish (Nv 5-8)"
       },
       "gold": {
         "name": "Relíquia de Ouro",
-        "desc": "Reduz custo de recarga de Orbes"
+        "desc": "Reduz recarga de Orbes (Nv 1-4) • Orbes Dourados x2 e +20% frequência (Nv 5-8)"
       },
       "sapphire": {
         "name": "Relíquia de Safira",
-        "desc": "Transforma Orbes Azuis em Amarelos (+500 Éter)"
+        "desc": "Orbes Azuis viram Amarelos (Nv 1-4) • Orbes Reais (+1.500) e Cósmicos (Nv 5-8)"
       },
       "ruby": {
         "name": "Relíquia de Rubi",
-        "desc": "-25% no preço de todas as outras Relíquias"
+        "desc": "-25% de desconto em Relíquias (Nv 1-4) • -35% geral e -20% na Torre (Nv 5-8)"
       },
       "emerald": {
         "name": "Relíquia de Esmeralda",
-        "desc": "Faz todo Pacto render o valor da carta em Éter na hora!"
+        "desc": "Cashback total em Pactos (Nv 1-4) • Transmutação Cósmica em repetidos (Nv 5-8)"
       }
     },
-    "relic_max": "🌟 Sua **{name}** já está no Nível Máximo (**Nv. 4**)!",
+    "relic_max": "🌟 Sua **{name}** já atingiu a **Ascensão Astral Máxima (Nv. 8)**!",
     "relic_insufficient": "❌ Éter insuficiente! Você precisa de **{cost} Éter 💠**, mas possui **{balance} Éter**.\n💡 Dica: use `{prefix}daily` para ganhar Éter agora mesmo!",
-    "relic_upgraded": "🏺 **Relíquia Evoluída!** Sua **{name}** subiu para o **Nível {level}/4**!\n✨ Efeito: *{effect}*\n💠 Saldo Restante: **{balance} Éter**",
+    "relic_upgraded": "🏺 **Relíquia Evoluída!** Sua **{name}** subiu para o **Nível {level}/8**!\n✨ Efeito: *{effect}*\n💠 Saldo Restante: **{balance} Éter**",
     "timers_title": "⏳ Painel Dimensional de Temporizadores ({user})",
     "timers_pact_title": "📜 Cargas de Pacto",
     "timers_pact_ready": "✅ **Disponível para firmar Pacto agora!**",

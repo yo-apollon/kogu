@@ -86,12 +86,18 @@ export function parseRelicKey(input: string | null | undefined): RelicKey | null
 // Apresentacao (texto puro; nenhum acesso externo)
 // ---------------------------------------------------------------------------
 
-/** Barra de nivel: `🟩🟩⬛⬛` (emojis centralizados em ui/emojis). */
+/** Barra de nivel: `🟩🟩🟩🟩🟪🟪⬛⬛` (8 niveis: 1..4 mortal, 5..8 ascensao cosmica). */
 export function relicBar(level: number): string {
   const filled = clampRelicLevel(level);
-  return (
-    emoji("relic.filled").repeat(filled) + emoji("relic.empty").repeat(RELIC_MAX_LEVEL - filled)
-  );
+  let bar = "";
+  for (let i = 1; i <= RELIC_MAX_LEVEL; i++) {
+    if (i <= filled) {
+      bar += i <= 4 ? emoji("relic.filled") : "🟪";
+    } else {
+      bar += emoji("relic.empty");
+    }
+  }
+  return bar;
 }
 
 /** "🥉 Reliquia de Bronze" no idioma pedido. */
