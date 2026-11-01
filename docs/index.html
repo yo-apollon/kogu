@@ -221,6 +221,133 @@
     }
 
     /* ==========================================================================
+       DISCORD HERO PROMO CARD
+       ========================================================================== */
+    .discord-promo-card {
+      background: linear-gradient(135deg, rgba(88, 101, 242, 0.12) 0%, rgba(124, 58, 237, 0.16) 100%), #141724;
+      border: 1px solid rgba(124, 58, 237, 0.35);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    }
+    .promo-left {
+      flex: 1 1 500px;
+    }
+    .promo-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+    .promo-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+      line-height: 1.25;
+    }
+    .promo-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+    .promo-starter-tip {
+      font-size: 0.85rem;
+      color: #fef08a;
+      background: rgba(234, 179, 8, 0.1);
+      border-left: 3px solid #eab308;
+      padding: 6px 12px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+    .promo-starter-tip code {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #67e8f9;
+      font-weight: 700;
+    }
+    .promo-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .btn-discord-hero {
+      background: #5865F2;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 10px 20px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      box-shadow: 0 4px 14px rgba(88, 101, 242, 0.4);
+    }
+    .btn-discord-hero:hover {
+      background: #4752c4;
+      transform: translateY(-2px);
+    }
+    .btn-outline-hero {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-outline-hero:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .promo-right-stats {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .promo-stat-box {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 12px 18px;
+      text-align: center;
+      min-width: 100px;
+    }
+    .stat-big-val {
+      display: block;
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #fff;
+    }
+    .stat-small-lbl {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* ==========================================================================
        SUBNAV BAR COM ABAS E CATEGORIAS (ESTILO MUDAE)
        ========================================================================== */
     .subnav-bar {
@@ -1325,6 +1452,46 @@
     <!-- VIEW 1: DATABASE DE PERSONAGENS (DEFAULT) -->
     <div id="panel-database" class="view-panel active">
       
+      <!-- HERO BANNER DE INTEGRAÇÃO DISCORD <-> WEB -->
+      <section class="discord-promo-card">
+        <div class="promo-left">
+          <div class="promo-badge">⚡ BOT OFICIAL DO DISCORD &bull; 100% ONLINE 24/7 NA VPS</div>
+          <h2 class="promo-title">Colecione Mais de 7.300 Cartas no seu Servidor!</h2>
+          <p class="promo-subtitle">
+            Invoque heróis dos Animes, lendas do UFC, Futebol, NBA e Trap/Música. Dispute duelos épicos na Arena RPG e erga os 12 andares da Torre de Éter com seus amigos no Discord!
+          </p>
+          <div class="promo-starter-tip">
+            🎁 <strong>Bônus de Iniciação:</strong> Digite <code>$tuto</code> ou <code>$daily</code> no Discord para resgatar <strong>+500 Éter</strong> e <strong>+5 Invocações Grátis</strong> imediatas!
+          </div>
+          <div class="promo-actions">
+            <a class="btn-discord-hero" href="https://discord.com/oauth2/authorize?client_id=1561074418250416178&permissions=412317240384&scope=bot%20applications.commands" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.894a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/></svg>
+              Adicionar Kogu ao Discord
+            </a>
+            <button class="btn-outline-hero" onclick="switchView('commands')">
+              📜 85+ Comandos Oficiais
+            </button>
+            <button class="btn-outline-hero" onclick="switchView('tower')">
+              🗼 Simulador da Torre ($ktower)
+            </button>
+          </div>
+        </div>
+        <div class="promo-right-stats">
+          <div class="promo-stat-box">
+            <span class="stat-big-val">7.379</span>
+            <span class="stat-small-lbl">Cartas Ativas</span>
+          </div>
+          <div class="promo-stat-box">
+            <span class="stat-big-val" style="color:var(--accent);">12</span>
+            <span class="stat-small-lbl">Andares da Torre</span>
+          </div>
+          <div class="promo-stat-box">
+            <span class="stat-big-val" style="color:#22c55e;">24/7</span>
+            <span class="stat-small-lbl">VPS Sentinel Ativo</span>
+          </div>
+        </div>
+      </section>
+      
       <!-- POPULAR CHARACTERS CAROUSEL SLIDER (IDENTICO AO MUDAE.NET) -->
       <section class="slider-container">
         <div class="section-header-row">
@@ -1601,60 +1768,94 @@
     let selectedImgIndex = 0;
 
     const COMMANDS = [
-      { s: "$w", c: "Invocação", d: "Invoca personagens femininas de qualquer universo." },
-      { s: "$h", c: "Invocação", d: "Invoca personagens masculinos de qualquer universo." },
-      { s: "$m", c: "Invocação", d: "Invocação mista (waifus e husbandos de qualquer obra)." },
-      { s: "$wa", c: "Invocação", d: "Invoca apenas Waifus de Anime e Mangá." },
-      { s: "$ha", c: "Invocação", d: "Invoca apenas Husbandos de Anime e Mangá." },
-      { s: "$wg", c: "Invocação", d: "Invoca cartas femininas originárias de Games." },
-      { s: "$hg", c: "Invocação", d: "Invoca cartas masculinas originárias de Games." },
-      { s: "$wc", c: "Invocação", d: "Invoca cartas de Cinema, Séries, Doramas e Idols." },
-      { s: "$hc", c: "Invocação", d: "Invoca cartas masculinas de Cinema, Séries e Idols." },
-      { s: "/roll", c: "Invocação", d: "Versão Slash Command de invocação com 10% bônus de Éter." },
-      { s: "$pt ($mm)", c: "Coleção", d: "Exibe seu Panteão de cartas com paginação e estatísticas." },
-      { s: "$ci <carta> [num]", c: "Coleção", d: "Galeria de imagens oficiais: veja todas as fotos e escolha a principal." },
-      { s: "$ai <carta> <url>", c: "Coleção", d: "Define imagem externa personalizada na sua carta (suporta GIF e PNG)." },
-      { s: "$ec <carta> <#hex>", c: "Coleção", d: "Customiza a cor da borda do embed do personagem no seu panteão." },
-      { s: "$sm <critério>", c: "Coleção", d: "Ordenação permanente do panteão (val, claim, alpha, id, series, rarity)." },
-      { s: "$mma / $mmk / $mmr", c: "Coleção", d: "Exibe o harém ordenado por Valor, Data de Casamento ou Raridade." },
-      { s: "$im <nome>", c: "Coleção", d: "Inspeciona todas as informações, fotos, stats de combate e chaves da carta." },
-      { s: "$trade @user", c: "Coleção", d: "Inicia troca segura e interativa com painel de confirmação dupla." },
-      { s: "$give @user <carta>", c: "Coleção", d: "Transfere a posse de uma carta diretamente para outro jogador." },
-      { s: "$divorce <carta>", c: "Coleção", d: "Rompe o pacto e recebe o valor integral da carta em Cristais de Éter." },
-      { s: "$bronze ($b)", c: "Economia", d: "Insígnia de Bronze: desbloqueia slots extras na Wishlist e bônus de drop." },
-      { s: "$silver ($s)", c: "Economia", d: "Insígnia de Prata: multiplica o ganho de Éter em personagens desejados." },
-      { s: "$gold ($g)", c: "Economia", d: "Insígnia de Ouro: reduz o tempo de recarga de pactos e rolagens." },
-      { s: "$sapphire", c: "Economia", d: "Insígnia de Safira: converte rolagens azuis em pedras de Éter preciosas." },
-      { s: "$ruby", c: "Economia", d: "Insígnia de Rubi: concede desconto maciço no aprimoramento de todas as insígnias." },
-      { s: "$emerald", c: "Economia", d: "Insígnia de Esmeralda: desbloqueia o reset de cooldown de casamento ($rt)." },
-      { s: "$bv ($badgevalue)", c: "Economia", d: "Consulta o custo e benefícios de todas as insígnias e relíquias." },
-      { s: "$kr ($kakerareward)", c: "Economia", d: "Consulta o teto de Éter e o valor atual de extração por reação." },
-      { s: "$topk ($topservk)", c: "Economia", d: "Ranking com os maiores acumuladores de Éter do servidor." },
-      { s: "$topm ($topservm)", c: "Economia", d: "Ranking dos maiores haréns e maiores valores somados de cartas." },
-      { s: "$ktower ($tower)", c: "Economia", d: "Obelisco Dimensional com 12 andares de bônus passivos permanentes." },
-      { s: "$build <1-12>", c: "Economia", d: "Constrói ou aprimora um andar na sua Torre Cósmica." },
-      { s: "$destroy", c: "Economia", d: "Demole toda a Torre com reembolso integral de 100% do Éter gasto." },
-      { s: "$kl ($lootbox)", c: "Economia", d: "Abre Caixas Astrais (500 Éter) com prêmios de Rolls, Éter e $fc." },
-      { s: "$relics", c: "Economia", d: "Forja Relíquias Astrais (Safira, Rubi, Esmeralda, Ouro, Diamante)." },
-      { s: "$wish ($wl) <nome>", c: "Wishlist", d: "Adiciona uma carta à lista com menção quando for invocada." },
-      { s: "$starwish ($sw)", c: "Wishlist", d: "Define seu desejo supremo com +50% de bônus na taxa de aparição." },
-      { s: "$ws ($wishseries) <obra>", c: "Wishlist", d: "Adiciona toda uma série, anime ou game à sua wishlist de uma só vez." },
-      { s: "$wdm [on/off]", c: "Wishlist", d: "Recebe notificações privadas na DM quando sua carta desejada é invocada." },
-      { s: "$wp ($wishpurge)", c: "Wishlist", d: "Limpa da sua wishlist todas as cartas que você já conquistou." },
-      { s: "$d ($disable) <franquia>", c: "Roleta", d: "Desativa uma série ou anime da sua roleta individual para focar nos favoritos." },
-      { s: "$ad ($enable) <franquia>", c: "Roleta", d: "Reativa uma franquia desativada na sua roleta pessoal." },
-      { s: "$dl ($disablelist)", c: "Roleta", d: "Exibe sua lista de bloqueios ativa e a contagem total de cartas filtradas." },
-      { s: "$lr ($limroul) <limite>", c: "Roleta", d: "Restringe a roleta apenas aos personagens do topo de popularidade global." },
-      { s: "$bt ($blacktea)", c: "Minijogos", d: "Jogo da Bomba de Palavras: digite antes que o tempo esgote e ganhe Éter." },
-      { s: "$gt ($greentea)", c: "Minijogos", d: "Minijogo do Chá Verde: vença digitando a palavra mais longa possível." },
-      { s: "$redtea", c: "Minijogos", d: "Minijogo de eliminação rápida contra o relógio em modo deathmatch." },
-      { s: "$yt ($yellowtea)", c: "Minijogos", d: "Encontre a maior palavra com combinações raras de letras." },
-      { s: "$mt ($mixtea)", c: "Minijogos", d: "Modo caótico que alterna regras de chá aleatoriamente a cada rodada." },
-      { s: "$pokeduel", c: "Minijogos", d: "Duelo Pokémon retrô com vantagens de tipos elementais e ataques especiais." },
-      { s: "$slot ($pokemon)", c: "Cassino", d: "Caça-níquel de mascotes Pokémon com chances de capturar versão Shiny." },
-      { s: "$arena [@user]", c: "Combate", d: "Batalha RPG tática por turnos com atributos reais (ATK, DEF, SPD, HP)." },
-      { s: "$btd ($bitesthedust)", c: "Servidor", d: "Reseta com segurança os haréns do servidor com estorno integral de 100% de Éter." },
-      { s: "$restore @user [id]", c: "Servidor", d: "Restaura o panteão completo de um jogador a partir de um snapshot seguro." }
+      // Invocação Multiversal
+      { s: "$w", c: "Invocação", d: "Invoca personagens femininas (waifus) de qualquer franquia." },
+      { s: "$h", c: "Invocação", d: "Invoca personagens masculinos (husbandos) de qualquer franquia." },
+      { s: "$m", c: "Invocação", d: "Invocação mista (waifus e husbandos de qualquer universo)." },
+      { s: "$wa", c: "Invocação", d: "Invoca apenas personagens femininas de Anime & Mangá." },
+      { s: "$ha", c: "Invocação", d: "Invoca apenas personagens masculinos de Anime & Mangá." },
+      { s: "$ma", c: "Invocação", d: "Invocação mista restrita ao universo Anime & Mangá." },
+      { s: "$wg", c: "Invocação", d: "Invoca personagens femininas originárias de Games." },
+      { s: "$hg", c: "Invocação", d: "Invoca personagens masculinos originários de Games." },
+      { s: "$mg", c: "Invocação", d: "Invocação mista restrita ao universo de Games." },
+      { s: "$wc", c: "Invocação", d: "Invoca personagens de Cinema, Séries, Filmes e TV." },
+      { s: "$hc", c: "Invocação", d: "Invoca cartas masculinas de Cinema, Filmes e Séries." },
+      { s: "$mc", c: "Invocação", d: "Invocação mista restrita ao universo de Cinema & Séries." },
+      { s: "$we", c: "Invocação", d: "Invoca lendas femininas de Esportes e Música." },
+      { s: "$he", c: "Invocação", d: "Invoca lendas masculinas de UFC, Futebol, NBA e Trap/Música." },
+      { s: "$me", c: "Invocação", d: "Invocação de Esportes Mundiais e Música/Trap." },
+      { s: "$roll ($s)", c: "Invocação", d: "Invocação aleatória geral em todo o catálogo multiversal." },
+      { s: "$ar", c: "Invocação", d: "Forja armas lendárias e artefatos de combate equipáveis." },
+      { s: "/roll", c: "Invocação", d: "Versão Slash Command com 10% bônus de Éter." },
+
+      // Temporizadores & Pacto (Claim)
+      { s: "$claim", c: "Pacto & Timers", d: "Reivindica a carta na tela para o seu Panteão (30s de exclusividade do roller)." },
+      { s: "$tu ($timers)", c: "Pacto & Timers", d: "Painel mestre de tempos: rolls disponíveis, claim, daily e orbes." },
+      { s: "$mu ($marryup)", c: "Pacto & Timers", d: "Verifica rapidamente se você pode firmar um pacto agora." },
+      { s: "$ru ($rollsup)", c: "Pacto & Timers", d: "Mostra quantas invocações restam e o minuto do reset." },
+      { s: "$ou ($orbup)", c: "Pacto & Timers", d: "Verifica a disponibilidade de absorção de Orbes de Éter." },
+      { s: "$fc ($freeclaim)", c: "Pacto & Timers", d: "Usa uma carga de Pacto Extra para zerar o cooldown de claim!" },
+      { s: "$rt ($resettime)", c: "Pacto & Timers", d: "Zera o cooldown de pacto usando o poder da Relíquia de Esmeralda (20h)." },
+
+      // Panteão & Coleção
+      { s: "$pt ($panteon, $mm)", c: "Coleção", d: "Exibe seu Panteão de cartas completo com paginação e status." },
+      { s: "$pt @user", c: "Coleção", d: "Inspeciona o Panteão e as relíquias de outro jogador no servidor." },
+      { s: "$im <nome> ($info)", c: "Coleção", d: "Ficha técnica completa: foto, raridade, Éter, ranking e stats de combate." },
+      { s: "$pr ($profile)", c: "Coleção", d: "Abre seu Perfil Dimensional com estatísticas, Éter, insígnias e torre." },
+      { s: "$firstmarry <nome> ($fm)", c: "Coleção", d: "Consagra o Líder Supremo do Panteão, exibido no perfil e nos rolls." },
+      { s: "$custompic <nome> <url> ($ci)", c: "Coleção", d: "Define imagem ou GIF externo personalizado exclusivo para a sua carta." },
+      { s: "$alias <nome> <apelido>", c: "Coleção", d: "Atribui um apelido personalizado gravado na entidade." },
+      { s: "$note <nome> <mensagem>", c: "Coleção", d: "Grava uma nota personalizada na ficha da carta visível em $im." },
+      { s: "$sm <critério>", c: "Coleção", d: "Ordena o panteão (val = valor, claim = data, rarity = raridade, alpha = A-Z)." },
+      { s: "$infokeys", c: "Coleção", d: "Exibe os marcos de poder e bônus dos Selos de Despertar (Keys 1 a 4)." },
+      { s: "$trade @user", c: "Coleção", d: "Inicia troca bilateral segura com confirmação dupla (até 5 cartas)." },
+      { s: "$give @user <nome>", c: "Coleção", d: "Presenteia uma carta do seu Panteão diretamente a outro jogador." },
+      { s: "$dissolve <nome> ($dk)", c: "Coleção", d: "Dissolve um pacto e recebe 100% do valor da carta em Éter puro." },
+
+      // Economia, Cassino & Minigames
+      { s: "$daily", c: "Economia & Jogos", d: "Resgata a recompensa diária de Éter e rolagens bônus (reseta a cada 20h)." },
+      { s: "$givekakera @user <valor>", c: "Economia & Jogos", d: "Transfere Éter do seu saldo para outro jogador no servidor." },
+      { s: "$kl ($lootbox)", c: "Economia & Jogos", d: "Abre Caixa Astral (500 Éter) em busca de rolls temporários, chaves e relíquias." },
+      { s: "$relics", c: "Economia & Jogos", d: "Visualiza e aprimora suas Relíquias Dimensionais (Esmeralda, Rubi, Safira...)." },
+      { s: "$blackjack <aposta> ($bj)", c: "Economia & Jogos", d: "Jogue 21 no Cassino Astral contra a banca! Paga 2.5x no Blackjack natural." },
+      { s: "$slot <aposta>", c: "Economia & Jogos", d: "Caça-Níqueis de Mascotes Astrais. Combine 3 criaturas para jackpots de até 10x!" },
+      { s: "$coinflip <cara/coroa> <aposta> ($cf)", c: "Economia & Jogos", d: "Aposta Cara ou Coroa no Cassino Astral valendo o dobro de Éter (50/50)." },
+      { s: "$arena [@user] ($duel)", c: "Economia & Jogos", d: "Duelo RPG por turnos com atributos reais (ATK, DEF, SPD, HP) valendo Éter." },
+      { s: "$blacktea ($bt)", c: "Economia & Jogos", d: "Batalha veloz de vocabulário contra os amigos valendo pote acumulado." },
+      { s: "$quiz", c: "Economia & Jogos", d: "Quiz dinâmico de Anime, Games e Esportes valendo premiações imediatas de Éter." },
+      { s: "$beam", c: "Economia & Jogos", d: "Disparo Dimensional de feixe cósmico de Éter contra o multiverso." },
+
+      // Torre de Éter (Obelisco)
+      { s: "$ktower ($tower)", c: "Torre de Éter", d: "Exibe a planta da sua Torre de Éter e os bônus dos 12 andares místicos." },
+      { s: "$build", c: "Torre de Éter", d: "Constrói o próximo andar da Torre consumindo Éter para bônus passivos." },
+      { s: "$destroy", c: "Torre de Éter", d: "Demole a Torre e reembolsa 100% de todo o Éter investido sem penalidade." },
+
+      // Wishlist & Otimização
+      { s: "$wish <nome> ($w)", c: "Wishlist & Filtros", d: "Adiciona uma carta à lista com notificação @ping quando for invocada." },
+      { s: "$starwish <nome> ($sw)", c: "Wishlist & Filtros", d: "Define seu Desejo Estelar com +50% de bônus de aparição nos seus rolls!" },
+      { s: "$wishseries <obra> ($ws)", c: "Wishlist & Filtros", d: "Adiciona todos os personagens de uma obra à sua wishlist de uma só vez." },
+      { s: "$wishlist ($wl)", c: "Wishlist & Filtros", d: "Exibe todas as entidades que você marcou com paginação." },
+      { s: "$disable <obra> ($d)", c: "Wishlist & Filtros", d: "Desativa uma série das suas invocações para focar nos favoritos." },
+      { s: "$antidisable <obra> ($e)", c: "Wishlist & Filtros", d: "Reativa uma série previamente desativada." },
+      { s: "$disablelist ($dl)", c: "Wishlist & Filtros", d: "Lista todas as séries desativadas e o total de cartas removidas." },
+
+      // Configurações & Servidor
+      { s: "$settings", c: "Configurações", d: "Painel interativo com todas as configurações ativas do servidor." },
+      { s: "$prefix <símbolo>", c: "Configurações", d: "Altera o prefixo de comandos no servidor (ex: $, !, ., k!)." },
+      { s: "$lang <pt-BR | en-US>", c: "Configurações", d: "Altera o idioma oficial do bot entre Português e Inglês." },
+      { s: "$gamemode <1 | 2>", c: "Configurações", d: "Alterna entre Modo Casual (1) e Modo Competitivo (2)." },
+      { s: "$setrolls <quantidade>", c: "Configurações", d: "Define o limite de invocações por hora por jogador." },
+      { s: "$settimer <minutos>", c: "Configurações", d: "Define o intervalo de recarga de pacto (padrão: 180 min)." },
+      { s: "$setclaim <segundos>", c: "Configurações", d: "Ajusta a duração da janela de proteção de claim (padrão: 30s)." },
+
+      // Iniciação & Suporte
+      { s: "$tuto", c: "Iniciação & Ajuda", d: "Tutorial interativo para iniciantes com recompensa de +500 Éter e +5 Rolls!" },
+      { s: "$skiptuto", c: "Iniciação & Ajuda", d: "Conclui instantaneamente o tutorial e resgata o pacote de iniciante." },
+      { s: "$help ($ajuda)", c: "Iniciação & Ajuda", d: "Central de Ajuda interativa com guias completos de todas as mecânicas." },
+      { s: "$invite", c: "Iniciação & Ajuda", d: "Exibe o link oficial de convite do Kogu para seu servidor do Discord." },
+      { s: "$ping", c: "Iniciação & Ajuda", d: "Monitora a latência da conexão com o Discord e o banco de dados." },
+      { s: "$catalog", c: "Catálogo & Curadoria", d: "Painel de métricas e status do catálogo em tempo real." },
+      { s: "$suggest <nome | link>", c: "Catálogo & Curadoria", d: "Sugere personagens, idols ou animes para curadoria da staff." }
     ];
 
     const TOWER_PERKS = [

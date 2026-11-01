@@ -338,7 +338,7 @@
   },
   "help": {
     "title": "✨ Dimensional Hub — Kogu Commands",
-    "footer": "Kogu Multiverse Gacha & RPG • Prefix: {prefix}",
+    "footer": "🌐 yo-apollon.github.io/kogu • Kogu Multiverse • Prefix: {prefix}",
     "placeholder": "Choose a category",
     "overview": "Pick a category in the menu below to see its commands. You can also use slash (`/`) commands.",
     "no_commands": "No commands in this category.",

@@ -17,7 +17,7 @@ import { createPanel } from "../../ui/components/panel.js";
 import { truncate } from "../../ui/format.js";
 import { msg } from "./messages.js";
 import { buildHelpGroups } from "./service.js";
-import { buildHelpSections } from "./views.js";
+import { buildHelpSections, OVERVIEW_SECTION_ID } from "./views.js";
 
 const SLASH_DESCRIPTION_MAX = 100;
 
@@ -47,10 +47,28 @@ export function createHelpCommand(
     async execute(ctx) {
       const prefix = ctx.guildConfig.prefix;
       const groups = buildHelpGroups(deps.getCommands(), ctx.locale, prefix);
+      const arg = (ctx.rawArgs?.[0] ?? "").toLowerCase().trim();
+      let initialSection = OVERVIEW_SECTION_ID;
+      if (arg) {
+        const found = groups.find(
+          (g) =>
+            g.category.toLowerCase() === arg ||
+            g.title.toLowerCase().includes(arg) ||
+            g.entries.some(
+              (e) =>
+                e.name.toLowerCase() === arg ||
+                e.aliases.some((a) => a.toLowerCase() === arg)
+            )
+        );
+        if (found) {
+          initialSection = found.category;
+        }
+      }
       const panel = await createPanel({
         kv: await deps.getKV(),
         ownerId: ctx.user.id,
         sections: buildHelpSections(groups, ctx.locale, prefix),
+        initial: initialSection,
         locale: ctx.locale,
         placeholder: msg(ctx.locale, "help.placeholder"),
       });
