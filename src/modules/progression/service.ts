@@ -11,8 +11,9 @@ export const LOOTBOX_COST = 1000;
 export const TOWER_BASE_COST = 5000;
 export const RT_COOLDOWN_MS = 20 * 60 * 60 * 1000;
 export const ARENA_COOLDOWN_MS = 3 * 60 * 1000;
+export const ARENA_ENTRY_FEE = 30;
 export const ARENA_WIN_REWARD = 250;
-export const SLOT_COST = 100;
+export const SLOT_COST = 50;
 
 export const tutoKey = (guildId: string, userId: string) => `tuto:done:${guildId}:${userId}`;
 export const towerKey = (guildId: string, userId: string) => `tower:floors:${guildId}:${userId}`;
@@ -471,6 +472,8 @@ export interface ArenaDuelResult {
   winnerCard: string;
   rounds: number;
   rewardAether: number;
+  fee: number;
+  netProfit: number;
   log: string[];
   finalHpA: number;
   finalHpB: number;
@@ -522,6 +525,23 @@ export async function runArenaBattle(
   challengerId: string,
   opponentId?: string
 ): Promise<ArenaDuelResult> {
+  await ensureMember(db, { guildId, userId: challengerId });
+  const [challenger] = await db
+    .select({ balance: guildMembers.aetherBalance })
+    .from(guildMembers)
+    .where(and(eq(guildMembers.guildId, guildId), eq(guildMembers.userId, challengerId)))
+    .limit(1);
+
+  if ((challenger?.balance ?? 0) < ARENA_ENTRY_FEE) {
+    throw new UserError("progression.insufficient_aether");
+  }
+
+  // Cobra a taxa de desafio (30 Éter)
+  await db
+    .update(guildMembers)
+    .set({ aetherBalance: sql`${guildMembers.aetherBalance} - ${ARENA_ENTRY_FEE}` })
+    .where(and(eq(guildMembers.guildId, guildId), eq(guildMembers.userId, challengerId)));
+
   const fighterA =
     (await loadBestFighter(guildId, challengerId)) ?? {
       ownerId: challengerId,
@@ -579,8 +599,12 @@ export async function runArenaBattle(
   const winnerId = aWins ? fighterA.ownerId : fighterB.ownerId;
   const winnerCard = aWins ? fighterA.cardName : fighterB.cardName;
 
-  if (winnerId !== "guardian") {
-    await credit(guildId, winnerId, ARENA_WIN_REWARD);
+  let rewardAether = 0;
+  if (aWins) {
+    rewardAether = ARENA_WIN_REWARD;
+    await credit(guildId, challengerId, ARENA_WIN_REWARD);
+  } else if (opponentId && winnerId === opponentId) {
+    await credit(guildId, opponentId, ARENA_WIN_REWARD);
   }
 
   return {
@@ -589,7 +613,9 @@ export async function runArenaBattle(
     winnerId,
     winnerCard,
     rounds,
-    rewardAether: ARENA_WIN_REWARD,
+    rewardAether,
+    fee: ARENA_ENTRY_FEE,
+    netProfit: aWins ? ARENA_WIN_REWARD - ARENA_ENTRY_FEE : -ARENA_ENTRY_FEE,
     log,
     finalHpA: hpA,
     finalHpB: hpB,
@@ -623,6 +649,8 @@ export interface SlotResult {
   isShiny: boolean;
   capturedName: string;
   aetherReward: number;
+  cost: number;
+  netProfit: number;
   newBalance: number;
 }
 
@@ -632,10 +660,28 @@ export async function spinSlotMachine(
   username?: string,
   rng: () => number = Math.random
 ): Promise<SlotResult> {
+  await ensureMember(db, { guildId, userId, username });
+  const [member] = await db
+    .select({ balance: guildMembers.aetherBalance })
+    .from(guildMembers)
+    .where(and(eq(guildMembers.guildId, guildId), eq(guildMembers.userId, userId)))
+    .limit(1);
+
+  const balance = member?.balance ?? 0;
+  if (balance < SLOT_COST) {
+    throw new UserError("progression.insufficient_aether");
+  }
+
+  // Cobra o custo do giro (50 Éter)
+  await db
+    .update(guildMembers)
+    .set({ aetherBalance: sql`${guildMembers.aetherBalance} - ${SLOT_COST}` })
+    .where(and(eq(guildMembers.guildId, guildId), eq(guildMembers.userId, userId)));
+
   const pick = () => FAMILIARS[Math.floor(rng() * FAMILIARS.length)] ?? FAMILIARS[0];
   const r1 = pick();
-  const r2 = rng() < 0.45 ? r1 : pick();
-  const r3 = rng() < 0.35 ? r2 : pick();
+  const r2 = rng() < 0.28 ? r1 : pick();
+  const r3 = rng() < 0.22 ? r2 : pick();
 
   const isJackpot = r1.emoji === r2.emoji && r2.emoji === r3.emoji;
   const isPair = !isJackpot && (r1.emoji === r2.emoji || r2.emoji === r3.emoji || r1.emoji === r3.emoji);
@@ -644,11 +690,18 @@ export async function spinSlotMachine(
 
   const matched = r1.emoji === r2.emoji ? r1 : r2.emoji === r3.emoji ? r2 : r1;
   let aetherReward = 0;
-  if (isJackpot) aetherReward = matched.reward * (isShiny ? 2 : 1);
-  else if (isPair) aetherReward = Math.round(matched.reward * 0.6 * (isShiny ? 1.5 : 1));
-  else aetherReward = 40; // consolo
+  if (isJackpot) {
+    aetherReward = Math.round(matched.reward * 2.5 * (isShiny ? 2 : 1));
+  } else if (isPair) {
+    aetherReward = Math.round(matched.reward * 0.8 * (isShiny ? 1.5 : 1));
+  } else {
+    aetherReward = 0; // Derrota total: perdeu os 50 Éter!
+  }
 
-  const newBalance = await credit(guildId, userId, aetherReward, { username });
+  let newBalance = balance - SLOT_COST;
+  if (aetherReward > 0) {
+    newBalance = await credit(guildId, userId, aetherReward, { username });
+  }
 
   if (won) {
     const kv = await getKV();
@@ -667,8 +720,10 @@ export async function spinSlotMachine(
     won,
     isJackpot,
     isShiny,
-    capturedName: `${matched.emoji} ${matched.namePt}${isShiny ? " ✨" : ""}`,
+    capturedName: won ? `${matched.emoji} ${matched.namePt}${isShiny ? " ✨" : ""}` : "",
     aetherReward,
+    cost: SLOT_COST,
+    netProfit: aetherReward - SLOT_COST,
     newBalance,
   };
 }
@@ -1014,6 +1069,7 @@ export async function startBlackjack(
   bet: number
 ): Promise<BlackjackGame> {
   const kv = await getKV();
+  await ensureMember(db, { guildId, userId, username });
   const [member] = await db
     .select({ balance: guildMembers.aetherBalance })
     .from(guildMembers)
@@ -1036,7 +1092,7 @@ export async function startBlackjack(
   const pScore = calcScore(pCards);
   const dScore = calcScore(dCards);
 
-  const sessionId = `${userId}:${Date.now().toString(36)}`;
+  const sessionId = `${userId}_${Date.now().toString(36)}`;
   let game: BlackjackGame = {
     sessionId,
     guildId,
@@ -1142,6 +1198,7 @@ export async function doubleBlackjack(sessionId: string): Promise<BlackjackGame>
   const game: BlackjackGame = JSON.parse(raw);
   if (game.gameOver) return game;
 
+  await ensureMember(db, { guildId: game.guildId, userId: game.userId, username: game.username });
   const [member] = await db
     .select({ balance: guildMembers.aetherBalance })
     .from(guildMembers)

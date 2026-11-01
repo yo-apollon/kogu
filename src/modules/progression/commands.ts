@@ -514,7 +514,9 @@ export const arenaCommand: AnyCommand = {
           battle.log.map((l) => `▸ ${l}`).join("\n") +
           `\n\n` +
           `🏆 **Vencedor:** ${winLabel} com **${battle.winnerCard}**!\n` +
-          `🎁 **Recompensa:** **+${formatNumber(battle.rewardAether, ctx.locale)}** ${emoji("aether")}`
+          (won
+            ? `🎁 **Recompensa:** **+${formatNumber(battle.rewardAether, ctx.locale)}** ${emoji("aether")} *(Lucro: **+${formatNumber(battle.netProfit, ctx.locale)}**)*`
+            : `💀 **Derrota!** Seu combatente foi nocauteado. Você perdeu a taxa de desafio de **-${battle.fee}** ${emoji("aether")}.`)
       );
 
     if (battle.fighterA.imageUrl) {
@@ -540,12 +542,6 @@ export const slotCommand: AnyCommand = {
     const res = await spinSlotMachine(ctx.guild.id, ctx.user.id, ctx.user.username);
     const [r1, r2, r3] = res.reels;
 
-    const headline = res.isJackpot
-      ? `🎉 **JACKPOT DIMENSIONAL! TRINCA PERFEITA!**`
-      : res.won
-        ? `✨ **PAR ENCONTRADO! FAMILIAR CAPTURADO!**`
-        : `🎰 **Oráculo Girado — Recompensa de Consolação!**`;
-
     const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
       new ButtonBuilder()
         .setCustomId(`${PROGRESSION_NS}:slot_spin:${ctx.user.id}`)
@@ -553,19 +549,41 @@ export const slotCommand: AnyCommand = {
         .setStyle(ButtonStyle.Primary)
     );
 
-    const embed = new EmbedBuilder()
-      .setColor(res.isJackpot ? 0xfacc15 : res.won ? 0x22c55e : 0x6366f1)
-      .setTitle("🎰 Oráculo de Familiares — Pokéslot Dimensional")
-      .setDescription(
-        `### ╔═══════════════════╗\n` +
-          `### ║   ${r1.emoji}   │   ${r2.emoji}   │   ${r3.emoji}   ║\n` +
-          `### ╚═══════════════════╝\n\n` +
-          `${headline}\n` +
-          (res.won ? `🐾 **Criatura Rara:** **${res.capturedName}**\n` : "") +
-          `💠 **Prêmio Coletado:** **+${formatNumber(res.aetherReward, ctx.locale)}** ${emoji("aether")}\n` +
-          `💰 **Seu Saldo:** **${formatNumber(res.newBalance, ctx.locale)}** ${emoji("aether")}\n\n` +
-          `*Multiplicadores: Trinca = Jackpot (x8) · Par = Familiar (x2.5) · Consolação (x0.3)*`
-      );
+    const embed = new EmbedBuilder();
+
+    if (res.won) {
+      const headline = res.isJackpot
+        ? `🎉 **JACKPOT DIMENSIONAL! TRINCA PERFEITA!**`
+        : `✨ **PAR ENCONTRADO! FAMILIAR CAPTURADO!**`;
+
+      embed
+        .setColor(res.isJackpot ? 0xfacc15 : 0x22c55e)
+        .setTitle(res.isJackpot ? "🎰 JACKPOT DIMENSIONAL! 🌟" : "🎰 Oráculo de Familiares — Captura com Sucesso!")
+        .setDescription(
+          `### ╔═══════════════════╗\n` +
+            `### ║   ${r1.emoji}   │   ${r2.emoji}   │   ${r3.emoji}   ║\n` +
+            `### ╚═══════════════════╝\n\n` +
+            `${headline}\n` +
+            `🐾 **Criatura:** **${res.capturedName}**\n` +
+            `💠 **Prêmio Coletado:** **+${formatNumber(res.aetherReward, ctx.locale)}** ${emoji("aether")} *(Lucro Líquido: **+${formatNumber(res.netProfit, ctx.locale)}**)*\n` +
+            `💰 **Seu Saldo:** **${formatNumber(res.newBalance, ctx.locale)}** ${emoji("aether")}\n\n` +
+            `*Multiplicadores: Trinca = Jackpot (x5+) · Par = Familiar (x1.6+)*`
+        );
+    } else {
+      embed
+        .setColor(0xef4444)
+        .setTitle("🎰 Oráculo de Familiares — Nenhuma Combinação!")
+        .setDescription(
+          `### ╔═══════════════════╗\n` +
+            `### ║   ${r1.emoji}   │   ${r2.emoji}   │   ${r3.emoji}   ║\n` +
+            `### ╚═══════════════════╝\n\n` +
+            `💀 **NENHUM PAR ENCONTRADO!**\n` +
+            `As energias astrais se dissiparam e nenhuma criatura atendeu ao chamado.\n` +
+            `Você perdeu **-${formatNumber(res.cost, ctx.locale)}** ${emoji("aether")} nesta rodada!\n\n` +
+            `💰 **Seu Saldo Atual:** **${formatNumber(res.newBalance, ctx.locale)}** ${emoji("aether")}\n\n` +
+            `*Tente novamente para alinhar os astros e capturar Familiares Raros!*`
+        );
+    }
 
     await ctx.reply({ embeds: [embed], components: [row] });
   },
@@ -1179,12 +1197,6 @@ export const progressionComponentHandler: ComponentHandler = {
       try {
         const res = await spinSlotMachine(guildId, interaction.user.id, interaction.user.username);
         const [r1, r2, r3] = res.reels;
-        const headline = res.isJackpot
-          ? `🎉 **JACKPOT DIMENSIONAL! TRINCA PERFEITA!**`
-          : res.won
-            ? `✨ **PAR ENCONTRADO! FAMILIAR CAPTURADO!**`
-            : `🎰 **Oráculo Girado — Recompensa de Consolação!**`;
-
         const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
           new ButtonBuilder()
             .setCustomId(`${PROGRESSION_NS}:slot_spin:${interaction.user.id}`)
@@ -1192,19 +1204,41 @@ export const progressionComponentHandler: ComponentHandler = {
             .setStyle(ButtonStyle.Primary)
         );
 
-        const embed = new EmbedBuilder()
-          .setColor(res.isJackpot ? 0xfacc15 : res.won ? 0x22c55e : 0x6366f1)
-          .setTitle("🎰 Oráculo de Familiares — Pokéslot Dimensional")
-          .setDescription(
-            `### ╔═══════════════════╗\n` +
-              `### ║   ${r1.emoji}   │   ${r2.emoji}   │   ${r3.emoji}   ║\n` +
-              `### ╚═══════════════════╝\n\n` +
-              `${headline}\n` +
-              (res.won ? `🐾 **Criatura Rara:** **${res.capturedName}**\n` : "") +
-              `💠 **Prêmio Coletado:** **+${formatNumber(res.aetherReward, "pt-BR")}** ${emoji("aether")}\n` +
-              `💰 **Seu Saldo:** **${formatNumber(res.newBalance, "pt-BR")}** ${emoji("aether")}\n\n` +
-              `*Multiplicadores: Trinca = Jackpot (x8) · Par = Familiar (x2.5) · Consolação (x0.3)*`
-          );
+        const embed = new EmbedBuilder();
+
+        if (res.won) {
+          const headline = res.isJackpot
+            ? `🎉 **JACKPOT DIMENSIONAL! TRINCA PERFEITA!**`
+            : `✨ **PAR ENCONTRADO! FAMILIAR CAPTURADO!**`;
+
+          embed
+            .setColor(res.isJackpot ? 0xfacc15 : 0x22c55e)
+            .setTitle(res.isJackpot ? "🎰 JACKPOT DIMENSIONAL! 🌟" : "🎰 Oráculo de Familiares — Captura com Sucesso!")
+            .setDescription(
+              `### ╔═══════════════════╗\n` +
+                `### ║   ${r1.emoji}   │   ${r2.emoji}   │   ${r3.emoji}   ║\n` +
+                `### ╚═══════════════════╝\n\n` +
+                `${headline}\n` +
+                `🐾 **Criatura:** **${res.capturedName}**\n` +
+                `💠 **Prêmio Coletado:** **+${formatNumber(res.aetherReward, "pt-BR")}** ${emoji("aether")} *(Lucro Líquido: **+${formatNumber(res.netProfit, "pt-BR")}**)*\n` +
+                `💰 **Seu Saldo:** **${formatNumber(res.newBalance, "pt-BR")}** ${emoji("aether")}\n\n` +
+                `*Multiplicadores: Trinca = Jackpot (x5+) · Par = Familiar (x1.6+)*`
+            );
+        } else {
+          embed
+            .setColor(0xef4444)
+            .setTitle("🎰 Oráculo de Familiares — Nenhuma Combinação!")
+            .setDescription(
+              `### ╔═══════════════════╗\n` +
+                `### ║   ${r1.emoji}   │   ${r2.emoji}   │   ${r3.emoji}   ║\n` +
+                `### ╚═══════════════════╝\n\n` +
+                `💀 **NENHUM PAR ENCONTRADO!**\n` +
+                `As energias astrais se dissiparam e nenhuma criatura atendeu ao chamado.\n` +
+                `Você perdeu **-${formatNumber(res.cost, "pt-BR")}** ${emoji("aether")} nesta rodada!\n\n` +
+                `💰 **Seu Saldo Atual:** **${formatNumber(res.newBalance, "pt-BR")}** ${emoji("aether")}\n\n` +
+                `*Tente novamente para alinhar os astros e capturar Familiares Raros!*`
+            );
+        }
 
         await interaction.update({ embeds: [embed], components: [row] });
       } catch (err) {
@@ -1252,7 +1286,9 @@ export const progressionComponentHandler: ComponentHandler = {
               battle.log.map((l) => `▸ ${l}`).join("\n") +
               `\n\n` +
               `🏆 **Vencedor:** ${winLabel} com **${battle.winnerCard}**!\n` +
-              `🎁 **Recompensa:** **+${formatNumber(battle.rewardAether, "pt-BR")}** ${emoji("aether")}`
+              (won
+                ? `🎁 **Recompensa:** **+${formatNumber(battle.rewardAether, "pt-BR")}** ${emoji("aether")} *(Lucro: **+${formatNumber(battle.netProfit, "pt-BR")}**)*`
+                : `💀 **Derrota!** Seu combatente foi nocauteado. Você perdeu a taxa de desafio de **-${battle.fee}** ${emoji("aether")}.`)
           );
 
         if (battle.fighterA.imageUrl) {
