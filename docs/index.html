@@ -173,10 +173,27 @@
       background: rgba(255,255,255,0.05);
     }
 
+    .search-clear-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.15rem;
+      cursor: pointer;
+      padding: 0 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: color 0.15s;
+    }
+    .search-clear-btn:hover {
+      color: #fff;
+    }
+
     .filter-btn-trigger {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       font-size: 0.85rem;
       font-weight: 500;
       color: var(--text-muted);
@@ -188,6 +205,14 @@
     }
     .filter-btn-trigger:hover, .filter-btn-trigger.active {
       color: var(--accent);
+    }
+    .filter-active-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 8px var(--accent);
     }
 
     /* AÇÕES DO TOPO */
@@ -748,10 +773,14 @@
 
     /* FILTROS EXPANSÍVEIS (DROPDOWN) */
     .filter-drawer {
-      background: var(--bg-darker);
-      border-bottom: 1px solid var(--border);
-      padding: 16px;
+      background: #0b0f19;
+      border-bottom: 2px solid var(--accent);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.85);
+      padding: 18px 24px;
       display: none;
+      position: sticky;
+      top: 108px;
+      z-index: 95;
       animation: fadeIn 0.15s ease;
     }
     .filter-drawer.open {
@@ -1690,12 +1719,17 @@
             placeholder="Search Anime, Games, Manga and More..."
             autocomplete="off"
             oninput="handleSearchInput()"
+            onkeydown="if(event.key === 'Enter') handleSearchSubmit()"
           />
-          <button class="search-btn" title="Buscar" onclick="handleSearchInput()">
+          <button id="searchClearBtn" class="search-clear-btn" title="Limpar busca" style="display:none;" onclick="clearSearchInput()">
+            &times;
+          </button>
+          <button class="search-btn" title="Buscar" onclick="handleSearchSubmit()">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           </button>
           <div id="filterBtnTrigger" class="filter-btn-trigger" onclick="toggleFilterDrawer()">
             <span>Filters</span>
+            <span id="activeFiltersBadge" class="filter-active-dot" style="display:none;"></span>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
           </div>
         </div>
@@ -1743,46 +1777,59 @@
 
   <!-- GAVETA DE FILTROS AVANÇADOS -->
   <div id="filterDrawer" class="filter-drawer">
+    <div style="max-width: 1360px; margin: 0 auto 16px auto; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 10px;">
+      <span style="font-weight: 800; font-size: 0.95rem; color: #fff; display: flex; align-items: center; gap: 8px;">
+        <span>⚙️</span> Filtros Avançados do Catálogo
+      </span>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn-inspect" style="padding: 4px 12px; font-size: 0.8rem;" onclick="resetAllFilters()">
+          🔄 Limpar Filtros
+        </button>
+        <button class="btn-inspect" style="padding: 4px 10px; font-size: 0.8rem; background: rgba(239,68,68,0.15); color: #f87171; border-color: rgba(239,68,68,0.3);" onclick="toggleFilterDrawer()">
+          ✕ Fechar
+        </button>
+      </div>
+    </div>
     <div class="filter-drawer-grid">
       <div class="filter-group">
         <div class="filter-group-title">Gênero</div>
         <div class="filter-checkboxes">
           <label class="filter-check-item">
-            <input type="checkbox" id="checkFemale" checked onchange="applyFilters()" />
+            <input type="checkbox" id="checkFemale" checked onchange="applyFilters(true)" />
             <span>Feminino (Waifus)</span>
           </label>
           <label class="filter-check-item">
-            <input type="checkbox" id="checkMale" checked onchange="applyFilters()" />
+            <input type="checkbox" id="checkMale" checked onchange="applyFilters(true)" />
             <span>Masculino (Husbands)</span>
           </label>
           <label class="filter-check-item">
-            <input type="checkbox" id="checkOther" checked onchange="applyFilters()" />
+            <input type="checkbox" id="checkOther" checked onchange="applyFilters(true)" />
             <span>Outros / Entidades</span>
           </label>
         </div>
       </div>
 
       <div class="filter-group">
-        <div class="filter-group-title">Raridade</div>
+        <div class="filter-group-title">Raridade & Tiers</div>
         <div class="filter-checkboxes">
           <label class="filter-check-item">
-            <input type="checkbox" id="checkMythic" checked onchange="applyFilters()" />
+            <input type="checkbox" id="checkMythic" checked onchange="applyFilters(true)" />
             <span style="color:#f87171">👑 1/1 Mítica</span>
           </label>
           <label class="filter-check-item">
-            <input type="checkbox" id="checkLegendary" checked onchange="applyFilters()" />
-            <span style="color:#fbbf24">🟡 Lendária</span>
+            <input type="checkbox" id="checkLegendary" checked onchange="applyFilters(true)" />
+            <span style="color:#fbbf24">⭐ Lendária</span>
           </label>
           <label class="filter-check-item">
-            <input type="checkbox" id="checkEpic" checked onchange="applyFilters()" />
+            <input type="checkbox" id="checkEpic" checked onchange="applyFilters(true)" />
             <span style="color:#c084fc">🟣 Épica</span>
           </label>
           <label class="filter-check-item">
-            <input type="checkbox" id="checkRare" checked onchange="applyFilters()" />
+            <input type="checkbox" id="checkRare" checked onchange="applyFilters(true)" />
             <span style="color:#38bdf8">🔵 Rara</span>
           </label>
           <label class="filter-check-item">
-            <input type="checkbox" id="checkCommon" checked onchange="applyFilters()" />
+            <input type="checkbox" id="checkCommon" checked onchange="applyFilters(true)" />
             <span style="color:#94a3b8">⚪ Comum</span>
           </label>
         </div>
@@ -1790,7 +1837,7 @@
 
       <div class="filter-group">
         <div class="filter-group-title">Franquia em Destaque</div>
-        <select id="seriesFilterSelect" class="db-select" style="width:100%" onchange="applyFilters()">
+        <select id="seriesFilterSelect" class="db-select" style="width:100%" onchange="applyFilters(true)">
           <option value="all">Todas as Séries</option>
         </select>
       </div>
@@ -2409,7 +2456,7 @@
       setCategoryFilter(targetCat, null, false);
     }
 
-    function switchView(viewName, updateHash = true) {
+    function switchView(viewName, updateHash = true, doScroll = true) {
       if (!VALID_VIEWS.includes(viewName)) viewName = 'database';
 
       document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
@@ -2420,11 +2467,21 @@
       if (target) target.classList.add('active');
       if (btn) btn.classList.add('active');
 
+      // Sincroniza o seletor do topo
+      const searchTypeSelect = document.getElementById('searchType');
+      if (searchTypeSelect) {
+        if (viewName === 'series') searchTypeSelect.value = 'series';
+        else if (viewName === 'commands') searchTypeSelect.value = 'commands';
+        else searchTypeSelect.value = 'characters';
+      }
+
       localStorage.setItem('kogu_active_view', viewName);
       if (updateHash) {
         history.replaceState(null, '', '#' + viewName);
       }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (doScroll) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
 
     function setCategoryFilter(cat, btn, updateHash = true) {
@@ -2521,11 +2578,58 @@
       });
     }
 
+    function normalizeStr(str) {
+      return (str || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .trim();
+    }
+
     function toggleFilterDrawer() {
       const drawer = document.getElementById('filterDrawer');
       const btn = document.getElementById('filterBtnTrigger');
-      drawer.classList.toggle('open');
-      btn.classList.toggle('active');
+      if (!drawer) return;
+
+      const isOpen = drawer.classList.toggle('open');
+      if (btn) btn.classList.toggle('active', isOpen);
+
+      if (isOpen) {
+        const activePanel = document.querySelector('.view-panel.active');
+        if (!activePanel || activePanel.id !== 'panel-database') {
+          switchView('database', false, false);
+          const searchType = document.getElementById('searchType');
+          if (searchType) searchType.value = 'characters';
+        }
+      }
+    }
+
+    function resetAllFilters() {
+      const checkF = document.getElementById('checkFemale'); if (checkF) checkF.checked = true;
+      const checkM = document.getElementById('checkMale'); if (checkM) checkM.checked = true;
+      const checkO = document.getElementById('checkOther'); if (checkO) checkO.checked = true;
+      const checkMy = document.getElementById('checkMythic'); if (checkMy) checkMy.checked = true;
+      const checkLeg = document.getElementById('checkLegendary'); if (checkLeg) checkLeg.checked = true;
+      const checkEp = document.getElementById('checkEpic'); if (checkEp) checkEp.checked = true;
+      const checkRa = document.getElementById('checkRare'); if (checkRa) checkRa.checked = true;
+      const checkCo = document.getElementById('checkCommon'); if (checkCo) checkCo.checked = true;
+
+      const seriesSelect = document.getElementById('seriesFilterSelect');
+      if (seriesSelect) seriesSelect.value = 'all';
+
+      const sortSelect = document.getElementById('sortSelect');
+      if (sortSelect) sortSelect.value = 'rank';
+
+      clearSearchInput();
+      setCategoryFilter('all', null, false);
+      applyFilters(true);
+    }
+
+    function updateActiveFiltersBadge(f) {
+      const badge = document.getElementById('activeFiltersBadge');
+      if (!badge) return;
+      const hasActive = !f.female || !f.male || !f.other || !f.mythic || !f.legendary || !f.epic || !f.rare || !f.common || f.selectedSeries !== 'all';
+      badge.style.display = hasActive ? 'inline-block' : 'none';
     }
 
     function setViewMode(mode) {
@@ -2539,7 +2643,9 @@
     function applyFilters(resetPage = false) {
       if (resetPage) currentPage = 1;
 
-      const search = (document.getElementById('mainSearchInput')?.value || '').trim().toLowerCase();
+      const searchRaw = document.getElementById('mainSearchInput')?.value || '';
+      const search = normalizeStr(searchRaw);
+
       const female = document.getElementById('checkFemale')?.checked ?? true;
       const male = document.getElementById('checkMale')?.checked ?? true;
       const other = document.getElementById('checkOther')?.checked ?? true;
@@ -2554,13 +2660,16 @@
       const selectedSeries = document.getElementById('seriesFilterSelect')?.value || 'all';
       const sortBy = document.getElementById('sortSelect')?.value || 'rank';
 
+      updateActiveFiltersBadge({ female, male, other, mythic, legendary, epic, rare, common, selectedSeries });
+
       filteredChars = catalog.filter(c => {
-        // Busca texto
+        // Busca texto (com normalização de acentos e id)
         if (search) {
-          const nameMatch = (c.name || '').toLowerCase().includes(search);
-          const seriesMatch = (c.seriesTitle || '').toLowerCase().includes(search);
-          const idMatch = String(c.id) === search || `id:${c.id}` === search;
-          if (!nameMatch && !seriesMatch && !idMatch) return false;
+          const nameNorm = normalizeStr(c.name);
+          const seriesNorm = normalizeStr(c.seriesTitle);
+          const idMatch = String(c.id) === search || `id:${c.id}` === search || `#${c.id}` === search;
+          const textMatch = nameNorm.includes(search) || seriesNorm.includes(search) || idMatch;
+          if (!textMatch) return false;
         }
 
         // Categoria superior dedicada
@@ -2613,6 +2722,25 @@
         return true;
       });
 
+      // Se a busca deu 0 resultados na categoria atual, mas existem em todo o catálogo:
+      if (filteredChars.length === 0 && search && currentCategory !== 'all') {
+        const globalMatches = catalog.filter(c => {
+          const nameNorm = normalizeStr(c.name);
+          const seriesNorm = normalizeStr(c.seriesTitle);
+          const idMatch = String(c.id) === search || `id:${c.id}` === search || `#${c.id}` === search;
+          return nameNorm.includes(search) || seriesNorm.includes(search) || idMatch;
+        });
+
+        if (globalMatches.length > 0) {
+          currentCategory = 'all';
+          document.querySelectorAll('.cat-pill').forEach(b => {
+            b.classList.toggle('active', b.getAttribute('data-cat') === 'all');
+          });
+          localStorage.setItem('kogu_active_category', 'all');
+          return applyFilters(false);
+        }
+      }
+
       // Ordenação
       filteredChars.sort((a, b) => {
         if (sortBy === 'rank') return (a.popularityRank || 9999) - (b.popularityRank || 9999);
@@ -2633,8 +2761,10 @@
       const pageItems = filteredChars.slice(startIdx, endIdx);
 
       const countMsg = filteredChars.length === 0
-        ? `Nenhuma carta encontrada com os filtros selecionados`
-        : `Mostrando <strong>${startIdx + 1}–${Math.min(endIdx, filteredChars.length)}</strong> de <strong>${filteredChars.length.toLocaleString('pt-BR')}</strong> cartas filtradas (Catálogo Total: <strong>${catalog.length.toLocaleString('pt-BR')}</strong>)`;
+        ? `Nenhuma carta encontrada para "<strong>${searchRaw}</strong>". Tente buscar por ID, outro nome ou limpar os filtros.`
+        : (search
+          ? `Encontradas <strong>${filteredChars.length.toLocaleString('pt-BR')}</strong> cartas para "<strong>${searchRaw}</strong>" (Exibindo ${startIdx + 1}–${Math.min(endIdx, filteredChars.length)})`
+          : `Mostrando <strong>${startIdx + 1}–${Math.min(endIdx, filteredChars.length)}</strong> de <strong>${filteredChars.length.toLocaleString('pt-BR')}</strong> cartas filtradas (Catálogo Total: <strong>${catalog.length.toLocaleString('pt-BR')}</strong>)`);
 
       const countEl = document.getElementById('dbCountText');
       if (countEl) countEl.innerHTML = countMsg;
@@ -3011,39 +3141,111 @@
       }
     }
 
+    function clearSearchInput() {
+      const input = document.getElementById('mainSearchInput');
+      if (input) input.value = '';
+      const clearBtn = document.getElementById('searchClearBtn');
+      if (clearBtn) clearBtn.style.display = 'none';
+      handleSearchInput();
+    }
+
+    function handleSearchSubmit() {
+      const type = document.getElementById('searchType')?.value || 'characters';
+      if (type === 'characters') switchView('database', true, true);
+      else if (type === 'series') switchView('series', true, true);
+      else if (type === 'commands') switchView('commands', true, true);
+      handleSearchInput();
+    }
+
     function handleSearchInput() {
-      switchView('database');
-      applyFilters(true);
+      const type = document.getElementById('searchType')?.value || 'characters';
+      const raw = document.getElementById('mainSearchInput')?.value || '';
+      const query = raw.trim();
+
+      const clearBtn = document.getElementById('searchClearBtn');
+      if (clearBtn) clearBtn.style.display = query ? 'flex' : 'none';
+
+      if (type === 'characters') {
+        const activePanel = document.querySelector('.view-panel.active');
+        if (!activePanel || activePanel.id !== 'panel-database') {
+          switchView('database', false, false);
+        }
+        applyFilters(true);
+      } else if (type === 'series') {
+        const activePanel = document.querySelector('.view-panel.active');
+        if (!activePanel || activePanel.id !== 'panel-series') {
+          switchView('series', false, false);
+        }
+        renderSeriesView(query);
+      } else if (type === 'commands') {
+        const activePanel = document.querySelector('.view-panel.active');
+        if (!activePanel || activePanel.id !== 'panel-commands') {
+          switchView('commands', false, false);
+        }
+        renderCommands(query);
+      }
     }
 
     function handleTypeChange() {
-      const type = document.getElementById('searchType').value;
-      if (type === 'series') switchView('series');
-      else if (type === 'commands') switchView('commands');
-      else switchView('database');
+      const type = document.getElementById('searchType')?.value || 'characters';
+      const input = document.getElementById('mainSearchInput');
+      if (type === 'characters') {
+        if (input) input.placeholder = "Buscar Waifus, Husbands, Animes, IDs (#101)...";
+        switchView('database', true, true);
+      } else if (type === 'series') {
+        if (input) input.placeholder = "Buscar Franquias, Obras, Universos...";
+        switchView('series', true, true);
+      } else if (type === 'commands') {
+        if (input) input.placeholder = "Buscar Comandos ($roll, $claim, $bj, $daily)...";
+        switchView('commands', true, true);
+      }
+      handleSearchInput();
     }
 
-    function renderSeriesView() {
+    function renderSeriesView(query = '') {
       const container = document.getElementById('seriesGrid');
       if (!container) return;
       container.innerHTML = '';
 
       const map = {};
       catalog.forEach(c => {
+        if (!c.seriesTitle) return;
         map[c.seriesTitle] = (map[c.seriesTitle] || 0) + 1;
       });
 
-      const sorted = Object.entries(map).sort((a,b) => b[1] - a[1]);
-      const countBadge = document.getElementById('seriesCountBadge');
-      if (countBadge) countBadge.textContent = `${sorted.length} Obras Cadastradas`;
+      let entries = Object.entries(map);
+      const qNorm = normalizeStr(query);
+      if (qNorm) {
+        entries = entries.filter(([name]) => normalizeStr(name).includes(qNorm));
+      }
 
-      sorted.forEach(([seriesName, count]) => {
+      entries.sort((a,b) => b[1] - a[1]);
+      const countBadge = document.getElementById('seriesCountBadge');
+      if (countBadge) {
+        countBadge.textContent = qNorm
+          ? `${entries.length} Obras Encontradas (Filtro: "${query}")`
+          : `${entries.length} Obras Cadastradas`;
+      }
+
+      if (entries.length === 0) {
+        container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:50px; color:var(--text-muted)">Nenhuma obra ou franquia encontrada para "<strong>${query}</strong>".</div>`;
+        return;
+      }
+
+      entries.forEach(([seriesName, count]) => {
         const item = document.createElement('div');
         item.className = 'series-card';
         item.onclick = () => {
           const select = document.getElementById('seriesFilterSelect');
           if (select) select.value = seriesName;
-          switchView('database');
+          const searchType = document.getElementById('searchType');
+          if (searchType) searchType.value = 'characters';
+          const input = document.getElementById('mainSearchInput');
+          if (input) input.value = '';
+          const clearBtn = document.getElementById('searchClearBtn');
+          if (clearBtn) clearBtn.style.display = 'none';
+          switchView('database', true, true);
+          setCategoryFilter('all', null, false);
           applyFilters(true);
         };
         item.innerHTML = `
@@ -3054,11 +3256,22 @@
       });
     }
 
-    function renderCommands() {
+    function renderCommands(query = '') {
       const container = document.getElementById('commandsGrid');
       if (!container) return;
       container.innerHTML = '';
-      COMMANDS.forEach(cmd => {
+
+      const qNorm = normalizeStr(query);
+      const filtered = qNorm
+        ? COMMANDS.filter(cmd => normalizeStr(cmd.s).includes(qNorm) || normalizeStr(cmd.d).includes(qNorm) || normalizeStr(cmd.c).includes(qNorm))
+        : COMMANDS;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:50px; color:var(--text-muted)">Nenhum comando encontrado para "<strong>${query}</strong>".</div>`;
+        return;
+      }
+
+      filtered.forEach(cmd => {
         const el = document.createElement('div');
         el.className = 'cmd-card';
         el.innerHTML = `
