@@ -8,7 +8,8 @@ import {
 } from "discord.js";
 import { z } from "zod";
 import type { AnyCommand, CommandContext, ComponentHandler } from "../../core/contracts.js";
-import { credit } from "../economy/service.js";
+import { claimDaily, credit } from "../economy/service.js";
+import { dailyEmbed } from "../economy/views.js";
 import { parseUserId } from "../economy/commands.js";
 import { emoji } from "../../ui/emojis.js";
 import { formatNumber } from "../../ui/format.js";
@@ -554,7 +555,21 @@ export function renderSlotEmbed(res: SlotResult, locale: string = "pt-BR"): Embe
           `🐾 **Criatura:** **${res.capturedName}**\n` +
           `💠 **Prêmio Coletado:** **+${formatNumber(res.aetherReward, locale)}** ${emoji("aether")} *(Lucro Líquido: **+${formatNumber(res.netProfit, locale)}**)*\n` +
           `💰 **Seu Saldo:** **${formatNumber(res.newBalance, locale)}** ${emoji("aether")}\n\n` +
-          `*Multiplicadores: Trinca = Jackpot (x5+) · Par = Familiar (x1.6+)*`
+          `*Multiplicadores: Trinca = Jackpot (x3.5+) · Par = Familiar (x0.7+)*`
+      );
+  } else if (res.isNearMiss) {
+    embed
+      .setColor(0xf97316)
+      .setTitle("🎰 Oráculo de Familiares — QUASE UM JACKPOT! 👀")
+      .setDescription(
+        `### ╔═══════════════════╗\n` +
+          `### ║   ${r1.emoji}   │   ${r2.emoji}   │   ${r3.emoji}   ║\n` +
+          `### ╚═══════════════════╝\n\n` +
+          `👀 **POR UM TRIZ!** Faltou apenas 1 **${res.nearMissSymbol}** para o Super Jackpot!\n` +
+          `O terceiro cilindro escapou no último segundo.\n` +
+          `Você perdeu **-${formatNumber(res.cost, locale)}** ${emoji("aether")} nesta rodada.\n\n` +
+          `💰 **Seu Saldo Atual:** **${formatNumber(res.newBalance, locale)}** ${emoji("aether")}\n\n` +
+          `🔥 *Os astros estão quase alinhados! Gire novamente para cravar a trinca!*`
       );
   } else {
     embed
@@ -574,18 +589,37 @@ export function renderSlotEmbed(res: SlotResult, locale: string = "pt-BR"): Embe
   return embed;
 }
 
-export function buildSlotRow(userId: string, bet: number): ActionRowBuilder<ButtonBuilder> {
-  const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    new ButtonBuilder()
-      .setCustomId(`${PROGRESSION_NS}:slot_spin:${userId}:${bet}`)
-      .setLabel(`🎰 Girar Novamente (${formatNumber(bet, "pt-BR")} Éter)`)
-      .setStyle(ButtonStyle.Primary),
-    new ButtonBuilder()
-      .setCustomId(`${PROGRESSION_NS}:slot_spin:${userId}:${Math.min(10000, bet * 2)}`)
-      .setLabel(`💰 Dobrar (${formatNumber(Math.min(10000, bet * 2), "pt-BR")} Éter)`)
-      .setStyle(ButtonStyle.Success)
-  );
-  if (bet > 50) {
+export function buildSlotRow(userId: string, bet: number, currentBalance?: number): ActionRowBuilder<ButtonBuilder> {
+  const row = new ActionRowBuilder<ButtonBuilder>();
+  const canReplaySame = currentBalance === undefined || currentBalance >= bet;
+  const canDouble = currentBalance === undefined || currentBalance >= bet * 2;
+
+  if (canReplaySame) {
+    row.addComponents(
+      new ButtonBuilder()
+        .setCustomId(`${PROGRESSION_NS}:slot_spin:${userId}:${bet}`)
+        .setLabel(`🎰 Girar Novamente (${formatNumber(bet, "pt-BR")} Éter)`)
+        .setStyle(ButtonStyle.Primary)
+    );
+    if (canDouble && bet * 2 <= 10000) {
+      row.addComponents(
+        new ButtonBuilder()
+          .setCustomId(`${PROGRESSION_NS}:slot_spin:${userId}:${Math.min(10000, bet * 2)}`)
+          .setLabel(`💰 Dobrar (${formatNumber(Math.min(10000, bet * 2), "pt-BR")} Éter)`)
+          .setStyle(ButtonStyle.Success)
+      );
+    }
+  } else if (currentBalance !== undefined && currentBalance >= 10) {
+    const availableBet = Math.min(bet, currentBalance);
+    row.addComponents(
+      new ButtonBuilder()
+        .setCustomId(`${PROGRESSION_NS}:slot_spin:${userId}:${availableBet}`)
+        .setLabel(`🎰 Girar Tudo (${formatNumber(availableBet, "pt-BR")} Éter)`)
+        .setStyle(ButtonStyle.Danger)
+    );
+  }
+
+  if (bet > 50 && (currentBalance === undefined || currentBalance >= 50)) {
     row.addComponents(
       new ButtonBuilder()
         .setCustomId(`${PROGRESSION_NS}:slot_spin:${userId}:50`)
@@ -593,6 +627,16 @@ export function buildSlotRow(userId: string, bet: number): ActionRowBuilder<Butt
         .setStyle(ButtonStyle.Secondary)
     );
   }
+
+  if (currentBalance !== undefined && currentBalance < 10) {
+    row.addComponents(
+      new ButtonBuilder()
+        .setCustomId(`${PROGRESSION_NS}:eco_daily:${userId}`)
+        .setLabel("🎁 Resgatar Diário ($daily)")
+        .setStyle(ButtonStyle.Success)
+    );
+  }
+
   return row;
 }
 
@@ -620,7 +664,7 @@ export const slotCommand: AnyCommand = {
     try {
       const res = await spinSlotMachine(ctx.guild.id, ctx.user.id, ctx.user.username, bet);
       const embed = renderSlotEmbed(res, ctx.locale);
-      const row = buildSlotRow(ctx.user.id, bet);
+      const row = buildSlotRow(ctx.user.id, bet, res.newBalance);
       await ctx.reply({ embeds: [embed], components: [row] });
     } catch (err) {
       const msg = mapProgressionError(err, ctx.guildConfig.prefix);
@@ -1032,18 +1076,37 @@ export function buildBlackjackPlayingRow(sessionId: string, userId: string, canD
   return row;
 }
 
-export function buildBlackjackReplayRow(userId: string, bet: number): ActionRowBuilder<ButtonBuilder> {
-  const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    new ButtonBuilder()
-      .setCustomId(`${PROGRESSION_NS}:bj_again:${bet}:${userId}`)
-      .setLabel(`🔁 Jogar Novamente (${formatNumber(bet, "pt-BR")} Éter)`)
-      .setStyle(ButtonStyle.Primary),
-    new ButtonBuilder()
-      .setCustomId(`${PROGRESSION_NS}:bj_again:${Math.min(50000, bet * 2)}:${userId}`)
-      .setLabel(`💰 Dobrar (${formatNumber(Math.min(50000, bet * 2), "pt-BR")} Éter)`)
-      .setStyle(ButtonStyle.Success)
-  );
-  if (bet > 50) {
+export function buildBlackjackReplayRow(userId: string, bet: number, currentBalance?: number): ActionRowBuilder<ButtonBuilder> {
+  const row = new ActionRowBuilder<ButtonBuilder>();
+  const canReplaySame = currentBalance === undefined || currentBalance >= bet;
+  const canDouble = currentBalance === undefined || currentBalance >= bet * 2;
+
+  if (canReplaySame) {
+    row.addComponents(
+      new ButtonBuilder()
+        .setCustomId(`${PROGRESSION_NS}:bj_again:${bet}:${userId}`)
+        .setLabel(`🔁 Jogar Novamente (${formatNumber(bet, "pt-BR")} Éter)`)
+        .setStyle(ButtonStyle.Primary)
+    );
+    if (canDouble && bet * 2 <= 50000) {
+      row.addComponents(
+        new ButtonBuilder()
+          .setCustomId(`${PROGRESSION_NS}:bj_again:${Math.min(50000, bet * 2)}:${userId}`)
+          .setLabel(`💰 Dobrar (${formatNumber(Math.min(50000, bet * 2), "pt-BR")} Éter)`)
+          .setStyle(ButtonStyle.Success)
+      );
+    }
+  } else if (currentBalance !== undefined && currentBalance >= 10) {
+    const availableBet = Math.min(bet, currentBalance);
+    row.addComponents(
+      new ButtonBuilder()
+        .setCustomId(`${PROGRESSION_NS}:bj_again:${availableBet}:${userId}`)
+        .setLabel(`🔁 Apostar Restante (${formatNumber(availableBet, "pt-BR")} Éter)`)
+        .setStyle(ButtonStyle.Danger)
+    );
+  }
+
+  if (bet > 50 && (currentBalance === undefined || currentBalance >= 50)) {
     row.addComponents(
       new ButtonBuilder()
         .setCustomId(`${PROGRESSION_NS}:bj_again:50:${userId}`)
@@ -1051,6 +1114,16 @@ export function buildBlackjackReplayRow(userId: string, bet: number): ActionRowB
         .setStyle(ButtonStyle.Secondary)
     );
   }
+
+  if (currentBalance !== undefined && currentBalance < 10) {
+    row.addComponents(
+      new ButtonBuilder()
+        .setCustomId(`${PROGRESSION_NS}:eco_daily:${userId}`)
+        .setLabel("🎁 Resgatar Diário ($daily)")
+        .setStyle(ButtonStyle.Success)
+    );
+  }
+
   return row;
 }
 
@@ -1084,7 +1157,7 @@ export const blackjackCommand: AnyCommand = {
         const row = buildBlackjackPlayingRow(game.sessionId, ctx.user.id, game.playerCards.length === 2);
         await ctx.reply({ embeds: [embed], components: [row] });
       } else {
-        const replayRow = buildBlackjackReplayRow(ctx.user.id, game.bet);
+        const replayRow = buildBlackjackReplayRow(ctx.user.id, game.bet, game.newBalance);
         await ctx.reply({ embeds: [embed], components: [replayRow] });
       }
     } catch (err) {
@@ -1479,7 +1552,7 @@ export const progressionComponentHandler: ComponentHandler = {
           const row = buildBlackjackPlayingRow(game.sessionId, interaction.user.id, game.playerCards.length === 2);
           await interaction.update({ embeds: [embed], components: [row] });
         } else {
-          const replayRow = buildBlackjackReplayRow(interaction.user.id, game.bet);
+          const replayRow = buildBlackjackReplayRow(interaction.user.id, game.bet, game.newBalance);
           await interaction.update({ embeds: [embed], components: [replayRow] });
         }
       } catch (err) {
@@ -1509,11 +1582,23 @@ export const progressionComponentHandler: ComponentHandler = {
           const row = buildBlackjackPlayingRow(game.sessionId, interaction.user.id, game.playerCards.length === 2);
           await interaction.update({ embeds: [embed], components: [row] });
         } else {
-          const replayRow = buildBlackjackReplayRow(interaction.user.id, game.bet);
+          const replayRow = buildBlackjackReplayRow(interaction.user.id, game.bet, game.newBalance);
           await interaction.update({ embeds: [embed], components: [replayRow] });
         }
       } catch (err) {
         const msg = mapProgressionError(err, "$") ?? "⚠️ Não foi possível iniciar uma nova rodada de Blackjack.";
+        await interaction.reply({ content: msg, flags: MessageFlags.Ephemeral });
+      }
+      return;
+    }
+
+    if (action === "eco_daily") {
+      try {
+        const result = await claimDaily(guildId, interaction.user.id, { username: interaction.user.username });
+        const embed = dailyEmbed({ result, baseRolls: 10, locale: "pt-BR" });
+        await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+      } catch (err) {
+        const msg = mapProgressionError(err, "$") ?? "⏳ Você já resgatou seu Diário hoje. Tente novamente mais tarde!";
         await interaction.reply({ content: msg, flags: MessageFlags.Ephemeral });
       }
       return;

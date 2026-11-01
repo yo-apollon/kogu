@@ -632,14 +632,17 @@ export interface FamiliarSpecies {
   nameEn: string;
   rarity: string;
   reward: number;
+  weight?: number;
 }
 
 export const FAMILIARS: readonly FamiliarSpecies[] = [
-  { emoji: "🍒", namePt: "Poring Astral", nameEn: "Astral Poring", rarity: "★", reward: 150 },
-  { emoji: "🦊", namePt: "Kitsune Espiritual", nameEn: "Spirit Kitsune", rarity: "★★", reward: 300 },
-  { emoji: "⚡", namePt: "Pikachu Dimensional", nameEn: "Dimensional Pikachu", rarity: "★★★", reward: 500 },
-  { emoji: "🐺", namePt: "Sombra de Igris", nameEn: "Shadow Igris", rarity: "★★★★", reward: 900 },
-  { emoji: "🐉", namePt: "Dragão Ancestral", nameEn: "Ancient Dragon", rarity: "★★★★★", reward: 2000 },
+  { emoji: "🍒", namePt: "Poring Astral", nameEn: "Astral Poring", rarity: "★", reward: 70, weight: 35 },
+  { emoji: "🔔", namePt: "Sino Cósmico", nameEn: "Cosmic Bell", rarity: "★", reward: 90, weight: 28 },
+  { emoji: "🍀", namePt: "Trevo Astral", nameEn: "Astral Clover", rarity: "★★", reward: 120, weight: 18 },
+  { emoji: "🦊", namePt: "Kitsune Espiritual", nameEn: "Spirit Kitsune", rarity: "★★★", reward: 220, weight: 10 },
+  { emoji: "⚡", namePt: "Pikachu Dimensional", nameEn: "Dimensional Pikachu", rarity: "★★★★", reward: 450, weight: 5 },
+  { emoji: "🐺", namePt: "Sombra de Igris", nameEn: "Shadow Igris", rarity: "★★★★", reward: 900, weight: 3 },
+  { emoji: "🐉", namePt: "Dragão Ancestral", nameEn: "Ancient Dragon", rarity: "★★★★★", reward: 2500, weight: 1 },
 ];
 
 export interface SlotResult {
@@ -647,6 +650,8 @@ export interface SlotResult {
   won: boolean;
   isJackpot: boolean;
   isShiny: boolean;
+  isNearMiss?: boolean;
+  nearMissSymbol?: string;
   capturedName: string;
   aetherReward: number;
   cost: number;
@@ -675,39 +680,93 @@ export async function spinSlotMachine(
   }
 
   // Cobra o custo do giro (actualBet Éter)
-  await db
+  const [debited] = await db
     .update(guildMembers)
     .set({ aetherBalance: sql`${guildMembers.aetherBalance} - ${actualBet}` })
-    .where(and(eq(guildMembers.guildId, guildId), eq(guildMembers.userId, userId)));
+    .where(and(eq(guildMembers.guildId, guildId), eq(guildMembers.userId, userId)))
+    .returning({ balance: guildMembers.aetherBalance });
 
-  const pick = () => FAMILIARS[Math.floor(rng() * FAMILIARS.length)] ?? FAMILIARS[0];
-  const r1 = pick();
-  const r2 = rng() < 0.28 ? r1 : pick();
-  const r3 = rng() < 0.22 ? r2 : pick();
+  let curBalance = debited?.balance ?? (balance - actualBet);
+
+  const kv = await getKV();
+  const streakKey = `slot_streak:${guildId}:${userId}`;
+  let lossStreak = 0;
+  try {
+    const rawStreak = await kv.get(streakKey);
+    lossStreak = rawStreak ? parseInt(rawStreak, 10) || 0 : 0;
+  } catch {}
+
+  const totalWeight = FAMILIARS.reduce((sum, f) => sum + (f.weight ?? 10), 0);
+  const pickWeighted = () => {
+    let rand = rng() * totalWeight;
+    for (const f of FAMILIARS) {
+      rand -= f.weight ?? 10;
+      if (rand <= 0) return f;
+    }
+    return FAMILIARS[0]!;
+  };
+
+  let r1 = pickWeighted();
+  let r2 = pickWeighted();
+  let r3 = pickWeighted();
+
+  // Pity / Anti-Rage: se perdeu 3+ vezes seguidas, dá 45% de chance de alinhar um par comum
+  if (lossStreak >= 3 && rng() < 0.45) {
+    const common = FAMILIARS[Math.floor(rng() * 3)]!;
+    r1 = common;
+    r2 = common;
+    r3 = pickWeighted();
+  }
 
   const isJackpot = r1.emoji === r2.emoji && r2.emoji === r3.emoji;
   const isPair = !isJackpot && (r1.emoji === r2.emoji || r2.emoji === r3.emoji || r1.emoji === r3.emoji);
   const won = isJackpot || isPair;
-  const isShiny = won && rng() < 0.12;
+  const isShiny = won && rng() < 0.08;
+
+  let isNearMiss = false;
+  let nearMissSymbol = "";
+
+  if (!won) {
+    // Em ~28% das derrotas, cria o clássico "Near Miss" (Quase!) para prender a atenção
+    if (rng() < 0.28) {
+      const highIndex = 3 + Math.floor(rng() * (FAMILIARS.length - 3));
+      const teaser = FAMILIARS[highIndex]!;
+      r1 = teaser;
+      r2 = teaser;
+      do {
+        r3 = pickWeighted();
+      } while (r3.emoji === teaser.emoji);
+      isNearMiss = true;
+      nearMissSymbol = `${teaser.emoji} ${teaser.namePt}`;
+    }
+  }
 
   const matched = r1.emoji === r2.emoji ? r1 : r2.emoji === r3.emoji ? r2 : r1;
   const multiplier = actualBet / SLOT_COST;
   let aetherReward = 0;
+
   if (isJackpot) {
-    aetherReward = Math.round(matched.reward * 2.5 * (isShiny ? 2 : 1) * multiplier);
+    const rarityMultiplier = matched.reward / 70;
+    aetherReward = Math.round(actualBet * (3.5 + rarityMultiplier * 2.5) * (isShiny ? 2 : 1));
   } else if (isPair) {
-    aetherReward = Math.round(matched.reward * 0.8 * (isShiny ? 1.5 : 1) * multiplier);
+    const pairRatio = matched.reward <= 90 ? (matched.reward === 70 ? 0.7 : 0.9) : (matched.reward / 120) * 1.35;
+    aetherReward = Math.round(actualBet * pairRatio * (isShiny ? 1.5 : 1));
   } else {
-    aetherReward = 0; // Derrota total: perdeu o Éter apostado!
+    aetherReward = 0;
   }
 
-  let newBalance = balance - actualBet;
   if (aetherReward > 0) {
-    newBalance = await credit(guildId, userId, aetherReward, { username });
+    curBalance = await credit(guildId, userId, aetherReward, { username });
+    try {
+      await kv.del(streakKey);
+    } catch {}
+  } else {
+    try {
+      await kv.set(streakKey, String(lossStreak + 1), { px: 3600_000 });
+    } catch {}
   }
 
   if (won) {
-    const kv = await getKV();
     const key = dexKey(guildId, userId);
     const raw = await kv.get(key);
     const list: string[] = raw ? JSON.parse(raw) : [];
@@ -723,11 +782,13 @@ export async function spinSlotMachine(
     won,
     isJackpot,
     isShiny,
+    isNearMiss,
+    nearMissSymbol,
     capturedName: won ? `${matched.emoji} ${matched.namePt}${isShiny ? " ✨" : ""}` : "",
     aetherReward,
     cost: actualBet,
     netProfit: aetherReward - actualBet,
-    newBalance,
+    newBalance: curBalance,
   };
 }
 
@@ -1019,6 +1080,7 @@ export interface BlackjackGame {
   gameOver: boolean;
   status: "playing" | "player_blackjack" | "player_bust" | "dealer_bust" | "player_win" | "dealer_win" | "push";
   rewardAether: number;
+  newBalance?: number;
 }
 
 const SUITS = ["♠️", "♥️", "♦️", "♣️"];
@@ -1085,10 +1147,13 @@ export async function startBlackjack(
   }
 
   // Debita aposta inicial
-  await db
+  const [debited] = await db
     .update(guildMembers)
     .set({ aetherBalance: sql`${guildMembers.aetherBalance} - ${bet}` })
-    .where(and(eq(guildMembers.guildId, guildId), eq(guildMembers.userId, userId)));
+    .where(and(eq(guildMembers.guildId, guildId), eq(guildMembers.userId, userId)))
+    .returning({ balance: guildMembers.aetherBalance });
+
+  let curBal = debited?.balance ?? (balance - bet);
 
   const pCards = [drawCard(), drawCard()];
   const dCards = [drawCard(), drawCard()];
@@ -1109,6 +1174,7 @@ export async function startBlackjack(
     gameOver: false,
     status: "playing",
     rewardAether: 0,
+    newBalance: curBal,
   };
 
   if (pScore === 21) {
@@ -1116,12 +1182,12 @@ export async function startBlackjack(
     if (dScore === 21) {
       game.status = "push";
       game.rewardAether = bet;
-      await credit(guildId, userId, bet, { username });
+      game.newBalance = await credit(guildId, userId, bet, { username });
     } else {
       game.status = "player_blackjack";
       const prize = Math.round(bet * 2.5);
       game.rewardAether = prize;
-      await credit(guildId, userId, prize, { username });
+      game.newBalance = await credit(guildId, userId, prize, { username });
     }
   }
 
@@ -1146,6 +1212,12 @@ export async function hitBlackjack(sessionId: string): Promise<BlackjackGame> {
     game.gameOver = true;
     game.status = "player_bust";
     game.rewardAether = 0;
+    const [cur] = await db
+      .select({ b: guildMembers.aetherBalance })
+      .from(guildMembers)
+      .where(and(eq(guildMembers.guildId, game.guildId), eq(guildMembers.userId, game.userId)))
+      .limit(1);
+    game.newBalance = cur?.b ?? 0;
     await kv.del(`bj:${sessionId}`);
     return game;
   }
@@ -1177,18 +1249,24 @@ export async function standBlackjack(sessionId: string): Promise<BlackjackGame> 
   if (game.dealerScore > 21) {
     game.status = "dealer_bust";
     game.rewardAether = game.bet * 2;
-    await credit(game.guildId, game.userId, game.rewardAether, { username: game.username });
+    game.newBalance = await credit(game.guildId, game.userId, game.rewardAether, { username: game.username });
   } else if (game.playerScore > game.dealerScore) {
     game.status = "player_win";
     game.rewardAether = game.bet * 2;
-    await credit(game.guildId, game.userId, game.rewardAether, { username: game.username });
+    game.newBalance = await credit(game.guildId, game.userId, game.rewardAether, { username: game.username });
   } else if (game.playerScore === game.dealerScore) {
     game.status = "push";
     game.rewardAether = game.bet;
-    await credit(game.guildId, game.userId, game.rewardAether, { username: game.username });
+    game.newBalance = await credit(game.guildId, game.userId, game.rewardAether, { username: game.username });
   } else {
     game.status = "dealer_win";
     game.rewardAether = 0;
+    const [cur] = await db
+      .select({ b: guildMembers.aetherBalance })
+      .from(guildMembers)
+      .where(and(eq(guildMembers.guildId, game.guildId), eq(guildMembers.userId, game.userId)))
+      .limit(1);
+    game.newBalance = cur?.b ?? 0;
   }
 
   return game;

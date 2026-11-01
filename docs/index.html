@@ -1603,27 +1603,83 @@
     /* Séries Hub */
     .series-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
       gap: 14px;
     }
     .series-card {
       background: var(--bg-darker);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 14px;
+      padding: 10px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 12px;
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+      position: relative;
     }
     .series-card:hover {
       background: var(--bg-hover);
       border-color: var(--accent);
       transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
     }
-    .series-name { font-weight: 700; color: #fff; font-size: 0.9rem; }
-    .series-count { font-size: 0.75rem; background: rgba(56,189,248,0.15); color: var(--accent); padding: 2px 8px; border-radius: 10px; font-weight: 700; }
+    .series-thumb-wrap {
+      width: 50px;
+      height: 65px;
+      flex-shrink: 0;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #090d16;
+      border: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+    }
+    .series-thumb-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.25s ease;
+    }
+    .series-card:hover .series-thumb-img {
+      transform: scale(1.08);
+    }
+    .series-card-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .series-name {
+      font-weight: 700;
+      color: #fff;
+      font-size: 0.88rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .series-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .series-count {
+      font-size: 0.72rem;
+      background: rgba(56,189,248,0.15);
+      color: var(--accent);
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-weight: 700;
+      border: 1px solid rgba(56,189,248,0.25);
+    }
+    .series-iconic {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
     /* FOOTER */
     footer {
@@ -2008,11 +2064,39 @@
     <!-- VIEW 2: SÉRIES & FRANQUIAS -->
     <div id="panel-series" class="view-panel">
       <div class="section-header-row">
-        <h2 class="section-title">Franquias & Universos Cadastrados</h2>
-        <span class="db-count-badge" id="seriesCountBadge">126 Obras Ativas</span>
+        <div>
+          <h2 class="section-title">Franquias & Universos Cadastrados</h2>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin-top:4px;">
+            Explore todas as obras do multiverso com as capas oficiais dos protagonistas e ícones. Clique em qualquer obra para filtrar suas cartas.
+          </p>
+        </div>
+        <span class="db-count-badge" id="seriesCountBadge">865 Obras Cadastradas</span>
       </div>
+
+      <!-- FILTRO DE UNIVERSOS PARA SÉRIES -->
+      <div class="category-pills-container" style="margin-bottom: 20px;">
+        <button class="cat-pill active series-universe-pill" data-u="all" onclick="filterSeriesUniverse('all', this)">
+          <span>🌟</span> <span>Todas as Obras</span>
+        </button>
+        <button class="cat-pill series-universe-pill" data-u="ANIME" onclick="filterSeriesUniverse('ANIME', this)">
+          <span>🎌</span> <span>Anime & Mangá</span>
+        </button>
+        <button class="cat-pill series-universe-pill" data-u="SPORTS" onclick="filterSeriesUniverse('SPORTS', this)">
+          <span>🥊</span> <span>Esportes (UFC, Futebol, NBA)</span>
+        </button>
+        <button class="cat-pill series-universe-pill" data-u="MUSIC" onclick="filterSeriesUniverse('MUSIC', this)">
+          <span>🎤</span> <span>Música & Trap</span>
+        </button>
+        <button class="cat-pill series-universe-pill" data-u="GAME" onclick="filterSeriesUniverse('GAME', this)">
+          <span>🎮</span> <span>Games</span>
+        </button>
+        <button class="cat-pill series-universe-pill" data-u="CINEMA" onclick="filterSeriesUniverse('CINEMA', this)">
+          <span>🎬</span> <span>Cinema & Séries</span>
+        </button>
+      </div>
+
       <div id="seriesGrid" class="series-grid">
-        <!-- Injetado via JS -->
+        <!-- Injetado via JS com capas oficiais e contagens -->
       </div>
     </div>
 
@@ -3202,42 +3286,87 @@
       handleSearchInput();
     }
 
+    let currentSeriesUniverse = 'all';
+
+    function filterSeriesUniverse(u, btn) {
+      currentSeriesUniverse = u;
+      document.querySelectorAll('.series-universe-pill').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-u') === u);
+      });
+      if (btn) btn.classList.add('active');
+      const query = document.getElementById('mainSearchInput')?.value || '';
+      renderSeriesView(query);
+    }
+
     function renderSeriesView(query = '') {
       const container = document.getElementById('seriesGrid');
       if (!container) return;
       container.innerHTML = '';
 
-      const map = {};
+      const seriesMap = {};
       catalog.forEach(c => {
         if (!c.seriesTitle) return;
-        map[c.seriesTitle] = (map[c.seriesTitle] || 0) + 1;
+        if (!seriesMap[c.seriesTitle]) {
+          seriesMap[c.seriesTitle] = {
+            name: c.seriesTitle,
+            count: 0,
+            universe: c.universe,
+            niche: c.niche,
+            coverImg: c.imageUrl,
+            topPrestige: c.prestige || 0,
+            topChar: c.name
+          };
+        }
+        const s = seriesMap[c.seriesTitle];
+        s.count++;
+        // Escolhe o personagem de maior prestígio para ser a capa oficial
+        if ((c.prestige || 0) > s.topPrestige && c.imageUrl) {
+          s.coverImg = c.imageUrl;
+          s.topPrestige = c.prestige || 0;
+          s.topChar = c.name;
+        }
       });
 
-      let entries = Object.entries(map);
-      const qNorm = normalizeStr(query);
-      if (qNorm) {
-        entries = entries.filter(([name]) => normalizeStr(name).includes(qNorm));
+      let list = Object.values(seriesMap);
+
+      // Filtro de Universo da Série
+      if (currentSeriesUniverse === 'ANIME') {
+        list = list.filter(s => s.universe === 'ANIME' || s.niche === 'anime');
+      } else if (currentSeriesUniverse === 'SPORTS') {
+        list = list.filter(s => s.niche === 'sport_mma' || s.niche === 'sport_football' || s.niche === 'sport_basketball' || s.name.includes('UFC') || s.name.includes('Futebol') || s.name.includes('NBA'));
+      } else if (currentSeriesUniverse === 'MUSIC') {
+        list = list.filter(s => s.niche?.startsWith('music_') || s.niche === 'idol' || s.name.includes('Música') || s.name.includes('Trap') || s.name.includes('Funk') || s.name.includes('Hip-Hop'));
+      } else if (currentSeriesUniverse === 'GAME') {
+        list = list.filter(s => s.universe === 'GAME' || s.niche === 'game');
+      } else if (currentSeriesUniverse === 'CINEMA') {
+        list = list.filter(s => (s.universe === 'CINEMA' || s.niche === 'cinema_tv') && !(s.niche === 'sport_mma' || s.niche === 'sport_football' || s.niche === 'sport_basketball' || s.niche?.startsWith('music_')));
       }
 
-      entries.sort((a,b) => b[1] - a[1]);
+      // Filtro de Busca
+      const qNorm = normalizeStr(query);
+      if (qNorm) {
+        list = list.filter(s => normalizeStr(s.name).includes(qNorm) || normalizeStr(s.topChar).includes(qNorm));
+      }
+
+      list.sort((a,b) => b.count - a.count);
       const countBadge = document.getElementById('seriesCountBadge');
       if (countBadge) {
         countBadge.textContent = qNorm
-          ? `${entries.length} Obras Encontradas (Filtro: "${query}")`
-          : `${entries.length} Obras Cadastradas`;
+          ? `${list.length} Obras Encontradas (Filtro: "${query}")`
+          : `${list.length} Obras Cadastradas`;
       }
 
-      if (entries.length === 0) {
+      if (list.length === 0) {
         container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:50px; color:var(--text-muted)">Nenhuma obra ou franquia encontrada para "<strong>${query}</strong>".</div>`;
         return;
       }
 
-      entries.forEach(([seriesName, count]) => {
+      list.forEach(s => {
         const item = document.createElement('div');
         item.className = 'series-card';
         item.onclick = () => {
           const select = document.getElementById('seriesFilterSelect');
-          if (select) select.value = seriesName;
+          if (select) select.value = s.name;
           const searchType = document.getElementById('searchType');
           if (searchType) searchType.value = 'characters';
           const input = document.getElementById('mainSearchInput');
@@ -3248,9 +3377,20 @@
           setCategoryFilter('all', null, false);
           applyFilters(true);
         };
+
+        const topCharShort = s.topChar ? s.topChar.split('(')[0].trim() : '';
+
         item.innerHTML = `
-          <span class="series-name">${seriesName}</span>
-          <span class="series-count">${count} cartas</span>
+          <div class="series-thumb-wrap">
+            <img class="series-thumb-img" src="${s.coverImg}" alt="${s.name}" loading="lazy" onerror="this.src='./assets/kogu_avatar_animated.gif'" />
+          </div>
+          <div class="series-card-info">
+            <span class="series-name" title="${s.name}">${s.name}</span>
+            <div class="series-meta-row">
+              <span class="series-count">${s.count} cartas</span>
+              ${topCharShort ? `<span class="series-iconic" title="Protagonista / Ícone">★ ${topCharShort}</span>` : ''}
+            </div>
+          </div>
         `;
         container.appendChild(item);
       });
