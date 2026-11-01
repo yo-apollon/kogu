@@ -1,11 +1,13 @@
 import { createCanvas, type Canvas, type Image } from "@napi-rs/canvas";
 import { DEFAULT_LOCALE } from "../../config/constants.js";
 import type { CardVariant, EntityTier } from "../../config/gacha.js";
+import type { CardArt } from "../../catalog/artQuality.js";
 import { hashSeed } from "../effects/noise.js";
 import { getSkin, selectSkin } from "../skins/registry.js";
 import type { AssetBag, CardRenderContext, CardSkin, UniverseKey } from "../skins/types.js";
 import { resolveTheme } from "../theme/tokens.js";
 import { CardCache, getCardCache, hashParts, loadAssetBag } from "./cache.js";
+import { resolveInputArt } from "./artResolver.js";
 import { registerFonts } from "./fonts.js";
 import { getImageLoader, type ImageLoader } from "./imageLoader.js";
 
@@ -32,6 +34,14 @@ export interface RenderCardInput {
   imageUrl?: string;
   /** Chave estavel da imagem (ex.: id da imagem primaria); padrao: imageUrl. */
   imageKey?: string;
+  /** Tipo da entidade (entity_type). Itens (WEAPON/COMPANION/DOMAIN) so mostram imagem via override; senao, emblema. */
+  entityType?: string;
+  /** Slug da entidade (chave dos overrides em data/art/overrides.json). */
+  slug?: string;
+  /** Descricao (ajuda a escolher o emblema de item). */
+  description?: string;
+  /** true = imagem escolhida pelo dono (custom_image_url): sempre desenhada, sem classificar. */
+  trustImage?: boolean;
   /** Skin cosmetica escolhida pelo dono. */
   preferredSkinId?: string;
   /** Forca uma skin (ferramentas/testes), ignorando match(). */
@@ -51,6 +61,8 @@ export interface CardPlan {
   skin: CardSkin;
   key: string;
   seed: number;
+  /** Arte resolvida: imagem confiavel ou emblema original. */
+  art: CardArt;
 }
 
 function warn(message: string, extra?: Record<string, unknown>): void {
@@ -69,7 +81,14 @@ export function planCard(input: RenderCardInput): CardPlan {
   const skin =
     forced ??
     selectSkin({ universe: input.universe, tier, variant: input.variant, preferredSkinId: input.preferredSkinId, now });
-  const imageKey = input.imageKey ?? input.imageUrl ?? "";
+  const art = resolveInputArt(input);
+  // a chave inclui o modo/emblema: trocar a regra de arte (ou um override) invalida a carta pronta
+  const imageKey =
+    art.mode === "EMBLEM"
+      ? `emblem:${art.emblem}`
+      : art.url !== (input.imageUrl ?? "")
+        ? `override:${art.url}`
+        : (input.imageKey ?? input.imageUrl ?? "");
   const entity = input.entityId ?? input.name;
   const key = hashParts([
     `${skin.id}@${skin.version}`,
@@ -90,7 +109,7 @@ export function planCard(input: RenderCardInput): CardPlan {
     input.def,
     input.spd,
   ]);
-  return { skin, key, seed: hashSeed(`${entity}|${input.variant}`) };
+  return { skin, key, seed: hashSeed(`${entity}|${input.variant}`), art };
 }
 
 export interface DrawnCard {
@@ -108,7 +127,9 @@ export async function drawCard(input: RenderCardInput, opts: RenderOptions = {})
   const tier = input.tier ?? "COMMON";
 
   const [portrait, assets] = await Promise.all([
-    input.imageUrl ? (opts.loader ?? getImageLoader()).load(input.imageUrl) : Promise.resolve<Image | null>(null),
+    plan.art.mode === "IMAGE" && plan.art.url
+      ? (opts.loader ?? getImageLoader()).load(plan.art.url)
+      : Promise.resolve<Image | null>(null),
     opts.assets ?? loadAssetBag(),
   ]);
 
@@ -130,11 +151,12 @@ export async function drawCard(input: RenderCardInput, opts: RenderOptions = {})
     theme: resolveTheme(tier, input.variant),
     seed: plan.seed,
     imageKey: input.imageKey ?? input.imageUrl,
+    emblem: plan.art.mode === "EMBLEM" ? plan.art.emblem : undefined,
   };
 
   const canvas = createCanvas(skin.size.w, skin.size.h);
   const g = canvas.getContext("2d");
-  let complete = !input.imageUrl || portrait !== null;
+  let complete = plan.art.mode === "EMBLEM" || !plan.art.url || portrait !== null;
   for (const layer of skin.layers) {
     g.save();
     try {

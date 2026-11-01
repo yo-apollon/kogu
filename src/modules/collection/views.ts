@@ -4,6 +4,7 @@
  */
 import type { EmbedBuilder } from "discord.js";
 import type { RenderCardInput } from "../../canvas/index.js";
+import { EDITION_LABEL, type EntityEdition } from "../../config/gacha.js";
 import { t } from "../../i18n/index.js";
 import { baseEmbed } from "../../ui/embeds.js";
 import { emoji, variantEmoji } from "../../ui/emojis.js";
@@ -34,6 +35,10 @@ export function pantheonLine(
     variantEmoji(row.variant),
     `**${safeText(row.name)}**`,
   ];
+  // Edicoes repetem o nome: o rotulo curto da edicao (Basica/Epica/Mitica) distingue as cartas.
+  if (row.edition && row.edition in EDITION_LABEL) {
+    parts.push(`*[${t(EDITION_LABEL[row.edition as EntityEdition], locale)}]*`);
+  }
   if (row.awakeningKeys > 0) parts.push(`\`★${row.awakeningKeys}\``);
   const nick = row.alias ?? row.alias2;
   if (nick && !display.compact) parts.push(`*(${safeText(nick, 30)})*`);
@@ -129,6 +134,7 @@ export function buildInfoView(
     claimRank: info.claimRank ?? info.popularityRank ?? undefined,
     likeRank: info.likeRank ?? undefined,
     tier: info.tier,
+    edition: info.edition ?? null,
     variant: pact?.variant ?? "STANDARD",
     alias: pact?.alias ?? undefined,
     ownerNote: pact?.note ?? pact?.alias ?? undefined,
@@ -142,6 +148,7 @@ export function buildInfoView(
       name: info.name,
       franchise,
       tier: info.tier,
+      edition: info.edition,
       variant: pact?.variant ?? "STANDARD",
       ownerEmbedColor,
     }),
@@ -167,6 +174,10 @@ export function cardRenderInput(info: EntityInfo, locale: string): RenderCardInp
     ownerName: pact?.ownerName ?? undefined,
     locale,
     imageUrl: pact?.customImage ?? info.imageUrl ?? undefined,
+    entityType: info.type,
+    slug: info.slug,
+    description: info.description ?? undefined,
+    trustImage: Boolean(pact?.customImage),
     skinId: "mudae",
   };
 }
@@ -182,7 +193,9 @@ export interface AutocompleteChoice {
 
 /** Choice de entidade: o valor `id:<n>` evita ambiguidade com nomes digitados. */
 export function entityChoice(hit: EntityHit): AutocompleteChoice {
-  const label = hit.series ? `${hit.name} · ${hit.series}` : hit.name;
+  const base = hit.series ? `${hit.name} · ${hit.series}` : hit.name;
+  // Edicoes repetem o nome: o tier (neutro de idioma) distingue as opcoes do autocomplete.
+  const label = hit.edition ? `${base} · ${hit.tier}` : base;
   return { name: truncate(label, 100), value: `id:${hit.id}` };
 }
 

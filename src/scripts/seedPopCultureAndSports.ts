@@ -17,7 +17,7 @@ export interface LegendEntry {
   franchise: string;
   series: string;
   tier: EntityTier;
-  gender: "MALE" | "FEMALE" | "OTHER";
+  gender: "MALE" | "FEMALE" | "NONBINARY";
   aether: number;
   atk: number;
   def: number;

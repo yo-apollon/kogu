@@ -1,5 +1,6 @@
 import type { SKRSContext2D } from "@napi-rs/canvas";
 import type { CardRenderContext } from "../../skins/types.js";
+import { drawEmblem } from "../../emblems/draw.js";
 import { COLORS, rgba } from "../../theme/tokens.js";
 import type { Rect } from "./shapes.js";
 import { FONT_SANS, initialsOf } from "./text.js";
@@ -15,6 +16,10 @@ export interface PortraitOptions {
 
 /** Desenha o retrato em modo "cover" dentro de `rect`. O chamador aplica o clip. */
 export function drawPortrait(g: SKRSContext2D, c: CardRenderContext, rect: Rect, opts: PortraitOptions = {}): void {
+  if (c.emblem) {
+    drawEmblem(g, c.emblem, rect, { theme: c.theme, tier: c.tier, seed: c.seed, name: c.name });
+    return;
+  }
   const img = c.portrait;
   if (!img || img.width === 0 || img.height === 0) {
     drawPortraitFallback(g, c, rect, opts);

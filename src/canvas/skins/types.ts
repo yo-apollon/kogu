@@ -1,4 +1,5 @@
 import type { SKRSContext2D, Image } from "@napi-rs/canvas";
+import type { EmblemKey } from "../emblems/pick.js";
 import type { CardVariant, EntityTier } from "../../config/gacha.js";
 
 export type UniverseKey = "ANIME" | "GAME" | "CINEMA" | "MYTHOLOGY" | "ORIGINAL" | "WEAPON";
@@ -34,6 +35,8 @@ export interface CardRenderContext {
   theme: ThemeTokens;
   /** Semente deterministica para ruido/particulas. */
   seed: number;
+  /** Quando definido, o retrato e substituido por este emblema original (arte nao confiavel). */
+  emblem?: EmblemKey;
   /** Chave de imagem para cache (id da imagem primaria). */
   imageKey?: string;
 }

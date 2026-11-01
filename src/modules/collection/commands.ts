@@ -17,6 +17,7 @@ import { z } from "zod";
 import { renderCardInPool } from "../../canvas/index.js";
 import type { AnyCommand, CommandContext, CommandDefinition } from "../../core/contracts.js";
 import type { CommandRegistration } from "../../core/registry.js";
+import { EDITION_LABEL } from "../../config/gacha.js";
 import { t } from "../../i18n/index.js";
 import { safeFetchImage } from "../../lib/http/safeFetch.js";
 import { getKV } from "../../infra/redis/client.js";
@@ -47,6 +48,8 @@ import {
   getEntityInfo,
   giveEntity,
   listPantheon,
+  parseRef,
+  resolveEditionForInfo,
   searchOwnPacts,
   setLeader,
   setPactCustomImage,
@@ -409,8 +412,15 @@ export const infoCommand: CommandDefinition<typeof infoArgs> = {
         query: safeText(query),
         prefix: usagePrefix(ctx),
       });
-    const entityId = await findEntityId(query);
-    if (entityId === null) throw notFound();
+    const foundId = await findEntityId(query);
+    if (foundId === null) throw notFound();
+    // Edicoes compartilham o nome: por nome mostra a mais rara que o usuario possui (ou a basica + lista);
+    // `id:<n>` (autocomplete) abre exatamente a edicao escolhida.
+    const byId = parseRef(query).kind === "id";
+    const edition = byId
+      ? { entityId: foundId, editions: [] }
+      : await resolveEditionForInfo(ctx.guild.id, ctx.user.id, foundId);
+    const entityId = edition.entityId;
     const info = await getEntityInfo(ctx.guild.id, entityId);
     if (!info) throw notFound();
 
@@ -432,7 +442,15 @@ export const infoCommand: CommandDefinition<typeof infoArgs> = {
       log.warn({ err, entityId }, "falha ao renderizar a carta do $info");
       embed.setImage(null);
     }
-    await ctx.reply({ embeds: [embed], files });
+    const content =
+      edition.editions.length > 1
+        ? t("collection.info_editions", ctx.locale, {
+            list: edition.editions
+              .map((e) => `${t(EDITION_LABEL[e.edition], ctx.locale)} (id:${e.id}${e.owned ? " ✅" : ""})`)
+              .join(" · "),
+          })
+        : undefined;
+    await ctx.reply({ content, embeds: [embed], files });
   },
 };
 

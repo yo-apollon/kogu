@@ -29,6 +29,20 @@
       "when": 1792860301655,
       "tag": "0003_dashboard",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793496397367,
+      "tag": "0004_card_editions",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1793497493497,
+      "tag": "0005_niche_prestige",
+      "breakpoints": true
     }
   ]
 }

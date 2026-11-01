@@ -26,3 +26,14 @@ export const TIER_STYLE: Record<EntityTier, TierStyle> = {
 export function tierRank(tier: EntityTier): number {
   return TIER_STYLE[tier].rank;
 }
+
+/**
+ * Cor da moldura fina da skin padrao para tiers altos (STANDARD). COMMON/RARE seguem brancas.
+ * Espelha `TIER_COLORS` de src/ui/tokens.ts (um teste confere), para as tres edicoes de uma carta
+ * (COMMON/EPIC/MYTHIC) ficarem distintas na arte sem texto.
+ */
+export const TIER_FRAME_COLOR: Partial<Record<EntityTier, string>> = {
+  EPIC: "#A855F7",
+  LEGENDARY: "#F59E0B",
+  MYTHIC: "#FF2E63",
+};

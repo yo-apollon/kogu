@@ -1,0 +1,926 @@
+{
+  "niche": "creator_gaming",
+  "collectedAt": "2026-10-31",
+  "creators": [
+    {
+      "slug": "gaules",
+      "name": "Gaules",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "twitch",
+          "handle": "Gaules",
+          "url": null,
+          "followers": 3900000,
+          "asOf": "2026-06-03"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Streamer brasileiro de Counter-Strike e organizador de eventos de esports.",
+      "sources": [
+        "https://olhardigital.com.br/2026/06/03/games-e-consoles/maiores-streamers-da-twitch-no-brasil-atraem-marcas/"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "alanzoka",
+      "name": "Alanzoka",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "twitch",
+          "handle": "Alanzoka",
+          "url": null,
+          "followers": 8100000,
+          "asOf": "2026-08-02"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Streamer brasileiro de jogos na Twitch.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_Twitch_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "casimiro",
+      "name": "Casimiro",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "twitch",
+          "handle": "Casimiro",
+          "url": null,
+          "followers": 3400000,
+          "asOf": "2026-06-03"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Streamer e comentarista esportivo brasileiro na Twitch.",
+      "sources": [
+        "https://olhardigital.com.br/2026/06/03/games-e-consoles/maiores-streamers-da-twitch-no-brasil-atraem-marcas/"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "coringa-victor-augusto",
+      "name": "Coringa (Victor Augusto)",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "twitch",
+          "handle": "Coringa (Victor Augusto)",
+          "url": null,
+          "followers": 7200000,
+          "asOf": "2026-08-02"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Streamer brasileiro de Free Fire.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_Twitch_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "authentic-games",
+      "name": "Authentic Games",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Authentic Games",
+          "url": null,
+          "followers": 20100000,
+          "asOf": "2025-07-24"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador brasileiro de conteúdo de Minecraft no YouTube.",
+      "sources": [
+        "https://olhardigital.com.br/2025/07/24/internet-e-redes-sociais/8-influencers-de-minecraft-para-voce-acompanhar-online-nas-redes-sociais/"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "jazzghost",
+      "name": "JazzGhost",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "JazzGhost",
+          "url": null,
+          "followers": 21200000,
+          "asOf": "2025-07-24"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador brasileiro de conteúdo de Minecraft, nome real Julian Barros.",
+      "sources": [
+        "https://olhardigital.com.br/2025/07/24/internet-e-redes-sociais/8-influencers-de-minecraft-para-voce-acompanhar-online-nas-redes-sociais/"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "tazercraft",
+      "name": "TazerCraft",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "TazerCraft",
+          "url": null,
+          "followers": 15200000,
+          "asOf": "2025-07-24"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Dupla brasileira (Pac e Mike) de conteúdo de Minecraft.",
+      "sources": [
+        "https://olhardigital.com.br/2025/07/24/internet-e-redes-sociais/8-influencers-de-minecraft-para-voce-acompanhar-online-nas-redes-sociais/"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "jp-plays",
+      "name": "JP Plays",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "JP Plays",
+          "url": null,
+          "followers": 11200000,
+          "asOf": "2025-07-24"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador brasileiro de conteúdo de Minecraft e jogos.",
+      "sources": [
+        "https://olhardigital.com.br/2025/07/24/internet-e-redes-sociais/8-influencers-de-minecraft-para-voce-acompanhar-online-nas-redes-sociais/"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "cellbit",
+      "name": "Cellbit",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "twitch",
+          "handle": "Cellbit",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Streamer e criador brasileiro, conhecido por projetos de Minecraft e RPG.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "nobru",
+      "name": "Nobru",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Nobru",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Jogador e criador brasileiro de Free Fire.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "felps",
+      "name": "Felps",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Felps",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador brasileiro de conteúdo de jogos no YouTube.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "jonvlogs",
+      "name": "Jonvlogs",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Jonvlogs",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador brasileiro de conteúdo de jogos e vlogs.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "mussoumano",
+      "name": "Mussoumano",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Mussoumano",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador brasileiro de conteúdo de jogos no YouTube.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "robin-hood-gamer",
+      "name": "Robin Hood Gamer",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Robin Hood Gamer",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador brasileiro de conteúdo de jogos no YouTube.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "julia-minegirl",
+      "name": "Julia Minegirl",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Julia Minegirl",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora brasileira de conteúdo de Minecraft.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "bruno-rezende-evil",
+      "name": "Bruno 'Rezende Evil'",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Bruno 'Rezende Evil'",
+          "url": null,
+          "followers": 34200000,
+          "asOf": "2026-04-22"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador brasileiro de conteúdo de jogos e entretenimento, canal Rezendeevil.",
+      "sources": [
+        "https://www.portaltela.com/entretenimento/2026/04/22/conheca-os-20-canais-do-youtube-com-mais-inscritos-no-brasil/"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "pewdiepie",
+      "name": "PewDiePie",
+      "country": "WORLD",
+      "originCountry": "SE",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "PewDiePie",
+          "url": null,
+          "followers": 109000000,
+          "asOf": "2026-06-01"
+        }
+      ],
+      "startedYear": 2010,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador sueco de conteúdo de jogos e vlogs, um dos maiores canais da história do YouTube.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "ninja",
+      "name": "Ninja",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "twitch",
+          "handle": "Ninja",
+          "url": null,
+          "followers": 19300000,
+          "asOf": "2026-08-02"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Streamer americano de Fortnite, Tyler Blevins.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_Twitch_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "kai-cenat",
+      "name": "Kai Cenat",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "twitch",
+          "handle": "Kai Cenat",
+          "url": null,
+          "followers": 21400000,
+          "asOf": "2026-08-02"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Streamer americano com recordes de inscritos na Twitch.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_Twitch_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "ibai-llanos",
+      "name": "Ibai Llanos",
+      "country": "WORLD",
+      "originCountry": "ES",
+      "platforms": [
+        {
+          "platform": "twitch",
+          "handle": "Ibai Llanos",
+          "url": null,
+          "followers": 20400000,
+          "asOf": "2026-08-02"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Streamer espanhol e organizador de eventos de streaming.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_Twitch_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "auronplay",
+      "name": "Auronplay",
+      "country": "WORLD",
+      "originCountry": "ES",
+      "platforms": [
+        {
+          "platform": "twitch",
+          "handle": "Auronplay",
+          "url": null,
+          "followers": 17000000,
+          "asOf": "2026-08-02"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Streamer e criador espanhol, Raúl Álvarez.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_Twitch_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "rubius",
+      "name": "Rubius",
+      "country": "WORLD",
+      "originCountry": "ES",
+      "platforms": [
+        {
+          "platform": "twitch",
+          "handle": "Rubius",
+          "url": null,
+          "followers": 16500000,
+          "asOf": "2026-08-02"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Streamer e criador espanhol, Rubén Doblas.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_Twitch_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "xqc",
+      "name": "xQc",
+      "country": "WORLD",
+      "originCountry": "CA",
+      "platforms": [
+        {
+          "platform": "twitch",
+          "handle": "xQc",
+          "url": null,
+          "followers": 12500000,
+          "asOf": "2026-08-02"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Streamer canadense, Félix Lengyel.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_Twitch_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "thegrefg",
+      "name": "TheGrefg",
+      "country": "WORLD",
+      "originCountry": "ES",
+      "platforms": [
+        {
+          "platform": "twitch",
+          "handle": "TheGrefg",
+          "url": null,
+          "followers": 12300000,
+          "asOf": "2026-08-02"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Streamer espanhol, David Cánovas.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_Twitch_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "tfue",
+      "name": "Tfue",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "twitch",
+          "handle": "Tfue",
+          "url": null,
+          "followers": 11500000,
+          "asOf": "2026-08-02"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Streamer americano de Fortnite, Turner Tenney.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_Twitch_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "shroud",
+      "name": "Shroud",
+      "country": "WORLD",
+      "originCountry": "CA",
+      "platforms": [
+        {
+          "platform": "twitch",
+          "handle": "Shroud",
+          "url": null,
+          "followers": 11300000,
+          "asOf": "2026-08-02"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Streamer canadense, ex-jogador profissional de FPS.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_Twitch_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "pokimane",
+      "name": "Pokimane",
+      "country": "WORLD",
+      "originCountry": "CA",
+      "platforms": [
+        {
+          "platform": "twitch",
+          "handle": "Pokimane",
+          "url": null,
+          "followers": 9500000,
+          "asOf": "2026-08-02"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Streamer canadense, Imane Anys.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_Twitch_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "timthetatman",
+      "name": "TimTheTatman",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "twitch",
+          "handle": "TimTheTatman",
+          "url": null,
+          "followers": 7600000,
+          "asOf": "2026-08-02"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Streamer americano de jogos.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_Twitch_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "dream",
+      "name": "Dream",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Dream",
+          "url": null,
+          "followers": 32900000,
+          "asOf": "2025-07-24"
+        },
+        {
+          "platform": "twitch",
+          "handle": "Dream",
+          "url": null,
+          "followers": 6000000,
+          "asOf": "2026-08-02"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de Minecraft.",
+      "sources": [
+        "https://olhardigital.com.br/2025/07/24/internet-e-redes-sociais/8-influencers-de-minecraft-para-voce-acompanhar-online-nas-redes-sociais/",
+        "https://en.wikipedia.org/wiki/List_of_most-followed_Twitch_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "dantdm",
+      "name": "DanTDM",
+      "country": "WORLD",
+      "originCountry": "GB",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "DanTDM",
+          "url": null,
+          "followers": 29200000,
+          "asOf": "2025-07-24"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador britânico de Minecraft, Daniel Middleton.",
+      "sources": [
+        "https://olhardigital.com.br/2025/07/24/internet-e-redes-sociais/8-influencers-de-minecraft-para-voce-acompanhar-online-nas-redes-sociais/"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "jelly",
+      "name": "Jelly",
+      "country": "WORLD",
+      "originCountry": "NL",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Jelly",
+          "url": null,
+          "followers": 23500000,
+          "asOf": "2025-07-24"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador neerlandês de conteúdo de jogos.",
+      "sources": [
+        "https://olhardigital.com.br/2025/07/24/internet-e-redes-sociais/8-influencers-de-minecraft-para-voce-acompanhar-online-nas-redes-sociais/"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "mikecrack",
+      "name": "Mikecrack",
+      "country": "WORLD",
+      "originCountry": "ES",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Mikecrack",
+          "url": null,
+          "followers": 58700000,
+          "asOf": "2026-06-01"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador espanhol de conteúdo de jogos.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "juegagerman",
+      "name": "JuegaGerman",
+      "country": "WORLD",
+      "originCountry": "CL",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "JuegaGerman",
+          "url": null,
+          "followers": 56900000,
+          "asOf": "2026-06-01"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador chileno de conteúdo de jogos.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "markiplier",
+      "name": "Markiplier",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Markiplier",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de conteúdo de jogos.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "jacksepticeye",
+      "name": "Jacksepticeye",
+      "country": "WORLD",
+      "originCountry": "IE",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Jacksepticeye",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador irlandês de conteúdo de jogos.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "vegetta777",
+      "name": "Vegetta777",
+      "country": "WORLD",
+      "originCountry": "ES",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Vegetta777",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador espanhol de conteúdo de jogos.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "valkyrae",
+      "name": "Valkyrae",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Valkyrae",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Streamer e criadora americana de conteúdo de jogos.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    }
+  ],
+  "excluded": [
+    {
+      "name": "Dr Disrespect",
+      "reason": "controvérsias graves; em dúvida, fora"
+    },
+    {
+      "name": "Adin Ross",
+      "reason": "controvérsias públicas; em dúvida, fora"
+    },
+    {
+      "name": "Felipe Neto",
+      "reason": "ativismo político declarado; em dúvida, fora"
+    },
+    {
+      "name": "Monark (Bruno Aiub)",
+      "reason": "controvérsias públicas relevantes; em dúvida, fora"
+    },
+    {
+      "name": "Pablo Marçal",
+      "reason": "candidato a cargo público"
+    },
+    {
+      "name": "Maria Clara & JP",
+      "reason": "menor de idade"
+    },
+    {
+      "name": "Kanye West",
+      "reason": "controvérsias graves de discurso de ódio; em dúvida, fora"
+    },
+    {
+      "name": "Andrew Tate",
+      "reason": "processos criminais graves"
+    },
+    {
+      "name": "Logan Paul / Jake Paul",
+      "reason": "controvérsias públicas; em dúvida, fora"
+    },
+    {
+      "name": "James Charles / David Dobrik",
+      "reason": "acusações públicas graves; em dúvida, fora"
+    },
+    {
+      "name": "Technoblade / Marília Mendonça / Mac Miller",
+      "reason": "falecidos; fora por cautela (decisão do dono)"
+    }
+  ]
+}

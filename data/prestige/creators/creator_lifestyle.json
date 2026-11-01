@@ -1,0 +1,758 @@
+{
+  "niche": "creator_lifestyle",
+  "collectedAt": "2026-10-31",
+  "creators": [
+    {
+      "slug": "luccas-neto",
+      "name": "Luccas Neto",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Luccas Neto",
+          "url": null,
+          "followers": 53400000,
+          "asOf": "2026-04-22"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador brasileiro de conteúdo de entretenimento.",
+      "sources": [
+        "https://www.portaltela.com/entretenimento/2026/04/22/conheca-os-20-canais-do-youtube-com-mais-inscritos-no-brasil/"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "emilly-vick",
+      "name": "Emilly Vick",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Emilly Vick",
+          "url": null,
+          "followers": 29500000,
+          "asOf": "2026-04-22"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora brasileira de conteúdo de entretenimento.",
+      "sources": [
+        "https://www.portaltela.com/entretenimento/2026/04/22/conheca-os-20-canais-do-youtube-com-mais-inscritos-no-brasil/"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "gkay",
+      "name": "Gkay",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Gkay",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Gessica Kayane, influenciadora e humorista brasileira.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "boca-rosa-bianca-andrade",
+      "name": "Boca Rosa (Bianca Andrade)",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Boca Rosa (Bianca Andrade)",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Empresária e influenciadora brasileira de beleza.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "camila-coelho",
+      "name": "Camila Coelho",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Camila Coelho",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Influenciadora brasileira de moda e beleza.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "mari-maria",
+      "name": "Mari Maria",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Mari Maria",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Maquiadora e empresária brasileira.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "jade-picon",
+      "name": "Jade Picon",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Jade Picon",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Influenciadora e atriz brasileira.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "flavia-pavanelli",
+      "name": "Flavia Pavanelli",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Flavia Pavanelli",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Influenciadora brasileira de lifestyle.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "camila-loures",
+      "name": "Camila Loures",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Camila Loures",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Influenciadora brasileira de lifestyle.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "rafa-kalimann",
+      "name": "Rafa Kalimann",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Rafa Kalimann",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Influenciadora e apresentadora brasileira.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "thassia-naves",
+      "name": "Thassia Naves",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Thassia Naves",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Influenciadora brasileira de lifestyle.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "carol-santina",
+      "name": "Carol Santina",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Carol Santina",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Influenciadora brasileira de lifestyle.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "mrbeast",
+      "name": "MrBeast",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "MrBeast",
+          "url": null,
+          "followers": 524000000,
+          "asOf": "2026-06-01"
+        },
+        {
+          "platform": "tiktok",
+          "handle": "MrBeast",
+          "url": null,
+          "followers": 144700000,
+          "asOf": "2026-10-23"
+        },
+        {
+          "platform": "instagram",
+          "handle": "MrBeast",
+          "url": null,
+          "followers": 90100000,
+          "asOf": "2026-09-30"
+        }
+      ],
+      "startedYear": 2012,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Jimmy Donaldson, criador americano de desafios, filantropia e entretenimento.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channels",
+        "https://en.wikipedia.org/wiki/List_of_most-followed_TikTok_accounts",
+        "https://en.wikipedia.org/wiki/List_of_most-followed_Instagram_accounts"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "charli-d-amelio",
+      "name": "Charli D'Amelio",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "tiktok",
+          "handle": "Charli D'Amelio",
+          "url": null,
+          "followers": 160300000,
+          "asOf": "2026-10-23"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora americana de vídeos curtos.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_TikTok_accounts"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "bella-poarch",
+      "name": "Bella Poarch",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "tiktok",
+          "handle": "Bella Poarch",
+          "url": null,
+          "followers": 91500000,
+          "asOf": "2026-10-23"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora e cantora filipino-americana.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_TikTok_accounts"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "addison-rae",
+      "name": "Addison Rae",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "tiktok",
+          "handle": "Addison Rae",
+          "url": null,
+          "followers": 87600000,
+          "asOf": "2026-10-23"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora e artista americana.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_TikTok_accounts"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "kimberly-loaiza",
+      "name": "Kimberly Loaiza",
+      "country": "WORLD",
+      "originCountry": "MX",
+      "platforms": [
+        {
+          "platform": "tiktok",
+          "handle": "Kimberly Loaiza",
+          "url": null,
+          "followers": 83500000,
+          "asOf": "2026-10-23"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora mexicana de lifestyle.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_TikTok_accounts"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "dixie-d-amelio",
+      "name": "Dixie D'Amelio",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "tiktok",
+          "handle": "Dixie D'Amelio",
+          "url": null,
+          "followers": 53700000,
+          "asOf": "2026-10-23"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora e cantora americana.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_TikTok_accounts"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "loren-gray",
+      "name": "Loren Gray",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "tiktok",
+          "handle": "Loren Gray",
+          "url": null,
+          "followers": 52700000,
+          "asOf": "2026-10-23"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora e cantora americana.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_TikTok_accounts"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "brooke-monk",
+      "name": "Brooke Monk",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "tiktok",
+          "handle": "Brooke Monk",
+          "url": null,
+          "followers": 48800000,
+          "asOf": "2026-10-23"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora americana de vídeos curtos.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_TikTok_accounts"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "stokes-twins",
+      "name": "Stokes Twins",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Stokes Twins",
+          "url": null,
+          "followers": 149000000,
+          "asOf": "2026-06-01"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Dupla de irmãos criadores de desafios e entretenimento.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "fede-vigevani",
+      "name": "Fede Vigevani",
+      "country": "WORLD",
+      "originCountry": "UY",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Fede Vigevani",
+          "url": null,
+          "followers": 80600000,
+          "asOf": "2026-06-01"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador mexicano-uruguaio de entretenimento.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "ben-azelart",
+      "name": "Ben Azelart",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Ben Azelart",
+          "url": null,
+          "followers": 51700000,
+          "asOf": "2026-06-01"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de entretenimento.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "emma-chamberlain",
+      "name": "Emma Chamberlain",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Emma Chamberlain",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora americana de vlogs e lifestyle.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "casey-neistat",
+      "name": "Casey Neistat",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Casey Neistat",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de vlogs.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "zoella",
+      "name": "Zoella",
+      "country": "WORLD",
+      "originCountry": "GB",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Zoella",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Zoe Sugg, criadora britânica de beleza e lifestyle.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "liza-koshy",
+      "name": "Liza Koshy",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Liza Koshy",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora e apresentadora americana.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "nikkietutorials",
+      "name": "NikkieTutorials",
+      "country": "WORLD",
+      "originCountry": "NL",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "NikkieTutorials",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora neerlandesa de maquiagem.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "alfie-deyes",
+      "name": "Alfie Deyes",
+      "country": "WORLD",
+      "originCountry": "GB",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Alfie Deyes",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador britânico de vlogs.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "safiya-nygaard",
+      "name": "Safiya Nygaard",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Safiya Nygaard",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora americana de vídeos de beleza e lifestyle.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    }
+  ],
+  "excluded": [
+    {
+      "name": "Virginia Fonseca",
+      "reason": "investigação pública sobre divulgação de apostas; em dúvida, fora"
+    },
+    {
+      "name": "Juan de Dios Pantoja",
+      "reason": "controvérsias públicas; em dúvida, fora"
+    },
+    {
+      "name": "Tana Mongeau / Jeffree Star / Colleen Ballinger",
+      "reason": "controvérsias públicas; em dúvida, fora"
+    },
+    {
+      "name": "Felipe Neto",
+      "reason": "ativismo político declarado; em dúvida, fora"
+    },
+    {
+      "name": "Monark (Bruno Aiub)",
+      "reason": "controvérsias públicas relevantes; em dúvida, fora"
+    },
+    {
+      "name": "Pablo Marçal",
+      "reason": "candidato a cargo público"
+    },
+    {
+      "name": "Maria Clara & JP",
+      "reason": "menor de idade"
+    },
+    {
+      "name": "Kanye West",
+      "reason": "controvérsias graves de discurso de ódio; em dúvida, fora"
+    },
+    {
+      "name": "Andrew Tate",
+      "reason": "processos criminais graves"
+    },
+    {
+      "name": "Logan Paul / Jake Paul",
+      "reason": "controvérsias públicas; em dúvida, fora"
+    },
+    {
+      "name": "James Charles / David Dobrik",
+      "reason": "acusações públicas graves; em dúvida, fora"
+    },
+    {
+      "name": "Technoblade / Marília Mendonça / Mac Miller",
+      "reason": "falecidos; fora por cautela (decisão do dono)"
+    }
+  ]
+}

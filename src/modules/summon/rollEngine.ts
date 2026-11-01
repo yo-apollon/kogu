@@ -302,6 +302,8 @@ export interface RolledEntity {
   type: "CHARACTER" | "WEAPON" | "COMPANION" | "DOMAIN";
   gender: "FEMALE" | "MALE" | "NONBINARY" | "ITEM" | "UNKNOWN";
   tier: "COMMON" | "RARE" | "EPIC" | "LEGENDARY" | "MYTHIC";
+  /** Edicao da carta (BASIC/EPIC/MYTHIC); null = carta comum. */
+  edition?: "BASIC" | "EPIC" | "MYTHIC" | null;
   description: string | null;
   isAdult: boolean;
   baseAether: number;
@@ -338,6 +340,7 @@ async function fetchRolled(guildId: string, entityId: number): Promise<RolledEnt
       type: entities.type,
       gender: entities.gender,
       tier: entities.tier,
+      edition: entities.edition,
       description: entities.description,
       isAdult: entities.isAdult,
       baseAether: entities.baseAether,
@@ -386,6 +389,7 @@ async function fetchRolled(guildId: string, entityId: number): Promise<RolledEnt
     type: r.type,
     gender: r.gender,
     tier: r.tier,
+    edition: (r.edition as "BASIC" | "EPIC" | "MYTHIC" | null) ?? null,
     description: r.description,
     isAdult: r.isAdult,
     baseAether: r.baseAether,

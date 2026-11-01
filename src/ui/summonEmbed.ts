@@ -3,7 +3,7 @@
  * Funcoes puras: o chamador gera a arte (skin `mudae`) e a anexa como `attachment://<attachmentName>`.
  */
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from "discord.js";
-import { ENTITY_TIERS, type CardVariant, type EntityTier } from "../config/gacha.js";
+import { EDITION_LABEL, ENTITY_TIERS, type CardVariant, type EntityEdition, type EntityTier } from "../config/gacha.js";
 import { DEFAULT_LOCALE } from "../config/constants.js";
 import { t, type TranslationKey } from "../i18n/index.js";
 import { emoji, genderEmoji, variantEmoji } from "./emojis.js";
@@ -23,6 +23,8 @@ export interface SummonView {
   claimRank?: number;
   likeRank?: number;
   tier: EntityTier;
+  /** Edicao da carta (Basica/Epica/Mitica); null/ausente = carta comum, sem rotulo. */
+  edition?: EntityEdition | null;
   variant: CardVariant;
   /** Nota/alias do dono (negrito + italico). */
   ownerNote?: string;
@@ -91,6 +93,7 @@ export function buildSummonEmbed(view: SummonView, opts: SummonEmbedOptions = {}
   const lines: string[] = [];
 
   lines.push(`${truncate(view.franchise, 100)} ${genderEmoji(view.gender)}`);
+  if (view.edition) lines.push(`**${t(EDITION_LABEL[view.edition], locale)}**`);
 
   const stats = [`*${t(rouletteKey, locale)}*`, `**${formatNumber(view.aetherValue, locale)}** ${emoji("aether")}`];
   if (keys > 0) stats.push(`${emoji("key")} (${keys})`);

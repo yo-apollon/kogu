@@ -10,6 +10,11 @@ import { trigramSimilarity } from "../lib/text/normalize.js";
 import type { DbExecutor } from "./executor.js";
 import { nameKey } from "./normalize.js";
 
+/** Exclui as edicoes derivadas (EPIC/MYTHIC); a ancora BASIC continua sendo uma entidade normal do sync. */
+function notDerivedEdition() {
+  return sql`(${entities.edition} IS NULL OR ${entities.edition} = 'BASIC')`;
+}
+
 /** Trigrama acima deste valor (na mesma franquia) vira DUPLICATE_SUSPECT. */
 export const TRIGRAM_DUPLICATE_THRESHOLD = 0.85;
 
@@ -106,6 +111,8 @@ export async function findCrossSourceMatch(
       and(
         inArray(entitySeries.seriesId, [...p.seriesIds]),
         ne(entities.status, "MERGED"),
+        // Edicoes EPIC/MYTHIC repetem nome e serie da ancora de proposito: nunca casam por nome.
+        notDerivedEdition(),
         or(
           eq(entities.nameNormalized, p.nameNormalized),
           p.nameNative ? eq(entities.nameNative, p.nameNative) : undefined
@@ -145,7 +152,14 @@ export async function findSimilarInFranchise(
   const rows = await db
     .select({ id: entities.id, name: entities.name, nameNormalized: entities.nameNormalized })
     .from(entities)
-    .where(and(eq(entities.franchiseId, p.franchiseId), ne(entities.status, "MERGED")))
+    .where(
+      and(
+        eq(entities.franchiseId, p.franchiseId),
+        ne(entities.status, "MERGED"),
+        // Edicoes tem o mesmo nome da ancora; nao sao duplicatas.
+        notDerivedEdition()
+      )
+    )
     .limit(FRANCHISE_SCAN_LIMIT);
   return pickDuplicateSuspects(p.name, rows, p.excludeIds ?? []);
 }

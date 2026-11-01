@@ -11,6 +11,8 @@ export const IMAGE_HOST_ALLOWLIST = [
   "media.discordapp.net",
   "upload.wikimedia.org",
   "static.wikia.nocookie.net",
+  // Imagens próprias do catálogo (docs/assets/cards), servidas pelo GitHub Pages.
+  "yo-apollon.github.io",
   "i.imgur.com",
   "imgur.com",
   "i.pinimg.com",

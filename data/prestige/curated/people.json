@@ -1,0 +1,1508 @@
+{
+  "collectedAt": "2026-10-31",
+  "dataCutoffNote": "Numeros conforme as fontes ate 31/10/2026; atualizacoes posteriores exigem revisao.",
+  "formulas": {
+    "sport_football": {
+      "weights": {
+        "worldCup": 18,
+        "ballonDor": 6,
+        "champions": 4,
+        "records": 5,
+        "eliteYears": 1.5,
+        "dominanceSeasons": 5
+      },
+      "caps": {
+        "worldCup": 54,
+        "ballonDor": 36,
+        "champions": 16,
+        "records": 10,
+        "eliteYears": 15,
+        "dominanceSeasons": 20
+      },
+      "normMax": 115,
+      "gamma": 0.7,
+      "notes": "Regua do spec 4.2 (Copa 18, Bola de Ouro 6 teto 36, Champions 4 teto 16, longevidade 1,5 teto 15, dominancia 5 teto 20). Recorde historico vale 5 por recorde (teto 10). Raw maximo pratico 115 (Messi) = 100 apos normalizacao; depois aplica-se gamma 0,7 (raw/115)^0,7 para dar resolucao as estrelas atuais sem mudar a ordem. Pre-1995 (Bola de Ouro so europeus): honraria da France Football conta como 1 Bola de Ouro; Libertadores conta como titulo continental equivalente a Champions; Melhor do Mundo FIFA feminina (Marta) conta como Bola de Ouro equivalente."
+    },
+    "sport_basketball": {
+      "weights": {
+        "titles": 6,
+        "mvp": 5,
+        "finalsMvp": 3,
+        "allNbaFirst": 1.5,
+        "allNbaTotal": 0.3,
+        "records": 3,
+        "seasons": 0.35
+      },
+      "caps": {
+        "titles": 36,
+        "mvp": 25,
+        "finalsMvp": 18,
+        "allNbaFirst": 15,
+        "allNbaTotal": 6,
+        "records": 12,
+        "seasons": 8
+      },
+      "normMax": 112,
+      "gamma": 0.7,
+      "notes": "Titulos 6 (teto 36), MVP 5 (teto 25), MVP das Finais 3 (teto 18), All-NBA 1o time 1,5 (teto 15), All-NBA total 0,3 (teto 6), recordes historicos 3 (teto 12), temporadas disputadas 0,35 (teto 8). Soma dos tetos 120; normMax 112 (Jordan fica perto de 97). gamma 0,7. Contagens de All-NBA/MVP consideram dados ate a temporada 2025-26 quando a fonte cita."
+    },
+    "sport_mma": {
+      "weights": {
+        "beltDivisions": 7,
+        "titleDefenses": 2.5,
+        "winStreak": 0.7,
+        "legacy": 0.41
+      },
+      "caps": {
+        "beltDivisions": 14,
+        "titleDefenses": 25,
+        "winStreak": 20,
+        "legacy": 41
+      },
+      "normMax": 95,
+      "gamma": 0.8,
+      "notes": "Cinturoes: 7 por divisao em que foi campeao do UFC (teto 14). Defesas: 2,5 cada (teto 25). Maior sequencia de vitorias: 0,7 cada (teto 20). Legado curado 0-100 (finalizacoes/nocautes marcantes, bilheteria, influencia) vale 41%. normMax 95, gamma 0,8. Criterio null sai da soma; o total e renormalizado com penalidade de cobertura (0,85 + 0,15*cobertura)."
+    },
+    "music_pop": {
+      "weights": {
+        "sales": 18,
+        "awards": 17,
+        "records": 20,
+        "influence": 35,
+        "careerYears": 10
+      },
+      "caps": {
+        "sales": 300,
+        "awards": 1,
+        "records": 100,
+        "influence": 100,
+        "careerYears": 40
+      },
+      "normMax": 100,
+      "gamma": 0.8,
+      "notes": "Vendas (milhoes, estimadas/alegadas, teto 300), premios = max(min(1,(Grammys+2*Album do Ano)/30), honrarias curadas/125), recordes de parada/publico curados 0-100, influencia historica curada 0-100 com justificativa, anos de carreira relevante (teto 40). Mesma regua para music_pop, music_rock, music_hiphop e music_other; gamma 0,8. Criterio null sai da soma com penalidade de cobertura."
+    },
+    "music_rock": {
+      "weights": {
+        "sales": 18,
+        "awards": 17,
+        "records": 20,
+        "influence": 35,
+        "careerYears": 10
+      },
+      "caps": {
+        "sales": 300,
+        "awards": 1,
+        "records": 100,
+        "influence": 100,
+        "careerYears": 40
+      },
+      "normMax": 100,
+      "gamma": 0.8,
+      "notes": "Vendas (milhoes, estimadas/alegadas, teto 300), premios = max(min(1,(Grammys+2*Album do Ano)/30), honrarias curadas/125), recordes de parada/publico curados 0-100, influencia historica curada 0-100 com justificativa, anos de carreira relevante (teto 40). Mesma regua para music_pop, music_rock, music_hiphop e music_other; gamma 0,8. Criterio null sai da soma com penalidade de cobertura."
+    },
+    "music_hiphop": {
+      "weights": {
+        "sales": 18,
+        "awards": 17,
+        "records": 20,
+        "influence": 35,
+        "careerYears": 10
+      },
+      "caps": {
+        "sales": 300,
+        "awards": 1,
+        "records": 100,
+        "influence": 100,
+        "careerYears": 40
+      },
+      "normMax": 100,
+      "gamma": 0.8,
+      "notes": "Vendas (milhoes, estimadas/alegadas, teto 300), premios = max(min(1,(Grammys+2*Album do Ano)/30), honrarias curadas/125), recordes de parada/publico curados 0-100, influencia historica curada 0-100 com justificativa, anos de carreira relevante (teto 40). Mesma regua para music_pop, music_rock, music_hiphop e music_other; gamma 0,8. Criterio null sai da soma com penalidade de cobertura."
+    },
+    "music_other": {
+      "weights": {
+        "sales": 18,
+        "awards": 17,
+        "records": 20,
+        "influence": 35,
+        "careerYears": 10
+      },
+      "caps": {
+        "sales": 300,
+        "awards": 1,
+        "records": 100,
+        "influence": 100,
+        "careerYears": 40
+      },
+      "normMax": 100,
+      "gamma": 0.8,
+      "notes": "Vendas (milhoes, estimadas/alegadas, teto 300), premios = max(min(1,(Grammys+2*Album do Ano)/30), honrarias curadas/125), recordes de parada/publico curados 0-100, influencia historica curada 0-100 com justificativa, anos de carreira relevante (teto 40). Mesma regua para music_pop, music_rock, music_hiphop e music_other; gamma 0,8. Criterio null sai da soma com penalidade de cobertura."
+    },
+    "idol": {
+      "weights": {
+        "groupAchievements": 30,
+        "soloAchievements": 20,
+        "intlReach": 25,
+        "awards": 15,
+        "careerYears": 10
+      },
+      "caps": {
+        "groupAchievements": 100,
+        "soloAchievements": 100,
+        "intlReach": 100,
+        "awards": 100,
+        "careerYears": 15
+      },
+      "normMax": 100,
+      "gamma": 0.9,
+      "notes": "Conquistas do grupo (curado 0-100, a partir de paradas/vendas), conquistas solo (0-100), alcance internacional (0-100), premios (0-100) e anos de carreira (teto 15). Para solistas o criterio de grupo e nao aplicavel e sai da soma sem penalidade. Membros de grupo herdam grupo/alcance/premios do grupo. gamma 0,9."
+    }
+  },
+  "people": [
+    {
+      "slug": "lionel-messi",
+      "name": "Lionel Messi",
+      "niche": "sport_football",
+      "inputs": {
+        "worldCup": 1,
+        "ballonDor": 8,
+        "champions": 4,
+        "records": 2,
+        "eliteYears": 21,
+        "dominanceSeasons": 12,
+        "notes": "WC 2022 campeao; 2026 vice (Bola de Prata, 21 gols em Copas); 8 Bolas de Ouro (recorde)"
+      },
+      "rationale": "Recordista de Bolas de Ouro (8), campeao mundial em 2022 e finalista em 2026, 4 Champions. Referencia 100 do nicho.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Lionel_Messi",
+        "https://www.thescore.com/worldcup/news/3550006/rodri-takes-golden-ball-over-messi-mbappe-claims-golden-boot-again"
+      ],
+      "confidence": "high",
+      "prestigeProposal": 100,
+      "tierSuggestion": "MYTHIC",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "pele",
+      "name": "Pelé",
+      "niche": "sport_football",
+      "inputs": {
+        "worldCup": 3,
+        "ballonDor": 1,
+        "champions": 2,
+        "records": 2,
+        "eliteYears": 18,
+        "dominanceSeasons": 12,
+        "notes": "Bola de Ouro honoraria (France Football) conta como 1; Libertadores 1962/63 como titulo continental; unico tricampeao mundial"
+      },
+      "rationale": "Unico tricampeao mundial (1958, 1962, 1970); ausencia de Bola de Ouro competitiva e compensada pela honraria e por 12 anos de dominio. Disputa o topo com Messi.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Pel%C3%A9"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 98.8,
+      "tierSuggestion": "MYTHIC",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "cristiano-ronaldo",
+      "name": "Cristiano Ronaldo",
+      "niche": "sport_football",
+      "inputs": {
+        "worldCup": 0,
+        "ballonDor": 5,
+        "champions": 5,
+        "records": 3,
+        "eliteYears": 21,
+        "dominanceSeasons": 8,
+        "notes": "Maior artilheiro oficial da historia; maior artilheiro da Champions; Euro 2016 e Liga das Nacoes nao entram na regua"
+      },
+      "rationale": "5 Bolas de Ouro, 5 Champions e varios recordes, mas sem Copa do Mundo. Caso polemico: fica na borda de LEGENDARY; o dono pode subir para MYTHIC por override.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Cristiano_Ronaldo"
+      ],
+      "confidence": "high",
+      "prestigeProposal": 84.9,
+      "tierSuggestion": "EPIC",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "marta-vieira",
+      "name": "Marta",
+      "niche": "sport_football",
+      "inputs": {
+        "worldCup": 0,
+        "ballonDor": 6,
+        "champions": 1,
+        "records": 2,
+        "eliteYears": 20,
+        "dominanceSeasons": 6,
+        "notes": "6 titulos de Melhor Jogadora FIFA (equiv. Bola de Ouro); maior artilheira de Copas femininas (17); UEFA Women's Cup 2004 pela Umea"
+      },
+      "rationale": "Seis vezes Melhor do Mundo e maior artilheira da historia das Copas femininas, mas sem Copa vencida; dominio longo.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Marta_(footballer)"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 80.9,
+      "tierSuggestion": "EPIC",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "ronaldo-fenomeno",
+      "name": "Ronaldo Fenômeno",
+      "niche": "sport_football",
+      "inputs": {
+        "worldCup": 1,
+        "ballonDor": 2,
+        "champions": 0,
+        "records": 1,
+        "eliteYears": 10,
+        "dominanceSeasons": 3,
+        "notes": "Penta 2002 como titular (1994 sem jogar); recorde de gols em Copas (15) de 2006 a 2014; 3x Melhor do Mundo FIFA"
+      },
+      "rationale": "Campeao mundial 2002, 2 Bolas de Ouro e 3 vezes Melhor do Mundo; carreira de elite encurtada por lesoes, sem Champions.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Ronaldo_(Brazilian_footballer)"
+      ],
+      "confidence": "high",
+      "prestigeProposal": 67.1,
+      "tierSuggestion": "RARE",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "ronaldinho-gaucho",
+      "name": "Ronaldinho Gaúcho",
+      "niche": "sport_football",
+      "inputs": {
+        "worldCup": 1,
+        "ballonDor": 1,
+        "champions": 1,
+        "records": 0,
+        "eliteYears": 7,
+        "dominanceSeasons": 2,
+        "notes": "Penta 2002; Bola de Ouro 2005; Champions 2006; Melhor FIFA 2004 e 2005"
+      },
+      "rationale": "Icone do futebol-arte com Copa, Champions e Bola de Ouro, mas pico de elite curto (~7 anos).",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Ronaldinho"
+      ],
+      "confidence": "high",
+      "prestigeProposal": 54.6,
+      "tierSuggestion": "RARE",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "kylian-mbappe",
+      "name": "Kylian Mbappé",
+      "niche": "sport_football",
+      "inputs": {
+        "worldCup": 1,
+        "ballonDor": 0,
+        "champions": 0,
+        "records": 1,
+        "eliteYears": 9,
+        "dominanceSeasons": 0,
+        "notes": "Campeao 2018; Chuteira de Ouro 2022 e 2026; maior artilheiro de Copas (22 gols apos 2026)"
+      },
+      "rationale": "Campeao mundial e recordista de gols em Copas (22), mas sem Bola de Ouro nem Champions; legado ainda em construcao.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Kylian_Mbapp%C3%A9",
+        "https://www.thescore.com/worldcup/news/3550006/rodri-takes-golden-ball-over-messi-mbappe-claims-golden-boot-again"
+      ],
+      "confidence": "high",
+      "prestigeProposal": 44.8,
+      "tierSuggestion": "COMMON",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "neymar-jr",
+      "name": "Neymar Jr",
+      "niche": "sport_football",
+      "inputs": {
+        "worldCup": 0,
+        "ballonDor": 0,
+        "champions": 1,
+        "records": 1,
+        "eliteYears": 10,
+        "dominanceSeasons": 0,
+        "notes": "Maior artilheiro da Selecao em jogos oficiais; Champions 2015; ouro olimpico 2016 (nao pontua)"
+      },
+      "rationale": "Maior artilheiro da Selecao e campeao da Champions 2015, sem Copa, Bola de Ouro nem dominio como melhor do mundo.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Neymar"
+      ],
+      "confidence": "high",
+      "prestigeProposal": 33.4,
+      "tierSuggestion": "COMMON",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "erling-haaland",
+      "name": "Erling Haaland",
+      "niche": "sport_football",
+      "inputs": {
+        "worldCup": 0,
+        "ballonDor": 0,
+        "champions": 1,
+        "records": 2,
+        "eliteYears": 6,
+        "dominanceSeasons": 0,
+        "notes": "Recorde de gols em uma edicao da Premier League (36); Champions 2023"
+      },
+      "rationale": "Fenomeno de gols com Champions 2023 e recordes da Premier League, mas poucos anos de elite e sem Copa nem Bola de Ouro.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Erling_Haaland"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 32.4,
+      "tierSuggestion": "COMMON",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "vini-jr",
+      "name": "Vini Jr",
+      "niche": "sport_football",
+      "inputs": {
+        "worldCup": 0,
+        "ballonDor": 0,
+        "champions": 2,
+        "records": 0,
+        "eliteYears": 6,
+        "dominanceSeasons": 1,
+        "notes": "Champions 2022 e 2024; Melhor FIFA 2024"
+      },
+      "rationale": "Dois titulos de Champions e Melhor FIFA 2024, ainda sem Copa nem recordes historicos.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Vin%C3%ADcius_J%C3%BAnior"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 31.4,
+      "tierSuggestion": "COMMON",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "michael-jordan",
+      "name": "Michael Jordan",
+      "niche": "sport_basketball",
+      "inputs": {
+        "titles": 6,
+        "mvp": 5,
+        "finalsMvp": 6,
+        "allNbaFirst": 10,
+        "allNbaTotal": 11,
+        "records": 4,
+        "seasons": 15,
+        "notes": "6-0 nas Finais; 10 titulos de cestinha; DPOY 1988; maior media de pontos da carreira"
+      },
+      "rationale": "6 titulos com 6 MVPs das Finais e 5 MVPs. Referencia do nicho.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Michael_Jordan"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 100,
+      "tierSuggestion": "MYTHIC",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "lebron-james",
+      "name": "LeBron James",
+      "niche": "sport_basketball",
+      "inputs": {
+        "titles": 4,
+        "mvp": 4,
+        "finalsMvp": 4,
+        "allNbaFirst": 13,
+        "allNbaTotal": 21,
+        "records": 5,
+        "seasons": 24,
+        "notes": "Maior pontuador da historia; 22 All-Star; 24 temporadas; no 76ers em 2026"
+      },
+      "rationale": "Maior pontuador, 4 titulos/MVPs de Finais e longevidade recorde (24 temporadas).",
+      "sources": [
+        "https://en.wikipedia.org/wiki/LeBron_James"
+      ],
+      "confidence": "high",
+      "prestigeProposal": 90.4,
+      "tierSuggestion": "LEGENDARY",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "kobe-bryant",
+      "name": "Kobe Bryant",
+      "niche": "sport_basketball",
+      "inputs": {
+        "titles": 5,
+        "mvp": 1,
+        "finalsMvp": 2,
+        "allNbaFirst": 11,
+        "allNbaTotal": 15,
+        "records": 2,
+        "seasons": 20,
+        "notes": "81 pontos em um jogo; 2 titulos de cestinha"
+      },
+      "rationale": "5 titulos, 2 MVPs de Finais e 15 selecoes All-NBA em 20 temporadas.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Kobe_Bryant"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 74.5,
+      "tierSuggestion": "EPIC",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "shaquille-oneal",
+      "name": "Shaquille O'Neal",
+      "niche": "sport_basketball",
+      "inputs": {
+        "titles": 4,
+        "mvp": 1,
+        "finalsMvp": 3,
+        "allNbaFirst": 8,
+        "allNbaTotal": 14,
+        "records": 1,
+        "seasons": 19,
+        "notes": "3 MVPs das Finais seguidos (2000-02); MVP 2000"
+      },
+      "rationale": "4 titulos e 3 MVPs das Finais seguidos, dominio fisico por uma decada.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Shaquille_O%27Neal"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 67.5,
+      "tierSuggestion": "RARE",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "stephen-curry",
+      "name": "Stephen Curry",
+      "niche": "sport_basketball",
+      "inputs": {
+        "titles": 4,
+        "mvp": 2,
+        "finalsMvp": 1,
+        "allNbaFirst": 4,
+        "allNbaTotal": 11,
+        "records": 4,
+        "seasons": 17,
+        "notes": "Maior em bolas de 3 da historia; primeiro MVP unanime (2016); maior % de lance livre"
+      },
+      "rationale": "4 titulos, 2 MVPs (um unanime) e recordes de bolas de 3; transformou o jogo.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Stephen_Curry"
+      ],
+      "confidence": "high",
+      "prestigeProposal": 67.8,
+      "tierSuggestion": "RARE",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "giannis-antetokounmpo",
+      "name": "Giannis Antetokounmpo",
+      "niche": "sport_basketball",
+      "inputs": {
+        "titles": 1,
+        "mvp": 2,
+        "finalsMvp": 1,
+        "allNbaFirst": 7,
+        "allNbaTotal": 9,
+        "records": 0,
+        "seasons": 13,
+        "notes": "MVP 2019 e 2020; DPOY 2020; campeao 2021; no Heat em 2026"
+      },
+      "rationale": "Campeao, 2 MVPs e DPOY; legado consolidado a meio caminho.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Giannis_Antetokounmpo"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 45.8,
+      "tierSuggestion": "COMMON",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "allen-iverson",
+      "name": "Allen Iverson",
+      "niche": "sport_basketball",
+      "inputs": {
+        "titles": 0,
+        "mvp": 1,
+        "finalsMvp": 0,
+        "allNbaFirst": 3,
+        "allNbaTotal": 7,
+        "records": 1,
+        "seasons": 14,
+        "notes": "MVP 2001; 4 titulos de cestinha; finalista 2001; icone cultural"
+      },
+      "rationale": "MVP 2001 e 4 titulos de cestinha, mas sem titulo; peso cultural alto, indicadores esportivos moderados.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Allen_Iverson"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 29.4,
+      "tierSuggestion": "COMMON",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "luka-doncic",
+      "name": "Luka Dončić",
+      "niche": "sport_basketball",
+      "inputs": {
+        "titles": 0,
+        "mvp": 0,
+        "finalsMvp": 0,
+        "allNbaFirst": 4,
+        "allNbaTotal": 6,
+        "records": 0,
+        "seasons": 8,
+        "notes": "Finalista 2024; no Lakers desde fev/2025; contagens sujeitas a revisao"
+      },
+      "rationale": "Estrela atual, sem titulo nem MVP, ainda sem legado consolidado.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Luka_Don%C4%8Di%C4%87"
+      ],
+      "confidence": "low",
+      "prestigeProposal": 19.2,
+      "tierSuggestion": "COMMON",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "jon-jones",
+      "name": "Jon Jones",
+      "niche": "sport_mma",
+      "inputs": {
+        "beltDivisions": 2,
+        "titleDefenses": 12,
+        "winStreak": 19,
+        "legacy": 97,
+        "notes": "Recorde de 12 defesas de titulo; 28-1-1(NC); aposentadoria anunciada em jun/2025 e pedido de liberacao do UFC em mar/2026"
+      },
+      "rationale": "Recordista de defesas (12) e campeao em 2 divisoes; maior curriculo do UFC apesar de situacao atual indefinida.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Jon_Jones"
+      ],
+      "confidence": "high",
+      "prestigeProposal": 97.5,
+      "tierSuggestion": "MYTHIC",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "anderson-silva",
+      "name": "Anderson Silva",
+      "niche": "sport_mma",
+      "inputs": {
+        "beltDivisions": 1,
+        "titleDefenses": 10,
+        "winStreak": 16,
+        "legacy": 93,
+        "notes": "16 vitorias seguidas no UFC e 10 defesas dos medios (reinado 2006-2013)"
+      },
+      "rationale": "Maior reinado do peso-medio e sequencia de 16 vitorias; pioneiro do striking de elite.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Anderson_Silva"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 88.3,
+      "tierSuggestion": "LEGENDARY",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "amanda-nunes",
+      "name": "Amanda Nunes",
+      "niche": "sport_mma",
+      "inputs": {
+        "beltDivisions": 2,
+        "titleDefenses": 8,
+        "winStreak": 12,
+        "legacy": 90,
+        "notes": "Primeira a ser campea simultanea em duas divisoes e a defender ambas; Hall da Fama 2025; volta anunciada para nov/2026"
+      },
+      "rationale": "Maior lutadora da historia por consenso, campea em 2 divisoes e Hall da Fama.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Amanda_Nunes"
+      ],
+      "confidence": "high",
+      "prestigeProposal": 86.5,
+      "tierSuggestion": "LEGENDARY",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "khabib-nurmagomedov",
+      "name": "Khabib Nurmagomedov",
+      "niche": "sport_mma",
+      "inputs": {
+        "beltDivisions": 1,
+        "titleDefenses": 3,
+        "winStreak": 29,
+        "legacy": 92,
+        "notes": "29-0, aposentado invicto em 2020; 3 defesas (Poirier, Gaethje e unificacao previa)"
+      },
+      "rationale": "Invicto em 29 lutas, aposentado no auge; legado enorme com poucas defesas por conta da aposentadoria.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Khabib_Nurmagomedov"
+      ],
+      "confidence": "high",
+      "prestigeProposal": 80.3,
+      "tierSuggestion": "EPIC",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "islam-makhachev",
+      "name": "Islam Makhachev",
+      "niche": "sport_mma",
+      "inputs": {
+        "beltDivisions": 2,
+        "titleDefenses": 5,
+        "winStreak": 17,
+        "legacy": 82,
+        "notes": "17 vitorias seguidas (maior do UFC); 4 defesas no leve + 1 no meio-medio"
+      },
+      "rationale": "Campeao em 2 divisoes e maior sequencia de vitorias do UFC; legado em andamento.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Islam_Makhachev"
+      ],
+      "confidence": "high",
+      "prestigeProposal": 80.1,
+      "tierSuggestion": "EPIC",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "israel-adesanya",
+      "name": "Israel Adesanya",
+      "niche": "sport_mma",
+      "inputs": {
+        "beltDivisions": 1,
+        "titleDefenses": 5,
+        "winStreak": 12,
+        "legacy": 78,
+        "notes": "2x campeao dos medios; 3 derrotas seguidas desde 2024"
+      },
+      "rationale": "5 defesas dos medios e astro global; fase recente irregular.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Israel_Adesanya"
+      ],
+      "confidence": "high",
+      "prestigeProposal": 69.1,
+      "tierSuggestion": "RARE",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "conor-mcgregor",
+      "name": "Conor McGregor",
+      "niche": "sport_mma",
+      "inputs": {
+        "beltDivisions": 2,
+        "titleDefenses": 0,
+        "winStreak": null,
+        "legacy": 85,
+        "notes": "Primeiro campeao simultaneo em 2 divisoes; UFC 229 ~2,4M PPV; nenhuma defesa; derrota para Holloway em jul/2026",
+        "missingCriteria": [
+          "winStreak"
+        ]
+      },
+      "rationale": "Maior astro de bilheteria do MMA e primeiro campeao duplo simultaneo, sem defesas de titulo.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Conor_McGregor"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 68.5,
+      "tierSuggestion": "RARE",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "alex-pereira",
+      "name": "Alex Pereira",
+      "niche": "sport_mma",
+      "inputs": {
+        "beltDivisions": 2,
+        "titleDefenses": 3,
+        "winStreak": null,
+        "legacy": 76,
+        "notes": "Primeiro campeao UFC nos medios e meio-pesados; bicampeao meio-pesado; vagou o cinturao em abr/2026; perdeu para Gane em jun/2026",
+        "missingCriteria": [
+          "winStreak"
+        ]
+      },
+      "rationale": "Campeao em 2 divisoes com 3 defesas; carreira curta no UFC, kickboxing de elite.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Alex_Pereira"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 72.8,
+      "tierSuggestion": "EPIC",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "ilia-topuria",
+      "name": "Ilia Topuria",
+      "niche": "sport_mma",
+      "inputs": {
+        "beltDivisions": 2,
+        "titleDefenses": 1,
+        "winStreak": 17,
+        "legacy": 70,
+        "notes": "17-0 ate jun/2025; perdeu o leve para Gaethje em jun/2026"
+      },
+      "rationale": "Campeao em 2 divisoes e 17 vitorias seguidas; legado precisa de mais tempo.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Ilia_Topuria"
+      ],
+      "confidence": "high",
+      "prestigeProposal": 66.5,
+      "tierSuggestion": "RARE",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "charles-do-bronx",
+      "name": "Charles Oliveira",
+      "niche": "sport_mma",
+      "inputs": {
+        "beltDivisions": 1,
+        "titleDefenses": 1,
+        "winStreak": 11,
+        "legacy": 72,
+        "notes": "Recordes: 21 finalizacoes, 17 submissions, 14 bonus de Performance; campeao BMF (simbolico) 2026"
+      },
+      "rationale": "Dono dos recordes de finalizacoes e submissions do UFC; 1 reinado curto.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Charles_Oliveira"
+      ],
+      "confidence": "high",
+      "prestigeProposal": 56.7,
+      "tierSuggestion": "RARE",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "michael-jackson",
+      "name": "Michael Jackson",
+      "niche": "music_pop",
+      "inputs": {
+        "sales": 500,
+        "awardsGrammy": {
+          "grammyWins": 13,
+          "albumOfYear": 1
+        },
+        "honors": 95,
+        "records": 100,
+        "recordsWhy": "Thriller 37 semanas #1 e ~70M; 13 #1 no Hot 100; 7 shows em Wembley (Guinness)",
+        "influence": 100,
+        "influenceWhy": "Redefiniu videoclipe, danca e o pop global.",
+        "careerYears": 38
+      },
+      "rationale": "Maior vendedor (est. 500M), Thriller e influencia sem rival no pop. Referencia 100.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Michael_Jackson"
+      ],
+      "confidence": "high",
+      "prestigeProposal": 96.3,
+      "tierSuggestion": "MYTHIC",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "taylor-swift",
+      "name": "Taylor Swift",
+      "niche": "music_pop",
+      "inputs": {
+        "sales": 200,
+        "awardsGrammy": {
+          "grammyWins": 14,
+          "albumOfYear": 4
+        },
+        "honors": 80,
+        "records": 97,
+        "recordsWhy": "Eras Tour ~US$2 bi (maior da historia); 16 #1 no Hot 100; top 14 simultaneo",
+        "influence": 85,
+        "influenceWhy": "Modelo de controle de catalogo (regravacoes) e fenomeno de bilheteria.",
+        "careerYears": 20
+      },
+      "rationale": "Recordista de Albuns do Ano (4) e da maior turne da historia; legado ainda em curso.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Taylor_Swift"
+      ],
+      "confidence": "high",
+      "prestigeProposal": 82.5,
+      "tierSuggestion": "EPIC",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "beyonce",
+      "name": "Beyoncé",
+      "niche": "music_pop",
+      "inputs": {
+        "sales": 200,
+        "awardsGrammy": {
+          "grammyWins": 35,
+          "albumOfYear": 1
+        },
+        "honors": 90,
+        "records": 80,
+        "recordsWhy": "Mais premiada do Grammy (35); turnes recordistas",
+        "influence": 90,
+        "influenceWhy": "Referencia de performance ao vivo e de album-evento.",
+        "careerYears": 29
+      },
+      "rationale": "Artista mais premiada do Grammy (35 gramofones) com influencia ampla.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Beyonc%C3%A9",
+        "https://en.wikipedia.org/wiki/List_of_Grammy_Award_records"
+      ],
+      "confidence": "high",
+      "prestigeProposal": 86.8,
+      "tierSuggestion": "LEGENDARY",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "rihanna",
+      "name": "Rihanna",
+      "niche": "music_pop",
+      "inputs": {
+        "sales": 250,
+        "awardsGrammy": {
+          "grammyWins": 9,
+          "albumOfYear": 0
+        },
+        "honors": 60,
+        "records": 80,
+        "recordsWhy": "14 #1 no Hot 100; Super Bowl 2023",
+        "influence": 72,
+        "influenceWhy": "Hits constantes e expansao para moda e beleza.",
+        "careerYears": 13
+      },
+      "rationale": "14 singles #1 e vendas altas; carreira musical concentrada em ~13 anos.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Rihanna"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 73.1,
+      "tierSuggestion": "EPIC",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "the-weeknd",
+      "name": "The Weeknd",
+      "niche": "music_pop",
+      "inputs": {
+        "sales": 75,
+        "awardsGrammy": {
+          "grammyWins": 4,
+          "albumOfYear": 0
+        },
+        "honors": 50,
+        "records": 82,
+        "recordsWhy": "Blinding Lights: entre as musicas mais ouvidas do Spotify e do ranking historico do Hot 100; Super Bowl 2021",
+        "influence": 62,
+        "influenceWhy": "Definiu o R&B sombrio dos 2010s e o synthwave pop.",
+        "careerYears": 16
+      },
+      "rationale": "Dono de uma das musicas mais ouvidas da historia; carreira de ~16 anos e menos premios.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/The_Weeknd"
+      ],
+      "confidence": "medium",
+      "aliasSlugs": [
+        "the-weeknd-starboy"
+      ],
+      "prestigeProposal": 60.5,
+      "tierSuggestion": "RARE",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "catalogId": 2986,
+      "reviewed": false
+    },
+    {
+      "slug": "billie-eilish",
+      "name": "Billie Eilish",
+      "niche": "music_pop",
+      "inputs": {
+        "sales": null,
+        "awardsGrammy": {
+          "grammyWins": 10,
+          "albumOfYear": 1
+        },
+        "honors": 55,
+        "records": 55,
+        "recordsWhy": "Grammy de Album, Gravacao e Cancao do Ano; 2 Oscars",
+        "influence": 65,
+        "influenceWhy": "Referencia do pop minimalista da Geracao Z.",
+        "careerYears": 11,
+        "missingCriteria": [
+          "sales"
+        ]
+      },
+      "rationale": "Premios altos para a idade (Grammys e 2 Oscars), mas catalogo ainda curto.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Billie_Eilish"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 59.4,
+      "tierSuggestion": "RARE",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "dua-lipa",
+      "name": "Dua Lipa",
+      "niche": "music_pop",
+      "inputs": {
+        "sales": null,
+        "awardsGrammy": {
+          "grammyWins": 3,
+          "albumOfYear": 0
+        },
+        "honors": 35,
+        "records": 55,
+        "recordsWhy": "Future Nostalgia entre os albuns mais ouvidos; hits bilionarios no Spotify",
+        "influence": 55,
+        "influenceWhy": "Liderou a volta do disco-pop nos anos 2020.",
+        "careerYears": 11,
+        "missingCriteria": [
+          "sales"
+        ]
+      },
+      "rationale": "Hits globais, Grammys moderados e carreira jovem.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Dua_Lipa"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 52.6,
+      "tierSuggestion": "RARE",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "bob-marley",
+      "name": "Bob Marley",
+      "niche": "music_other",
+      "inputs": {
+        "sales": 75,
+        "awardsGrammy": {
+          "grammyWins": 0,
+          "albumOfYear": 0
+        },
+        "honors": 85,
+        "records": 55,
+        "recordsWhy": "Exodus (Time: album do seculo); Legend entre os mais vendidos",
+        "influence": 97,
+        "influenceWhy": "Difundiu o reggae e a cultura jamaicana no mundo.",
+        "careerYears": 19
+      },
+      "rationale": "Maior simbolo do reggae, influencia cultural quase unica; nicho sugerido music_other (reggae).",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Bob_Marley"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 71.5,
+      "tierSuggestion": "EPIC",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "daft-punk",
+      "name": "Daft Punk",
+      "niche": "music_other",
+      "inputs": {
+        "sales": null,
+        "awardsGrammy": {
+          "grammyWins": 6,
+          "albumOfYear": 1
+        },
+        "honors": 40,
+        "records": 55,
+        "recordsWhy": "Random Access Memories: Album e Gravacao do Ano 2014",
+        "influence": 85,
+        "influenceWhy": "Levou a musica eletronica ao mainstream.",
+        "careerYears": 28,
+        "missingCriteria": [
+          "sales"
+        ]
+      },
+      "rationale": "Dupla que levou a eletronica ao mainstream; nicho sugerido music_other (eletronica).",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Daft_Punk"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 69.2,
+      "tierSuggestion": "RARE",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "freddie-mercury",
+      "name": "Freddie Mercury",
+      "niche": "music_rock",
+      "inputs": {
+        "sales": 250,
+        "awardsGrammy": {
+          "grammyWins": 0,
+          "albumOfYear": 0
+        },
+        "honors": 90,
+        "records": 82,
+        "recordsWhy": "Bohemian Rhapsody entre as maiores do seculo; Live Aid 1985; Queen ~250M",
+        "influence": 92,
+        "influenceWhy": "Voz e palco de referencia do rock.",
+        "careerYears": 21
+      },
+      "rationale": "Voz mais influente do rock; Queen com honrarias (Grammy Lifetime, Rock Hall) e 21 anos de carreira.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Freddie_Mercury",
+        "https://en.wikipedia.org/wiki/Queen_(band)"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 84.6,
+      "tierSuggestion": "EPIC",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "kurt-cobain",
+      "name": "Kurt Cobain",
+      "niche": "music_rock",
+      "inputs": {
+        "sales": 75,
+        "awardsGrammy": {
+          "grammyWins": 1,
+          "albumOfYear": 0
+        },
+        "honors": 70,
+        "records": 60,
+        "recordsWhy": "Nevermind #1 e 30M+ de copias",
+        "influence": 85,
+        "influenceWhy": "Encerrou o hair metal e tornou o grunge mainstream.",
+        "careerYears": 7
+      },
+      "rationale": "Voz da geracao grunge em carreira curta (~7 anos); alta influencia.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Kurt_Cobain",
+        "https://en.wikipedia.org/wiki/Nirvana_(band)"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 64.2,
+      "tierSuggestion": "RARE",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "eminem",
+      "name": "Eminem",
+      "niche": "music_hiphop",
+      "inputs": {
+        "sales": 220,
+        "awardsGrammy": {
+          "grammyWins": 15,
+          "albumOfYear": 0
+        },
+        "honors": 55,
+        "records": 90,
+        "recordsWhy": "11 de 11 albuns #1 na Billboard 200; 2 albuns diamante; Oscar",
+        "influence": 90,
+        "influenceWhy": "Referencia de tecnica e do rap no mainstream.",
+        "careerYears": 30
+      },
+      "rationale": "Mais certificacoes diamante do rap, 15 Grammys e 11 #1.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Eminem"
+      ],
+      "confidence": "high",
+      "prestigeProposal": 82.6,
+      "tierSuggestion": "EPIC",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "snoop-dogg",
+      "name": "Snoop Dogg",
+      "niche": "music_hiphop",
+      "inputs": {
+        "sales": null,
+        "awardsGrammy": {
+          "grammyWins": 0,
+          "albumOfYear": 0
+        },
+        "honors": 35,
+        "records": 55,
+        "recordsWhy": "Doggystyle #1 de estreia em 1993",
+        "influence": 80,
+        "influenceWhy": "Rosto do G-funk e da West Coast; 30 anos relevante.",
+        "careerYears": 34,
+        "missingCriteria": [
+          "sales"
+        ]
+      },
+      "rationale": "Icone do hip-hop da Costa Oeste, longevidade alta e premios competitivos baixos.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Snoop_Dogg"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 68.2,
+      "tierSuggestion": "RARE",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "travis-scott",
+      "name": "Travis Scott",
+      "niche": "music_hiphop",
+      "inputs": {
+        "sales": null,
+        "awardsGrammy": {
+          "grammyWins": 0,
+          "albumOfYear": 0
+        },
+        "honors": 15,
+        "records": 70,
+        "recordsWhy": "Utopia e Astroworld #1; shows de grande publico (Fortnite 2020)",
+        "influence": 55,
+        "influenceWhy": "Definiu o som trap psicodelico dos 2010s.",
+        "careerYears": 14,
+        "missingCriteria": [
+          "sales"
+        ]
+      },
+      "rationale": "Estrela atual com alcance de streaming, sem premios competitivos.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Travis_Scott"
+      ],
+      "confidence": "low",
+      "prestigeProposal": 53.8,
+      "tierSuggestion": "RARE",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "post-malone",
+      "name": "Post Malone",
+      "niche": "music_hiphop",
+      "inputs": {
+        "sales": null,
+        "awardsGrammy": {
+          "grammyWins": 0,
+          "albumOfYear": 0
+        },
+        "honors": 20,
+        "records": 80,
+        "recordsWhy": "Circles e Sunflower entre as mais ouvidas; Hot 100 #1",
+        "influence": 50,
+        "influenceWhy": "Misturou rap, rock e country no mainstream.",
+        "careerYears": 11,
+        "missingCriteria": [
+          "sales"
+        ]
+      },
+      "rationale": "Hits massivos, carreira curta e sem premios competitivos.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Post_Malone"
+      ],
+      "confidence": "low",
+      "prestigeProposal": 54,
+      "tierSuggestion": "RARE",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "matue",
+      "name": "Matuê",
+      "niche": "music_hiphop",
+      "inputs": {
+        "sales": null,
+        "awardsGrammy": {
+          "grammyWins": 0,
+          "albumOfYear": 0
+        },
+        "honors": 10,
+        "records": 55,
+        "recordsWhy": "Recordes nacionais de streaming com 333 e Maquina do Tempo",
+        "influence": 40,
+        "influenceWhy": "Popularizou o trap brasileiro moderno.",
+        "careerYears": 10,
+        "missingCriteria": [
+          "sales"
+        ]
+      },
+      "rationale": "Principal nome do trap brasileiro por streaming; alcance nacional.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Matu%C3%AA"
+      ],
+      "confidence": "low",
+      "prestigeProposal": 42.4,
+      "tierSuggestion": "COMMON",
+      "seedFile": "src/scripts/seedPopCultureAndSports.ts",
+      "reviewed": false
+    },
+    {
+      "slug": "jungkook-era-golden",
+      "name": "Jungkook",
+      "niche": "idol",
+      "inputs": {
+        "groupAchievements": 98,
+        "soloAchievements": 88,
+        "intlReach": 100,
+        "awards": 90,
+        "careerYears": 13,
+        "notes": "BTS: 7 #1 Hot 100, 5 #1 Billboard 200, 40M+ albuns na Coreia; solo Seven (2023)"
+      },
+      "rationale": "Membro do BTS (maior act do nicho) com forte carreira solo.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/BTS",
+        "https://en.wikipedia.org/wiki/Jungkook"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 94.7,
+      "tierSuggestion": "LEGENDARY",
+      "seedFile": "src/scripts/seedIdolsAndDoramas.ts",
+      "catalogId": 2946,
+      "reviewed": false
+    },
+    {
+      "slug": "v-kim-taehyung-layover",
+      "name": "V (Kim Taehyung)",
+      "niche": "idol",
+      "inputs": {
+        "groupAchievements": 98,
+        "soloAchievements": 72,
+        "intlReach": 100,
+        "awards": 90,
+        "careerYears": 13,
+        "notes": "BTS; Layover (2023)"
+      },
+      "rationale": "Membro do BTS; solo bem-sucedido, abaixo de Jungkook.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/BTS",
+        "https://en.wikipedia.org/wiki/V_(singer)"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 91.8,
+      "tierSuggestion": "LEGENDARY",
+      "seedFile": "src/scripts/seedIdolsAndDoramas.ts",
+      "catalogId": 2947,
+      "reviewed": false
+    },
+    {
+      "slug": "lalisa-manoban-lisa-rockstar",
+      "name": "Lisa",
+      "niche": "idol",
+      "inputs": {
+        "groupAchievements": 90,
+        "soloAchievements": 68,
+        "intlReach": 92,
+        "awards": 78,
+        "careerYears": 10,
+        "notes": "BLACKPINK (headline do Coachella 2023); Lalisa (2021), Rockstar"
+      },
+      "rationale": "BLACKPINK com solo expressivo (Lalisa, Rockstar).",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Blackpink",
+        "https://en.wikipedia.org/wiki/Lisa_(rapper)"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 83.6,
+      "tierSuggestion": "EPIC",
+      "seedFile": "src/scripts/seedIdolsAndDoramas.ts",
+      "catalogId": 2948,
+      "reviewed": false
+    },
+    {
+      "slug": "jennie-kim-era-ruby",
+      "name": "Jennie",
+      "niche": "idol",
+      "inputs": {
+        "groupAchievements": 90,
+        "soloAchievements": 66,
+        "intlReach": 92,
+        "awards": 78,
+        "careerYears": 10,
+        "notes": "BLACKPINK; Ruby (2025)"
+      },
+      "rationale": "BLACKPINK com solo (Ruby).",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Blackpink",
+        "https://en.wikipedia.org/wiki/Jennie_(singer)"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 83.2,
+      "tierSuggestion": "EPIC",
+      "seedFile": "src/scripts/seedIdolsAndDoramas.ts",
+      "catalogId": 2949,
+      "reviewed": false
+    },
+    {
+      "slug": "felix-lee-stray-kids",
+      "name": "Felix",
+      "niche": "idol",
+      "inputs": {
+        "groupAchievements": 82,
+        "soloAchievements": 28,
+        "intlReach": 85,
+        "awards": 75,
+        "careerYears": 8,
+        "notes": "Stray Kids: 9 #1 Billboard 200, 40M+ albuns, 6 daesang; embaixador Louis Vuitton"
+      },
+      "rationale": "Stray Kids com recordes de #1 nos EUA; atuacao individual menor.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Stray_Kids",
+        "https://en.wikipedia.org/wiki/Felix_(singer)"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 70.7,
+      "tierSuggestion": "EPIC",
+      "seedFile": "src/scripts/seedIdolsAndDoramas.ts",
+      "catalogId": 2950,
+      "reviewed": false
+    },
+    {
+      "slug": "karina-aespa-supernova",
+      "name": "Karina",
+      "niche": "idol",
+      "inputs": {
+        "groupAchievements": 70,
+        "soloAchievements": 22,
+        "intlReach": 75,
+        "awards": 65,
+        "careerYears": 6,
+        "notes": "aespa: albuns 1M+, MAMA Song of the Year 2024, Golden Disc Artist of the Year"
+      },
+      "rationale": "Lider de aespa; nivel intermediario do nicho em alcance global.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Aespa",
+        "https://en.wikipedia.org/wiki/Karina_(singer)"
+      ],
+      "confidence": "medium",
+      "prestigeProposal": 61.2,
+      "tierSuggestion": "RARE",
+      "seedFile": "src/scripts/seedIdolsAndDoramas.ts",
+      "catalogId": 2951,
+      "reviewed": false
+    },
+    {
+      "slug": "ado-uta-rainha-do-j-pop",
+      "name": "Ado",
+      "niche": "idol",
+      "inputs": {
+        "groupAchievements": null,
+        "soloAchievements": 82,
+        "intlReach": 78,
+        "awards": 60,
+        "careerYears": 6,
+        "soloist": true,
+        "notes": "3 #1 no Japan Hot 100; turne 2025 com 500k+ de publico; voz de Uta (One Piece Film Red); ~80% dos streams vem do exterior"
+      },
+      "rationale": "Solista com recordes no Japao e alcance mundial; o card mistura a artista com a personagem Uta.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Ado_(singer)"
+      ],
+      "confidence": "high",
+      "prestigeProposal": 72.4,
+      "tierSuggestion": "EPIC",
+      "seedFile": "src/scripts/seedIdolsAndDoramas.ts",
+      "catalogId": 2952,
+      "reviewed": false
+    }
+  ],
+  "orderingByNiche": {
+    "sport_football": [
+      "lionel-messi",
+      "pele",
+      "cristiano-ronaldo",
+      "marta-vieira",
+      "ronaldo-fenomeno",
+      "ronaldinho-gaucho",
+      "kylian-mbappe",
+      "neymar-jr",
+      "erling-haaland",
+      "vini-jr"
+    ],
+    "sport_basketball": [
+      "michael-jordan",
+      "lebron-james",
+      "kobe-bryant",
+      "stephen-curry",
+      "shaquille-oneal",
+      "giannis-antetokounmpo",
+      "allen-iverson",
+      "luka-doncic"
+    ],
+    "sport_mma": [
+      "jon-jones",
+      "anderson-silva",
+      "amanda-nunes",
+      "khabib-nurmagomedov",
+      "islam-makhachev",
+      "alex-pereira",
+      "israel-adesanya",
+      "conor-mcgregor",
+      "ilia-topuria",
+      "charles-do-bronx"
+    ],
+    "music_pop": [
+      "michael-jackson",
+      "beyonce",
+      "taylor-swift",
+      "rihanna",
+      "the-weeknd",
+      "billie-eilish",
+      "dua-lipa"
+    ],
+    "idol": [
+      "jungkook-era-golden",
+      "v-kim-taehyung-layover",
+      "lalisa-manoban-lisa-rockstar",
+      "jennie-kim-era-ruby",
+      "ado-uta-rainha-do-j-pop",
+      "felix-lee-stray-kids",
+      "karina-aespa-supernova"
+    ],
+    "music_rock": [
+      "freddie-mercury",
+      "kurt-cobain"
+    ],
+    "music_hiphop": [
+      "eminem",
+      "snoop-dogg",
+      "post-malone",
+      "travis-scott",
+      "matue"
+    ],
+    "music_other": [
+      "bob-marley",
+      "daft-punk"
+    ]
+  },
+  "duplicates": [
+    {
+      "slug": "the-weeknd-starboy",
+      "duplicateOf": "the-weeknd",
+      "note": "Mesma pessoa; usar o mesmo prestigio."
+    }
+  ]
+}

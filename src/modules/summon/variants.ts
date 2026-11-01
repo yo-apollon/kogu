@@ -67,9 +67,14 @@ export function pactAetherValue(
 /** Recompensa do orbe de Eter (fluxo antigo: 20% do valor, minimo 25). */
 export const ORB_MIN_REWARD = 25;
 export const ORB_REWARD_RATIO = 0.2;
+/** Teto do premio: com cartas de 25 mil+ de Eter, 20% sem limite viraria inflacao. */
+export const ORB_MAX_REWARD = 2_000;
 
 export function orbReward(aetherValue: number): number {
-  return Math.max(ORB_MIN_REWARD, Math.round(aetherValue * ORB_REWARD_RATIO));
+  return Math.min(
+    ORB_MAX_REWARD,
+    Math.max(ORB_MIN_REWARD, Math.round(aetherValue * ORB_REWARD_RATIO))
+  );
 }
 
 /** PRNG mulberry32: deterministico por seed, para testes e rolls reproduziveis. */

@@ -8,6 +8,7 @@ import { imagesVerify } from "./imagesVerify.js";
 import { jikanEnrich, jikanSeasons } from "./jikanEnrich.js";
 import { maintenancePrune } from "./maintenancePrune.js";
 import { catalogRerank } from "./rerank.js";
+import { siteExport } from "./siteExport.js";
 import { releaseWindowsExpire } from "./releaseWindowsExpire.js";
 import { tmdbTrending } from "./tmdbTrending.js";
 
@@ -15,7 +16,7 @@ import { tmdbTrending } from "./tmdbTrending.js";
  * Tabela de jobs e agenda (UTC):
  *  anilist.trending 6h | anilist.topCharacters diario 02:30 | jikan.enrich diario 05:00 |
  *  jikan.seasons 12h | igdb.releases 12h | igdb.popular semanal (dom 04:00) | tmdb.trending diario 03:00 |
- *  catalog.rerank diario 04:00 | images.verify 1h | releaseWindows.expire 1h | maintenance.prune diario 04:30.
+ *  catalog.rerank diario 04:00 | site.export diario 04:20 | images.verify 1h | releaseWindows.expire 1h | maintenance.prune diario 04:30.
  * Cada fila (queue) tem um worker com concorrencia 1, entao jobs da mesma fonte nunca se sobrepoem.
  */
 export const JOBS: readonly JobDef[] = [
@@ -27,6 +28,7 @@ export const JOBS: readonly JobDef[] = [
   igdbPopular,
   tmdbTrending,
   catalogRerank,
+  siteExport,
   imagesVerify,
   releaseWindowsExpire,
   maintenancePrune,

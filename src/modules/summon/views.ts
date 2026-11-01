@@ -146,6 +146,7 @@ export function buildOfferView(
     claimRank: entity.claimRank ?? undefined,
     likeRank: entity.likeRank ?? undefined,
     tier: entity.tier,
+    edition: entity.edition ?? null,
     variant,
   };
   const pact = entity.pact;
@@ -167,6 +168,7 @@ export function buildOfferView(
     name: entity.name,
     franchise: view.franchise,
     tier: entity.tier,
+    edition: entity.edition,
     variant,
     ownerEmbedColor: owner.embedColor,
   });

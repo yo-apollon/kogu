@@ -11,3 +11,5 @@ export { registerSkin, getSkin, listSkins, selectSkin, FALLBACK_SKIN_ID } from "
 export { mudaeSkin } from "./skins/mudae.js";
 export { resolveTheme } from "./theme/tokens.js";
 export type { CardSkin, CardLayer, CardRenderContext, ThemeTokens, SkinMatchContext, UniverseKey } from "./skins/types.js";
+export { drawEmblem, pickEmblem, EMBLEM_KEYS } from "./emblems/index.js";
+export type { EmblemKey } from "./emblems/index.js";

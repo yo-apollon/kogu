@@ -1,0 +1,820 @@
+{
+  "niche": "creator_comedy",
+  "collectedAt": "2026-10-31",
+  "creators": [
+    {
+      "slug": "whindersson-nunes",
+      "name": "Whindersson Nunes",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Whindersson Nunes",
+          "url": null,
+          "followers": 44600000,
+          "asOf": "2026-04-22"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Humorista e criador brasileiro.",
+      "sources": [
+        "https://www.portaltela.com/entretenimento/2026/04/22/conheca-os-20-canais-do-youtube-com-mais-inscritos-no-brasil/"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "enaldinho",
+      "name": "Enaldinho",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Enaldinho",
+          "url": null,
+          "followers": 45900000,
+          "asOf": "2026-04-22"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador brasileiro de conteúdo de humor e entretenimento.",
+      "sources": [
+        "https://www.portaltela.com/entretenimento/2026/04/22/conheca-os-20-canais-do-youtube-com-mais-inscritos-no-brasil/"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "renato-garcia",
+      "name": "Renato Garcia",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Renato Garcia",
+          "url": null,
+          "followers": 31200000,
+          "asOf": "2026-04-22"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador brasileiro de conteúdo de humor.",
+      "sources": [
+        "https://www.portaltela.com/entretenimento/2026/04/22/conheca-os-20-canais-do-youtube-com-mais-inscritos-no-brasil/"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "natan-por-ai",
+      "name": "Natan por Aí",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Natan por Aí",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador brasileiro de conteúdo de humor; contagens divergentes entre fontes.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "carlinhos-maia",
+      "name": "Carlinhos Maia",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Carlinhos Maia",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Humorista e criador brasileiro de conteúdo.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "thiago-ventura",
+      "name": "Thiago Ventura",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Thiago Ventura",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Humorista brasileiro de stand-up.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "fabio-porchat",
+      "name": "Fábio Porchat",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Fábio Porchat",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Humorista, ator e apresentador brasileiro, cofundador do Porta dos Fundos.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "porta-dos-fundos",
+      "name": "Porta dos Fundos",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Porta dos Fundos",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": 2012,
+      "milestones": [],
+      "genderHint": "UNKNOWN",
+      "desc": "Canal brasileiro de esquetes de humor.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "tirullipa",
+      "name": "Tirullipa",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Tirullipa",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Humorista brasileiro de internet.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "kefera",
+      "name": "Kéfera",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Kéfera",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": 2010,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora brasileira, canal 5inco Minutos.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "marcelo-adnet",
+      "name": "Marcelo Adnet",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Marcelo Adnet",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Humorista e apresentador brasileiro.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "rafael-portugal",
+      "name": "Rafael Portugal",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Rafael Portugal",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Humorista brasileiro.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "tata-werneck",
+      "name": "Tatá Werneck",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Tatá Werneck",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Humorista e apresentadora brasileira.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "leandro-hassum",
+      "name": "Leandro Hassum",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Leandro Hassum",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Humorista e ator brasileiro.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "afonso-padilha",
+      "name": "Afonso Padilha",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Afonso Padilha",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Humorista brasileiro de stand-up.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "gustavo-mendes",
+      "name": "Gustavo Mendes",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Gustavo Mendes",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Humorista e imitador brasileiro.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "murilo-couto",
+      "name": "Murilo Couto",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Murilo Couto",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Humorista brasileiro.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "khaby-lame",
+      "name": "Khaby Lame",
+      "country": "WORLD",
+      "originCountry": "IT",
+      "platforms": [
+        {
+          "platform": "tiktok",
+          "handle": "Khaby Lame",
+          "url": null,
+          "followers": 163000000,
+          "asOf": "2026-10-23"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador ítalo-senegalês de vídeos de humor sem fala no TikTok.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_TikTok_accounts"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "kevin-hart",
+      "name": "Kevin Hart",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Kevin Hart",
+          "url": null,
+          "followers": 172000000,
+          "asOf": "2026-09-30"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Humorista e ator americano.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_Instagram_accounts"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "dude-perfect",
+      "name": "Dude Perfect",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Dude Perfect",
+          "url": null,
+          "followers": 62800000,
+          "asOf": "2026-06-01"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "UNKNOWN",
+      "desc": "Grupo americano de entretenimento esportivo e humor.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "ishowspeed",
+      "name": "IShowSpeed",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "IShowSpeed",
+          "url": null,
+          "followers": 62100000,
+          "asOf": "2026-06-01"
+        },
+        {
+          "platform": "tiktok",
+          "handle": "IShowSpeed",
+          "url": null,
+          "followers": 54300000,
+          "asOf": "2026-10-23"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de entretenimento.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channels",
+        "https://en.wikipedia.org/wiki/List_of_most-followed_TikTok_accounts"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "zach-king",
+      "name": "Zach King",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "tiktok",
+          "handle": "Zach King",
+          "url": null,
+          "followers": 86800000,
+          "asOf": "2026-10-23"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de vídeos de ilusionismo e humor.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_TikTok_accounts"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "michael-le",
+      "name": "Michael Le",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "tiktok",
+          "handle": "Michael Le",
+          "url": null,
+          "followers": 49700000,
+          "asOf": "2026-10-23"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de vídeos de humor.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_TikTok_accounts"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "kallmekris",
+      "name": "KallMeKris",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "tiktok",
+          "handle": "KallMeKris",
+          "url": null,
+          "followers": 50300000,
+          "asOf": "2026-10-23"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora americana de vídeos de humor.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_TikTok_accounts"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "brent-rivera",
+      "name": "Brent Rivera",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "tiktok",
+          "handle": "Brent Rivera",
+          "url": null,
+          "followers": 50900000,
+          "asOf": "2026-10-23"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de vídeos de humor.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-followed_TikTok_accounts"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "ryan-higa",
+      "name": "Ryan Higa",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Ryan Higa",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": 2006,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de humor, canal nigahiga.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "lilly-singh",
+      "name": "Lilly Singh",
+      "country": "WORLD",
+      "originCountry": "CA",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Lilly Singh",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora e apresentadora canadense.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "ian-hecox",
+      "name": "Ian Hecox",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Ian Hecox",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": 2005,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Cofundador do canal Smosh.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "anthony-padilla",
+      "name": "Anthony Padilla",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Anthony Padilla",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": 2005,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Cofundador do canal Smosh.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "jenna-marbles",
+      "name": "Jenna Marbles",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Jenna Marbles",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": 2010,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora americana de humor, afastada da internet.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "roman-atwood",
+      "name": "Roman Atwood",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Roman Atwood",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de vídeos de pegadinhas.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "uncle-roger",
+      "name": "Uncle Roger",
+      "country": "WORLD",
+      "originCountry": "MY",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Uncle Roger",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Nigel Ng, humorista malaio-britânico.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "jacksfilms",
+      "name": "Jacksfilms",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Jacksfilms",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de humor.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    }
+  ],
+  "excluded": [
+    {
+      "name": "Danilo Gentili",
+      "reason": "comentarista político frequente; em dúvida, fora"
+    },
+    {
+      "name": "Rafinha Bastos",
+      "reason": "em dúvida, fora"
+    },
+    {
+      "name": "Júlio Cocielo",
+      "reason": "controvérsia pública; em dúvida, fora"
+    },
+    {
+      "name": "Paulo Gustavo",
+      "reason": "falecido"
+    },
+    {
+      "name": "Dave Chappelle",
+      "reason": "controvérsias públicas; em dúvida, fora"
+    },
+    {
+      "name": "Felipe Neto",
+      "reason": "ativismo político declarado; em dúvida, fora"
+    },
+    {
+      "name": "Monark (Bruno Aiub)",
+      "reason": "controvérsias públicas relevantes; em dúvida, fora"
+    },
+    {
+      "name": "Pablo Marçal",
+      "reason": "candidato a cargo público"
+    },
+    {
+      "name": "Maria Clara & JP",
+      "reason": "menor de idade"
+    },
+    {
+      "name": "Kanye West",
+      "reason": "controvérsias graves de discurso de ódio; em dúvida, fora"
+    },
+    {
+      "name": "Andrew Tate",
+      "reason": "processos criminais graves"
+    },
+    {
+      "name": "Logan Paul / Jake Paul",
+      "reason": "controvérsias públicas; em dúvida, fora"
+    },
+    {
+      "name": "James Charles / David Dobrik",
+      "reason": "acusações públicas graves; em dúvida, fora"
+    },
+    {
+      "name": "Technoblade / Marília Mendonça / Mac Miller",
+      "reason": "falecidos; fora por cautela (decisão do dono)"
+    }
+  ]
+}

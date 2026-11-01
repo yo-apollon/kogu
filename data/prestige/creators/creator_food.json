@@ -1,0 +1,726 @@
+{
+  "niche": "creator_food",
+  "collectedAt": "2026-10-31",
+  "creators": [
+    {
+      "slug": "rita-lobo-panelinha",
+      "name": "Rita Lobo (Panelinha)",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Rita Lobo (Panelinha)",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Autora e criadora brasileira de conteúdo de culinária.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "paola-carosella",
+      "name": "Paola Carosella",
+      "country": "BR",
+      "originCountry": "AR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Paola Carosella",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Chef argentina radicada no Brasil, jurada do MasterChef.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "erick-jacquin",
+      "name": "Érick Jacquin",
+      "country": "BR",
+      "originCountry": "FR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Érick Jacquin",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Chef francês radicado no Brasil, jurado do MasterChef.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "henrique-fogaca",
+      "name": "Henrique Fogaça",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Henrique Fogaça",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Chef brasileiro, jurado do MasterChef.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "alex-atala",
+      "name": "Alex Atala",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Alex Atala",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Chef brasileiro do restaurante D.O.M.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "bela-gil",
+      "name": "Bela Gil",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Bela Gil",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Chef e apresentadora brasileira.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "ana-maria-braga",
+      "name": "Ana Maria Braga",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Ana Maria Braga",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Apresentadora brasileira de culinária e TV.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "ana-maria-brogui",
+      "name": "Ana Maria Brogui",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Ana Maria Brogui",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Pioneira da culinária no YouTube brasileiro.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "otto-vitteleschi",
+      "name": "Otto Vitteleschi",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Otto Vitteleschi",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador brasileiro de conteúdo de gastronomia.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "culinaria-em-casa",
+      "name": "Culinária em Casa",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Culinária em Casa",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "UNKNOWN",
+      "desc": "Canal brasileiro de receitas.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "rodrigo-hilbert",
+      "name": "Rodrigo Hilbert",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Rodrigo Hilbert",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Apresentador e criador brasileiro de conteúdo de culinária e casa.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "edu-guedes",
+      "name": "Edu Guedes",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Edu Guedes",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Chef e apresentador brasileiro.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "gordon-ramsay",
+      "name": "Gordon Ramsay",
+      "country": "WORLD",
+      "originCountry": "GB",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Gordon Ramsay",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Chef e apresentador britânico.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "jamie-oliver",
+      "name": "Jamie Oliver",
+      "country": "WORLD",
+      "originCountry": "GB",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Jamie Oliver",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Chef e autor britânico.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "andrew-rea-binging-with-babish",
+      "name": "Andrew Rea (Binging with Babish)",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Andrew Rea (Binging with Babish)",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de culinária.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "joshua-weissman",
+      "name": "Joshua Weissman",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Joshua Weissman",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de culinária.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "nick-digiovanni",
+      "name": "Nick DiGiovanni",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Nick DiGiovanni",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de culinária.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "maangchi",
+      "name": "Maangchi",
+      "country": "WORLD",
+      "originCountry": "KR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Maangchi",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": 2007,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora de culinária coreana.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "adam-ragusea",
+      "name": "Adam Ragusea",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Adam Ragusea",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de culinária.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "guga-foods",
+      "name": "Guga Foods",
+      "country": "WORLD",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Guga Foods",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Gustavo Tosta, criador brasileiro radicado nos EUA, de culinária e churrasco.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "mark-wiens",
+      "name": "Mark Wiens",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Mark Wiens",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de comida e viagens.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "sam-the-cooking-guy",
+      "name": "Sam the Cooking Guy",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Sam the Cooking Guy",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de culinária.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "mike-greenfield-pro-home-cooks",
+      "name": "Mike Greenfield (Pro Home Cooks)",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Mike Greenfield (Pro Home Cooks)",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de culinária.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "ethan-chlebowski",
+      "name": "Ethan Chlebowski",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Ethan Chlebowski",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de culinária.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "alton-brown",
+      "name": "Alton Brown",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Alton Brown",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Apresentador e autor americano de culinária.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "rosanna-pansino",
+      "name": "Rosanna Pansino",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Rosanna Pansino",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora americana de culinária.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "laura-vitale",
+      "name": "Laura Vitale",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Laura Vitale",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora ítalo-americana de culinária.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "nisha-madhulika",
+      "name": "Nisha Madhulika",
+      "country": "WORLD",
+      "originCountry": "IN",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Nisha Madhulika",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora indiana de culinária.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "ranveer-brar",
+      "name": "Ranveer Brar",
+      "country": "WORLD",
+      "originCountry": "IN",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Ranveer Brar",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Chef e criador indiano.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "kenji-lopez-alt",
+      "name": "Kenji López-Alt",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Kenji López-Alt",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Chef e autor americano.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "emily-mariko",
+      "name": "Emily Mariko",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "tiktok",
+          "handle": "Emily Mariko",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora americana de culinária e lifestyle.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    }
+  ],
+  "excluded": [
+    {
+      "name": "Felipe Neto",
+      "reason": "ativismo político declarado; em dúvida, fora"
+    },
+    {
+      "name": "Monark (Bruno Aiub)",
+      "reason": "controvérsias públicas relevantes; em dúvida, fora"
+    },
+    {
+      "name": "Pablo Marçal",
+      "reason": "candidato a cargo público"
+    },
+    {
+      "name": "Maria Clara & JP",
+      "reason": "menor de idade"
+    },
+    {
+      "name": "Kanye West",
+      "reason": "controvérsias graves de discurso de ódio; em dúvida, fora"
+    },
+    {
+      "name": "Andrew Tate",
+      "reason": "processos criminais graves"
+    },
+    {
+      "name": "Logan Paul / Jake Paul",
+      "reason": "controvérsias públicas; em dúvida, fora"
+    },
+    {
+      "name": "James Charles / David Dobrik",
+      "reason": "acusações públicas graves; em dúvida, fora"
+    },
+    {
+      "name": "Technoblade / Marília Mendonça / Mac Miller",
+      "reason": "falecidos; fora por cautela (decisão do dono)"
+    }
+  ]
+}

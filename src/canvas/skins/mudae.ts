@@ -4,6 +4,7 @@ import { scoreMatch } from "../engine/draw/match.js";
 import { drawPortrait } from "../engine/draw/portrait.js";
 import { roundRectPath, type Rect } from "../engine/draw/shapes.js";
 import { COLORS, lighten, rgba } from "../theme/tokens.js";
+import { TIER_FRAME_COLOR, TIER_STYLE } from "../theme/tiers.js";
 import type { CardLayer, CardRenderContext, CardSkin } from "./types.js";
 
 /**
@@ -81,8 +82,14 @@ const frame: CardLayer = {
         g.shadowColor = rgba(c.theme.glow, 0.9);
         g.shadowBlur = 10;
         break;
-      default:
-        g.strokeStyle = COLORS.white;
+      default: {
+        const tierColor = TIER_FRAME_COLOR[c.tier];
+        g.strokeStyle = tierColor ?? COLORS.white;
+        if (tierColor) {
+          g.shadowColor = rgba(tierColor, 0.85);
+          g.shadowBlur = Math.round(TIER_STYLE[c.tier].glowBonus * 0.7);
+        }
+      }
     }
     g.lineWidth = EDGE;
     roundRectPath(g, r, RADIUS - EDGE / 2);

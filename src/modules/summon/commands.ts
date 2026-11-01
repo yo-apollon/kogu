@@ -404,6 +404,10 @@ export async function runSummon(
             ownerName: view.ownerName,
             locale,
             imageUrl,
+            entityType: entity.type,
+            slug: entity.slug,
+            description: entity.description ?? undefined,
+            trustImage: Boolean(extras?.customImage),
             preferredSkinId: skinId,
           }),
           deps.renderTimeoutMs ?? RENDER_TIMEOUT_MS

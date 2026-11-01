@@ -133,7 +133,7 @@ describe("migrations do zero", () => {
     await runMigrations(testUrl);
     await runMigrations(testUrl); // segunda execucao nao faz nada
     const [{ n }] = await sql`SELECT count(*)::int AS n FROM drizzle.__drizzle_migrations`;
-    expect(n).toBe(4);
+    expect(n).toBe(5);
   });
 
   it("cria extensoes pg_trgm e unaccent", async () => {
@@ -164,6 +164,7 @@ describe("migrations do zero", () => {
     expect(find("guild_members", "guilds")?.del).toBe("c");
     expect(find("roll_offers", "entities")?.del).toBe("r");
     expect(find("entities", "franchises")?.del).toBe("n"); // set null
+    expect(find("entities", "entities", "entities_parent_id_entities_id_fk")?.del).toBe("n"); // set null
     expect(find("entity_images", "entities")?.del).toBe("c");
     expect(find("disabled_series", "series")?.del).toBe("c");
     expect(find("disabled_series", "franchises")?.del).toBe("c");
@@ -354,6 +355,31 @@ describe("regras de integridade", () => {
       INSERT INTO entity_images (entity_id, url, is_primary, status)
       VALUES (${broken}, 'https://x/b.png', true, 'BROKEN')`;
     expect(await pgError(bad)).toBe("23514");
+  });
+
+  it("entities: colunas e indices de edicao existem", async () => {
+    const cols = await sql`
+      SELECT column_name, is_nullable FROM information_schema.columns
+      WHERE table_name = 'entities' AND column_name IN ('parent_id', 'edition')`;
+    expect(cols.map((c) => c.column_name).sort()).toEqual(["edition", "parent_id"]);
+    expect(cols.every((c) => c.is_nullable === "YES")).toBe(true);
+    const idx = await sql`
+      SELECT indexname, indexdef FROM pg_indexes
+      WHERE schemaname = 'public' AND indexname IN ('idx_entities_parent', 'idx_entities_edition')`;
+    expect(idx.length).toBe(2);
+    expect(idx.find((i) => i.indexname === "idx_entities_edition")?.indexdef).toContain("WHERE");
+  });
+
+  it("entities: CHECK de edicao e FK parent_id (set null ao apagar a ancora)", async () => {
+    const anchor = await seedEntity("Edicao Ancora");
+    const child = await seedEntity("Edicao Filha");
+    await sql`UPDATE entities SET edition = 'BASIC' WHERE id = ${anchor}`;
+    await sql`UPDATE entities SET edition = 'EPIC', parent_id = ${anchor} WHERE id = ${child}`;
+    expect(await pgError(sql`UPDATE entities SET edition = 'RARE' WHERE id = ${child}`)).toBe("23514");
+    expect(await pgError(sql`UPDATE entities SET parent_id = 999999999 WHERE id = ${child}`)).toBe("23503");
+    await sql`DELETE FROM entities WHERE id = ${anchor}`;
+    const [row] = await sql`SELECT parent_id FROM entities WHERE id = ${child}`;
+    expect(row.parent_id).toBeNull();
   });
 
   it("entities: popularity_rank e unico, mas troca de ranks na mesma transacao funciona", async () => {

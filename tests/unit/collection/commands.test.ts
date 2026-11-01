@@ -34,6 +34,7 @@ const svc = vi.hoisted(() => ({
   setPactText: vi.fn(),
   setPactCustomImage: vi.fn(),
   dissolveOwnPact: vi.fn(),
+  resolveEditionForInfo: vi.fn(),
 }));
 vi.mock("../../../src/modules/collection/service.js", async (importOriginal) => ({
   ...(await importOriginal<typeof import("../../../src/modules/collection/service.js")>()),
@@ -173,6 +174,8 @@ const entityInfo = (extra: Partial<EntityInfo> = {}): EntityInfo => ({
 beforeEach(() => {
   vi.resetAllMocks();
   kvHolder.kv = new MemoryStore();
+  // Sem edicoes por padrao: o $im usa a entidade encontrada.
+  svc.resolveEditionForInfo.mockImplementation(async (_g: string, _u: string, id: number) => ({ entityId: id, editions: [] }));
   safeFetchMock.safeFetchImage.mockResolvedValue({ buffer: Buffer.from("png"), contentType: "image/png" });
   canvasMock.renderCardInPool.mockResolvedValue(Buffer.from("webp"));
   confirmMock.confirm.mockImplementation(async (o: any) => {
@@ -472,6 +475,35 @@ describe("$im / $info / /info", () => {
     expect(embed.description).toContain("Darling in the Franxx");
     expect(embed.description).toContain("380");
     expect(embed.footer.text).toBe("Livre para Pacto");
+  });
+
+  it("edicoes: por nome abre a edicao resolvida e lista as demais; id:<n> abre exatamente a escolhida", async () => {
+    svc.findEntityId.mockResolvedValue(7);
+    svc.resolveEditionForInfo.mockResolvedValue({
+      entityId: 9,
+      editions: [
+        { id: 7, edition: "BASIC", tier: "COMMON", owned: false },
+        { id: 8, edition: "EPIC", tier: "EPIC", owned: false },
+        { id: 9, edition: "MYTHIC", tier: "MYTHIC", owned: true },
+      ],
+    });
+    svc.getEntityInfo.mockResolvedValue({ ...entityInfo(), id: 9, tier: "MYTHIC", edition: "MYTHIC" });
+    const m = await run("$im Zero Two");
+    expect(svc.resolveEditionForInfo).toHaveBeenCalledWith("g1", ME, 7);
+    expect(svc.getEntityInfo).toHaveBeenCalledWith("g1", 9);
+    const payload = payloadOf(m);
+    expect(payload.content).toContain("Edição Básica (id:7)");
+    expect(payload.content).toContain("Edição Mítica (id:9 ✅)");
+    expect(payload.embeds[0].toJSON().description).toContain("Edição Mítica");
+
+    svc.resolveEditionForInfo.mockClear();
+    svc.getEntityInfo.mockClear();
+    svc.findEntityId.mockResolvedValue(8);
+    svc.getEntityInfo.mockResolvedValue({ ...entityInfo(), id: 8, tier: "EPIC", edition: "EPIC" });
+    const m2 = await run("$im id:8");
+    expect(svc.resolveEditionForInfo).not.toHaveBeenCalled();
+    expect(svc.getEntityInfo).toHaveBeenCalledWith("g1", 8);
+    expect(payloadOf(m2).content).toBeUndefined();
   });
 
   it("carta com dono: usa o valor do pacto, mostra dono e posicao", async () => {

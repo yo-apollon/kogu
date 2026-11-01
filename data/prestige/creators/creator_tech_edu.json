@@ -1,0 +1,708 @@
+{
+  "niche": "creator_tech_edu",
+  "collectedAt": "2026-10-31",
+  "creators": [
+    {
+      "slug": "ibere-thenorio-manual-do-mundo",
+      "name": "Iberê Thenório (Manual do Mundo)",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Iberê Thenório (Manual do Mundo)",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": 2008,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador do Manual do Mundo, canal brasileiro de experimentos e ciência.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "felipe-castanhari-canal-nostalgia",
+      "name": "Felipe Castanhari (Canal Nostalgia)",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Felipe Castanhari (Canal Nostalgia)",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador brasileiro de vídeos de história e ciência.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "atila-iamarino",
+      "name": "Átila Iamarino",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Átila Iamarino",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Biólogo e divulgador científico brasileiro.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "pirula",
+      "name": "Pirula",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Pirula",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Biólogo e divulgador científico brasileiro, canal Ciência Todo Dia.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "nathalia-arcuri-me-poupe",
+      "name": "Nathalia Arcuri (Me Poupe)",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Nathalia Arcuri (Me Poupe)",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora brasileira de conteúdo de educação financeira.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "thiago-nigro-primo-rico",
+      "name": "Thiago Nigro (Primo Rico)",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Thiago Nigro (Primo Rico)",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador brasileiro de conteúdo de educação financeira.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "voce-sabia",
+      "name": "Você Sabia?",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Você Sabia?",
+          "url": null,
+          "followers": 47100000,
+          "asOf": "2026-04-22"
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "UNKNOWN",
+      "desc": "Canal brasileiro de curiosidades e ciência.",
+      "sources": [
+        "https://www.portaltela.com/entretenimento/2026/04/22/conheca-os-20-canais-do-youtube-com-mais-inscritos-no-brasil/"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "filipe-deschamps",
+      "name": "Filipe Deschamps",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Filipe Deschamps",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador brasileiro de conteúdo de tecnologia e programação.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "gustavo-guanabara",
+      "name": "Gustavo Guanabara",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Gustavo Guanabara",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Professor brasileiro, criador do Curso em Vídeo.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "diego-fernandes-rocketseat",
+      "name": "Diego Fernandes (Rocketseat)",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Diego Fernandes (Rocketseat)",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Cofundador da Rocketseat, conteúdo de programação.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "tecmundo",
+      "name": "TecMundo",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "TecMundo",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "UNKNOWN",
+      "desc": "Veículo e canal brasileiro de tecnologia.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "canaltech",
+      "name": "Canaltech",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Canaltech",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "UNKNOWN",
+      "desc": "Veículo e canal brasileiro de tecnologia.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "professor-ferretto",
+      "name": "Professor Ferretto",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Professor Ferretto",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Professor brasileiro de matemática e preparatório para o Enem.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "hashtag-treinamentos",
+      "name": "Hashtag Treinamentos",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Hashtag Treinamentos",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "UNKNOWN",
+      "desc": "Canal brasileiro de cursos de Excel e programação.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "mark-rober",
+      "name": "Mark Rober",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Mark Rober",
+          "url": null,
+          "followers": 85200000,
+          "asOf": "2026-06-01"
+        }
+      ],
+      "startedYear": 2011,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Engenheiro e criador americano de ciência e engenharia.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channels"
+      ],
+      "confidence": "high",
+      "reviewed": false
+    },
+    {
+      "slug": "marques-brownlee-mkbhd",
+      "name": "Marques Brownlee (MKBHD)",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Marques Brownlee (MKBHD)",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": 2008,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de análises de tecnologia.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "linus-sebastian",
+      "name": "Linus Sebastian",
+      "country": "WORLD",
+      "originCountry": "CA",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Linus Sebastian",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador canadense do Linus Tech Tips.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "derek-muller-veritasium",
+      "name": "Derek Muller (Veritasium)",
+      "country": "WORLD",
+      "originCountry": "AU",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Derek Muller (Veritasium)",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador de conteúdo científico.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "michael-stevens-vsauce",
+      "name": "Michael Stevens (Vsauce)",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Michael Stevens (Vsauce)",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de conteúdo de ciência e curiosidades.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "kurzgesagt",
+      "name": "Kurzgesagt",
+      "country": "WORLD",
+      "originCountry": "DE",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Kurzgesagt",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "UNKNOWN",
+      "desc": "Canal alemão de animações científicas.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "john-green-e-hank-green",
+      "name": "John Green e Hank Green",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "John Green e Hank Green",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Irmãos criadores do Crash Course.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "grant-sanderson-3blue1brown",
+      "name": "Grant Sanderson (3Blue1Brown)",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Grant Sanderson (3Blue1Brown)",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador americano de matemática visual.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "sal-khan",
+      "name": "Sal Khan",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Sal Khan",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Fundador da Khan Academy.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "tom-scott",
+      "name": "Tom Scott",
+      "country": "WORLD",
+      "originCountry": "GB",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Tom Scott",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador britânico de conteúdo educativo.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "destin-sandlin-smarter-every-day",
+      "name": "Destin Sandlin (Smarter Every Day)",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Destin Sandlin (Smarter Every Day)",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Engenheiro e criador americano de ciência.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "arun-maini-mrwhosetheboss",
+      "name": "Arun Maini (Mrwhosetheboss)",
+      "country": "WORLD",
+      "originCountry": "GB",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Arun Maini (Mrwhosetheboss)",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador britânico de análises de tecnologia.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "lewis-hilsenteger-unbox-therapy",
+      "name": "Lewis Hilsenteger (Unbox Therapy)",
+      "country": "WORLD",
+      "originCountry": "CA",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Lewis Hilsenteger (Unbox Therapy)",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador canadense de análises de tecnologia.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "jeff-delaney-fireship",
+      "name": "Jeff Delaney (Fireship)",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Jeff Delaney (Fireship)",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador de conteúdo de programação.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "brady-haran-numberphile",
+      "name": "Brady Haran (Numberphile)",
+      "country": "WORLD",
+      "originCountry": "AU",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Brady Haran (Numberphile)",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Jornalista e criador de canais educativos.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "justine-ezarik-ijustine",
+      "name": "Justine Ezarik (iJustine)",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Justine Ezarik (iJustine)",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora americana de conteúdo de tecnologia.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    }
+  ],
+  "excluded": [
+    {
+      "name": "Felipe Neto",
+      "reason": "ativismo político declarado; em dúvida, fora"
+    },
+    {
+      "name": "Monark (Bruno Aiub)",
+      "reason": "controvérsias públicas relevantes; em dúvida, fora"
+    },
+    {
+      "name": "Pablo Marçal",
+      "reason": "candidato a cargo público"
+    },
+    {
+      "name": "Maria Clara & JP",
+      "reason": "menor de idade"
+    },
+    {
+      "name": "Kanye West",
+      "reason": "controvérsias graves de discurso de ódio; em dúvida, fora"
+    },
+    {
+      "name": "Andrew Tate",
+      "reason": "processos criminais graves"
+    },
+    {
+      "name": "Logan Paul / Jake Paul",
+      "reason": "controvérsias públicas; em dúvida, fora"
+    },
+    {
+      "name": "James Charles / David Dobrik",
+      "reason": "acusações públicas graves; em dúvida, fora"
+    },
+    {
+      "name": "Technoblade / Marília Mendonça / Mac Miller",
+      "reason": "falecidos; fora por cautela (decisão do dono)"
+    }
+  ]
+}

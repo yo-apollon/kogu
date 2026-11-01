@@ -1,0 +1,698 @@
+{
+  "niche": "creator_fitness",
+  "collectedAt": "2026-10-31",
+  "creators": [
+    {
+      "slug": "paulo-muzy",
+      "name": "Paulo Muzy",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Paulo Muzy",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": 2013,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador brasileiro de conteúdo sobre treino, hipertrofia e saúde no YouTube.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "felipe-franco",
+      "name": "Felipe Franco",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Felipe Franco",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Fisiculturista e criador brasileiro de conteúdo de treino e nutrição.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "joel-jota",
+      "name": "Joel Jota",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Joel Jota",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Ex-atleta de natação e palestrante brasileiro, produz conteúdo de alta performance e hábitos.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "gracyanne-barbosa",
+      "name": "Gracyanne Barbosa",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Gracyanne Barbosa",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Fisiculturista e personalidade brasileira, com presença em redes sociais sobre treino.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "bella-falconi",
+      "name": "Bella Falconi",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Bella Falconi",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora brasileira de conteúdo fitness e estilo de vida saudável.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "thaynara-og",
+      "name": "Thaynara OG",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Thaynara OG",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Nutricionista e criadora brasileira de conteúdo sobre alimentação e emagrecimento.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "carol-borba",
+      "name": "Carol Borba",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Carol Borba",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora brasileira de conteúdo fitness e de treinos.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "leandro-twin",
+      "name": "Leandro Twin",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Leandro Twin",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Fisiculturista brasileiro (dupla Twin) com conteúdo de treino em redes sociais.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "rodrigo-goes",
+      "name": "Rodrigo Goes",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Rodrigo Goes",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Médico brasileiro com conteúdo de saúde, treino e nutrição.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "luciano-pascoal",
+      "name": "Luciano Pascoal",
+      "country": "BR",
+      "originCountry": "BR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Luciano Pascoal",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador brasileiro de conteúdo sobre musculação e hipertrofia.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "chloe-ting",
+      "name": "Chloe Ting",
+      "country": "WORLD",
+      "originCountry": "AU",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Chloe Ting",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": 2017,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora australiana de desafios de treino em casa no YouTube.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "joe-wicks",
+      "name": "Joe Wicks",
+      "country": "WORLD",
+      "originCountry": "GB",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Joe Wicks",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Personal trainer britânico, conhecido por The Body Coach e aulas de treino online.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "jeff-nippard",
+      "name": "Jeff Nippard",
+      "country": "WORLD",
+      "originCountry": "CA",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Jeff Nippard",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Fisiculturista e criador canadense de conteúdo de treino baseado em ciência.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "jeff-cavaliere",
+      "name": "Jeff Cavaliere",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Jeff Cavaliere",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": 2011,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Fisioterapeuta e treinador americano, criador do canal ATHLEAN-X.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "cassey-ho",
+      "name": "Cassey Ho",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Cassey Ho",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": 2009,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Instrutora americana de pilates, criadora do canal Blogilates.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "kayla-itsines",
+      "name": "Kayla Itsines",
+      "country": "WORLD",
+      "originCountry": "AU",
+      "platforms": [
+        {
+          "platform": "instagram",
+          "handle": "Kayla Itsines",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Personal trainer australiana, criadora do programa Sweat.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "pamela-reif",
+      "name": "Pamela Reif",
+      "country": "WORLD",
+      "originCountry": "DE",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Pamela Reif",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora alemã de treinos em vídeo no YouTube e Instagram.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "whitney-simmons",
+      "name": "Whitney Simmons",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Whitney Simmons",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora americana de conteúdo de treino e estilo de vida.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "chris-heria",
+      "name": "Chris Heria",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Chris Heria",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Treinador americano de calistenia, criador do canal THENX.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "greg-doucette",
+      "name": "Greg Doucette",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Greg Doucette",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Fisiculturista e criador americano de conteúdo de treino e dieta.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "mike-israetel",
+      "name": "Mike Israetel",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Mike Israetel",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Fisiologista do exercício americano e criador de conteúdo (Renaissance Periodization).",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "sam-sulek",
+      "name": "Sam Sulek",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Sam Sulek",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Fisiculturista americano com vlogs de treino no YouTube.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "natacha-oceane",
+      "name": "Natacha Océane",
+      "country": "WORLD",
+      "originCountry": "FR",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Natacha Océane",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Criadora francesa de conteúdo de treino e fitness.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "sydney-cummings-houdyshell",
+      "name": "Sydney Cummings Houdyshell",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Sydney Cummings Houdyshell",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Treinadora americana de aulas de treino diárias gratuitas no YouTube.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "chris-bumstead",
+      "name": "Chris Bumstead",
+      "country": "WORLD",
+      "originCountry": "CA",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Chris Bumstead",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Fisiculturista canadense, pentacampeão de Classic Physique no Mr. Olympia.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "jeremy-ethier",
+      "name": "Jeremy Ethier",
+      "country": "WORLD",
+      "originCountry": "CA",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Jeremy Ethier",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Criador canadense de conteúdo de treino baseado em ciência.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "adriene-mishler",
+      "name": "Adriene Mishler",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Adriene Mishler",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": 2012,
+      "milestones": [],
+      "genderHint": "FEMALE",
+      "desc": "Instrutora americana de ioga, criadora do canal Yoga With Adriene.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "daniel-e-kelli-segars-fitness-blender",
+      "name": "Daniel e Kelli Segars (Fitness Blender)",
+      "country": "WORLD",
+      "originCountry": "US",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Daniel e Kelli Segars (Fitness Blender)",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "UNKNOWN",
+      "desc": "Casal americano de instrutores, criadores do canal Fitness Blender.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    },
+    {
+      "slug": "simeon-panda",
+      "name": "Simeon Panda",
+      "country": "WORLD",
+      "originCountry": "GB",
+      "platforms": [
+        {
+          "platform": "youtube",
+          "handle": "Simeon Panda",
+          "url": null,
+          "followers": null,
+          "asOf": null
+        }
+      ],
+      "startedYear": null,
+      "milestones": [],
+      "genderHint": "MALE",
+      "desc": "Fisiculturista e criador britânico de conteúdo de treino.",
+      "sources": [],
+      "confidence": "low",
+      "reviewed": false
+    }
+  ],
+  "excluded": [
+    {
+      "name": "Renato Cariani",
+      "reason": "histórico de processo judicial envolvendo empresa; em dúvida, fora"
+    },
+    {
+      "name": "Gabriela Pugliesi",
+      "reason": "controvérsia pública; em dúvida, fora"
+    },
+    {
+      "name": "Mayra Cardi",
+      "reason": "em dúvida, fora"
+    },
+    {
+      "name": "Larry Wheels",
+      "reason": "controvérsias públicas; em dúvida, fora"
+    },
+    {
+      "name": "Felipe Neto",
+      "reason": "ativismo político declarado; em dúvida, fora"
+    },
+    {
+      "name": "Monark (Bruno Aiub)",
+      "reason": "controvérsias públicas relevantes; em dúvida, fora"
+    },
+    {
+      "name": "Pablo Marçal",
+      "reason": "candidato a cargo público"
+    },
+    {
+      "name": "Maria Clara & JP",
+      "reason": "menor de idade"
+    },
+    {
+      "name": "Kanye West",
+      "reason": "controvérsias graves de discurso de ódio; em dúvida, fora"
+    },
+    {
+      "name": "Andrew Tate",
+      "reason": "processos criminais graves"
+    },
+    {
+      "name": "Logan Paul / Jake Paul",
+      "reason": "controvérsias públicas; em dúvida, fora"
+    },
+    {
+      "name": "James Charles / David Dobrik",
+      "reason": "acusações públicas graves; em dúvida, fora"
+    },
+    {
+      "name": "Technoblade / Marília Mendonça / Mac Miller",
+      "reason": "falecidos; fora por cautela (decisão do dono)"
+    }
+  ]
+}

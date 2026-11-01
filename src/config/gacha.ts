@@ -5,17 +5,56 @@
 export const ENTITY_TIERS = ["COMMON", "RARE", "EPIC", "LEGENDARY", "MYTHIC"] as const;
 export type EntityTier = (typeof ENTITY_TIERS)[number];
 
+/**
+ * Edicoes de uma mesma carta. BASIC e a ancora do personagem (carta original); EPIC e MYTHIC sao
+ * linhas proprias em `entities` com `parent_id` apontando para a ancora. A raridade de cada
+ * edicao e fixa (nao entra no ranking por percentil).
+ */
+export const ENTITY_EDITIONS = ["BASIC", "EPIC", "MYTHIC"] as const;
+export type EntityEdition = (typeof ENTITY_EDITIONS)[number];
+
+export const EDITION_TIER: Record<EntityEdition, EntityTier> = {
+  BASIC: "COMMON",
+  EPIC: "EPIC",
+  MYTHIC: "MYTHIC",
+};
+
+/** Chave i18n do rotulo de cada edicao (pt-BR "Edicao Mitica", en-US "Mythic Edition"). */
+export const EDITION_LABEL = {
+  BASIC: "summon.edition_basic",
+  EPIC: "summon.edition_epic",
+  MYTHIC: "summon.edition_mythic",
+} as const satisfies Record<EntityEdition, `summon.edition_${string}`>;
+
 export const CARD_VARIANTS = ["STANDARD", "FOIL", "HOLO", "ASTRAL"] as const;
 export type CardVariant = (typeof CARD_VARIANTS)[number];
 
 /** Peso de sorteio por tier (maior = mais comum). */
 export const TIER_WEIGHT: Record<EntityTier, number> = {
   COMMON: 1.0,
-  RARE: 0.65,
-  EPIC: 0.35,
-  LEGENDARY: 0.12,
-  MYTHIC: 0.03,
+  RARE: 0.5,
+  EPIC: 0.25,
+  LEGENDARY: 0.08,
+  MYTHIC: 0.015,
 };
+
+/**
+ * Faixa de Eter base por tier (antes do multiplicador de variante e dos Selos de Despertar).
+ * Dentro da faixa o valor varia pela posicao da carta no tier e por um pequeno desvio fixo
+ * por carta, entao nao ha duas cartas com o mesmo preco por acaso.
+ */
+export const TIER_AETHER_BAND: Record<EntityTier, { min: number; max: number }> = {
+  COMMON: { min: 80, max: 800 },
+  RARE: { min: 1_000, max: 2_500 },
+  EPIC: { min: 3_000, max: 7_000 },
+  LEGENDARY: { min: 8_000, max: 20_000 },
+  MYTHIC: { min: 25_000, max: 60_000 },
+};
+
+/** Expoente da curva dentro da faixa (>1 deixa as melhores cartas do tier mais caras que o meio). */
+export const AETHER_BAND_CURVE = 1.6;
+/** Desvio fixo por carta, em fracao do valor (0.04 = +-4%), limitado a faixa do tier. */
+export const AETHER_BAND_JITTER = 0.04;
 
 /** Limite global de copias ativas por tier (Opcao A: MYTHIC 1/1, LEGENDARY 3, EPIC 10; null = ilimitado). */
 export const TIER_MAX_SUPPLY: Record<EntityTier, number | null> = {
@@ -33,6 +72,36 @@ export const TIER_TOP_PERCENT: Record<Exclude<EntityTier, "COMMON">, number> = {
   EPIC: 0.15,
   RARE: 0.4,
 };
+
+/**
+ * Prestigio por nicho (docs/raridade-por-nicho.md). O tier sai de limiares absolutos de prestigio
+ * (0..100), por familia: "fiction" (anime, jogos, cinema) e "people" (esporte, musica, criadores).
+ */
+export type PrestigeFamily = "fiction" | "people";
+
+/** Prestigio minimo de cada tier; abaixo do menor limiar a carta e COMMON. */
+export const PRESTIGE_THRESHOLDS: Record<PrestigeFamily, Record<Exclude<EntityTier, "COMMON">, number>> = {
+  fiction: { MYTHIC: 94, LEGENDARY: 82, EPIC: 66, RARE: 45 },
+  people: { MYTHIC: 95, LEGENDARY: 85, EPIC: 70, RARE: 50 },
+};
+
+/** Teto de MYTHIC por nicho grande: no maximo esta fracao das cartas do nicho, arredondada para cima. */
+export const MYTHIC_MAX_SHARE = 0.01;
+/** O teto percentual de MYTHIC so vale em nichos com pelo menos esta quantidade de cartas; nos menores vale so o limiar. */
+export const MYTHIC_CAP_MIN_NICHE_SIZE = 50;
+
+/** Pesos do prestigio computado de ficcao (somam 1): fama, popularidade da serie, historia. */
+export const FICTION_PRESTIGE_WEIGHTS = { fame: 0.4, series: 0.3, story: 0.3 } as const;
+
+/** Importancia na historia por papel (AniList: MAIN, SUPPORTING; outro ou ausente = sem papel). */
+export const FICTION_ROLE_WEIGHT = { MAIN: 1, SUPPORTING: 0.55, NONE: 0.4 } as const;
+/** Decaimento da posicao (por favoritos) na serie: 1 / (1 + decay * (pos - 1)). */
+export const FICTION_POSITION_DECAY = 0.35;
+/** Teto de prestigio de obra sem sinal confiavel (nenhum favorito na serie). */
+export const FICTION_NO_SIGNAL_CAP = 40;
+
+/** Expoente da curva do Eter dentro da faixa do tier quando a posicao vem do prestigio. */
+export const PRESTIGE_BAND_CURVE = 1.6;
 
 /** Chance acumulada por variante, avaliada de cima para baixo (em %). */
 export const VARIANT_CHANCE = {

@@ -6,16 +6,64 @@
 export const ENTITY_TIERS = ["COMMON", "RARE", "EPIC", "LEGENDARY", "MYTHIC"] as const;
 export type EntityTier = (typeof ENTITY_TIERS)[number];
 
+/**
+ * Edicoes de uma mesma carta. BASIC e a ancora do personagem (carta original); EPIC e MYTHIC sao
+ * linhas proprias em `entities` com `parent_id` apontando para a ancora. A raridade de cada
+ * edicao e fixa (nao entra no ranking por percentil).
+ */
+export const ENTITY_EDITIONS = ["BASIC", "EPIC", "MYTHIC"] as const;
+export type EntityEdition = (typeof ENTITY_EDITIONS)[number];
+
+export const EDITION_TIER: Record<EntityEdition, EntityTier> = {
+  BASIC: "COMMON",
+  EPIC: "EPIC",
+  MYTHIC: "MYTHIC",
+};
+
+/** Chave i18n do rotulo de cada edicao (pt-BR "Edicao Mitica", en-US "Mythic Edition"). */
+export const EDITION_LABEL = {
+  BASIC: "summon.edition_basic",
+  EPIC: "summon.edition_epic",
+  MYTHIC: "summon.edition_mythic",
+} as const satisfies Record<EntityEdition, `summon.edition_${string}`>;
+
 export const CARD_VARIANTS = ["STANDARD", "FOIL", "HOLO", "ASTRAL"] as const;
 export type CardVariant = (typeof CARD_VARIANTS)[number];
 
 /** Peso de sorteio por tier (maior = mais comum). */
 export const TIER_WEIGHT: Record<EntityTier, number> = {
   COMMON: 1.0,
-  RARE: 0.8,
-  EPIC: 0.55,
-  LEGENDARY: 0.3,
-  MYTHIC: 0.12,
+  RARE: 0.5,
+  EPIC: 0.25,
+  LEGENDARY: 0.08,
+  MYTHIC: 0.015,
+};
+
+/**
+ * Faixa de Eter base por tier (antes do multiplicador de variante e dos Selos de Despertar).
+ * Dentro da faixa o valor varia pela posicao da carta no tier e por um pequeno desvio fixo
+ * por carta, entao nao ha duas cartas com o mesmo preco por acaso.
+ */
+export const TIER_AETHER_BAND: Record<EntityTier, { min: number; max: number }> = {
+  COMMON: { min: 80, max: 800 },
+  RARE: { min: 1_000, max: 2_500 },
+  EPIC: { min: 3_000, max: 7_000 },
+  LEGENDARY: { min: 8_000, max: 20_000 },
+  MYTHIC: { min: 25_000, max: 60_000 },
+};
+
+/** Expoente da curva dentro da faixa (>1 deixa as melhores cartas do tier mais caras que o meio). */
+export const AETHER_BAND_CURVE = 1.6;
+/** Desvio fixo por carta, em fracao do valor (0.04 = +-4%), limitado a faixa do tier. */
+export const AETHER_BAND_JITTER = 0.04;
+
+/** Limite global de copias ativas por tier (Opcao A: MYTHIC 1/1, LEGENDARY 3, EPIC 10; null = ilimitado). */
+export const TIER_MAX_SUPPLY: Record<EntityTier, number | null> = {
+  MYTHIC: 1,
+  LEGENDARY: 3,
+  EPIC: 10,
+  RARE: null,
+  COMMON: null,
 };
 
 /** Corte de percentil (do topo) para cada tier; o restante e COMMON. */
@@ -67,7 +115,7 @@ export const GUILD_DEFAULTS = {
   baseRolls: 10,
   rollIntervalMin: 60,
   claimIntervalMin: 180,
-  claimWindowSeconds: 45,
+  claimWindowSeconds: 120,
   pactLimit: 8100,
 } as const;
 

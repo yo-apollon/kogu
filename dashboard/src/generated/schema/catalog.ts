@@ -23,6 +23,7 @@ import {
   mediaTypeEnum,
   universeEnum,
 } from "./enums";
+import { niches } from "./niches";
 
 const tz = (name: string) => timestamp(name, { withTimezone: true });
 
@@ -133,6 +134,16 @@ export const entities = pgTable(
         onDelete: "set null",
       }
     ),
+    // Edicoes da mesma carta: parent_id aponta para a ancora (BASIC); edition NULL = carta comum.
+    parentId: bigint("parent_id", { mode: "number" }).references((): AnyPgColumn => entities.id, {
+      onDelete: "set null",
+    }),
+    edition: text("edition"),
+    // Prestigio por nicho (docs/raridade-por-nicho.md); CHECKs de faixa e origem na migration 0005.
+    nicheId: bigint("niche_id", { mode: "number" }).references(() => niches.id, { onDelete: "set null" }),
+    prestige: real("prestige"),
+    prestigeSource: text("prestige_source"),
+    prestigeReason: text("prestige_reason"),
     lastSyncedAt: tz("last_synced_at"),
     createdAt: tz("created_at").notNull().defaultNow(),
     updatedAt: tz("updated_at")
@@ -146,6 +157,13 @@ export const entities = pgTable(
       .on(t.legacyId)
       .where(sql`${t.legacyId} IS NOT NULL`),
     franchiseIdx: index("idx_entities_franchise").on(t.franchiseId),
+    parentIdx: index("idx_entities_parent").on(t.parentId),
+    editionIdx: index("idx_entities_edition")
+      .on(t.edition)
+      .where(sql`${t.edition} IS NOT NULL`),
+    nichePrestigeIdx: index("idx_entities_niche_prestige")
+      .on(t.nicheId, t.prestige.desc())
+      .where(sql`${t.status} = 'ACTIVE'`),
     statusIdx: index("idx_entities_status").on(t.status),
     normalizedIdx: index("idx_entities_name_normalized").on(t.nameNormalized),
     // Carga do pool de roll: so entidades ativas, agrupadas por bucket.

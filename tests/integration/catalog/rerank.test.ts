@@ -3,6 +3,7 @@ import { startTestDb, silentLog, type TestDb } from "./testDb.js";
 import { createJobContext, type JobContext } from "../../../src/catalog/jobs/context.js";
 import { catalogRerank } from "../../../src/catalog/jobs/rerank.js";
 import { runJob } from "../../../src/catalog/jobs/runner.js";
+import { TIER_AETHER_BAND, TIER_WEIGHT, type EntityTier } from "../../../src/config/gacha.js";
 import { MemoryStore } from "../../../src/infra/redis/memoryStore.js";
 import { subscribeEvent } from "../../../src/infra/redis/pubsub.js";
 
@@ -51,8 +52,14 @@ describe("catalog.rerank", () => {
     expect(rows[0].tier).toBe("MYTHIC");
     expect(rows[0].score).toBe(1);
     expect(rows[199].tier).toBe("COMMON");
-    expect(rows[0].roll_weight).toBeCloseTo(0.12 * 1.15, 4);
-    expect(rows[0].base_aether).toBe(1200);
+    expect(rows[0].roll_weight).toBeCloseTo(TIER_WEIGHT.MYTHIC * 1.15, 4);
+    // Cada carta fica dentro da faixa de Eter do proprio tier; o topo do tier e o mais caro.
+    for (const row of rows) {
+      const band = TIER_AETHER_BAND[row.tier as EntityTier];
+      expect(row.base_aether).toBeGreaterThanOrEqual(band.min);
+      expect(row.base_aether).toBeLessThanOrEqual(band.max);
+    }
+    expect(rows[0].base_aether).toBeGreaterThan(TIER_AETHER_BAND.MYTHIC.max * 0.9);
 
     const quar = await t.sql`SELECT popularity_rank, like_rank FROM entities WHERE slug = 'quar'`;
     expect(quar[0].popularity_rank).toBeNull();

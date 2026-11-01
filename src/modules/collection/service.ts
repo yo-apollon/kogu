@@ -6,7 +6,9 @@
 import { and, asc, desc, eq, inArray, or, sql, type SQL } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import {
+  ENTITY_EDITIONS,
   type CardVariant,
+  type EntityEdition,
   type EntityTier,
 } from "../../config/gacha.js";
 import { db } from "../../infra/db/client.js";
@@ -71,6 +73,8 @@ export interface PantheonRow {
   name: string;
   gender: string;
   tier: EntityTier;
+  /** Edicao da carta; null/ausente = carta comum. */
+  edition?: string | null;
   variant: CardVariant;
   awakeningKeys: number;
   isSoulmate: boolean;
@@ -115,6 +119,7 @@ export async function listPantheon(
         name: entities.name,
         gender: entities.gender,
         tier: entities.tier,
+        edition: entities.edition,
         variant: pacts.variant,
         awakeningKeys: pacts.awakeningKeys,
         isSoulmate: pacts.isSoulmate,
@@ -559,6 +564,8 @@ export interface EntityHit {
   series: string | null;
   gender: string;
   tier: EntityTier;
+  /** Edicao da carta (BASIC/EPIC/MYTHIC); null/ausente = carta comum. */
+  edition?: string | null;
 }
 
 async function attachSeries(hits: Array<Omit<EntityHit, "series">>): Promise<EntityHit[]> {
@@ -583,7 +590,13 @@ async function attachSeries(hits: Array<Omit<EntityHit, "series">>): Promise<Ent
 /** Entidades ativas mais populares (autocomplete sem texto). */
 export async function topEntities(limit: number = AUTOCOMPLETE_LIMIT): Promise<EntityHit[]> {
   const rows = await db
-    .select({ id: entities.id, name: entities.name, gender: entities.gender, tier: entities.tier })
+    .select({
+      id: entities.id,
+      name: entities.name,
+      gender: entities.gender,
+      tier: entities.tier,
+      edition: entities.edition,
+    })
     .from(entities)
     .where(eq(entities.status, "ACTIVE"))
     .orderBy(desc(entities.popularityScore), asc(entities.id))
@@ -610,6 +623,7 @@ export async function searchEntities(
         name: entities.name,
         gender: entities.gender,
         tier: entities.tier,
+        edition: entities.edition,
       })
       .from(entities)
       .where(and(eq(entities.status, "ACTIVE"), eq(entities.nameNormalized, norm)))
@@ -621,7 +635,13 @@ export async function searchEntities(
   const allTokens = tokensMatch(tokens);
   const similarity = sql<number>`similarity(${entities.nameNormalized}, ${norm})`;
   const rows = await db
-    .select({ id: entities.id, name: entities.name, gender: entities.gender, tier: entities.tier })
+    .select({
+      id: entities.id,
+      name: entities.name,
+      gender: entities.gender,
+      tier: entities.tier,
+      edition: entities.edition,
+    })
     .from(entities)
     .where(
       and(eq(entities.status, "ACTIVE"), or(allTokens, sql`${entities.nameNormalized} % ${norm}`))
@@ -702,8 +722,13 @@ export interface EntityInfo {
   id: number;
   name: string;
   universe: "ANIME" | "GAME" | "CINEMA";
+  /** entity_type, slug e descricao: escolhem entre imagem e emblema na arte da carta. */
+  type?: string;
+  slug?: string;
+  description?: string | null;
   gender: string;
   tier: EntityTier;
+  edition?: EntityEdition | null;
   baseAether: number;
   baseAtk: number;
   baseDef: number;
@@ -723,8 +748,12 @@ export async function getEntityInfo(guildId: string, entityId: number): Promise<
       id: entities.id,
       name: entities.name,
       universe: entities.universe,
+      type: entities.type,
+      slug: entities.slug,
+      description: entities.description,
       gender: entities.gender,
       tier: entities.tier,
+      edition: entities.edition,
       baseAether: entities.baseAether,
       baseAtk: entities.baseAtk,
       baseDef: entities.baseDef,
@@ -788,8 +817,12 @@ export async function getEntityInfo(guildId: string, entityId: number): Promise<
     id: r.id,
     name: r.name,
     universe: r.universe,
+    type: r.type,
+    slug: r.slug,
+    description: r.description,
     gender: r.gender,
     tier: r.tier,
+    edition: (r.edition as EntityEdition | null) ?? null,
     baseAether: r.baseAether,
     baseAtk: r.baseAtk,
     baseDef: r.baseDef,
@@ -801,6 +834,59 @@ export async function getEntityInfo(guildId: string, entityId: number): Promise<
     seriesTitle: r.seriesTitle,
     pact,
   };
+}
+
+export interface EditionVariant {
+  id: number;
+  edition: EntityEdition;
+  tier: EntityTier;
+  owned: boolean;
+}
+
+/**
+ * Varias cartas compartilham o mesmo nome (edicoes BASIC/EPIC/MYTHIC). Para o $info por nome:
+ * se o usuario tem pacto (neste servidor) em alguma edicao, usa a de maior raridade que ele possui;
+ * senao usa a ancora (BASIC) e devolve a lista curta das edicoes para o comando mostrar.
+ * Carta sem edicao devolve a propria entidade e lista vazia.
+ */
+export async function resolveEditionForInfo(
+  guildId: string,
+  userId: string,
+  entityId: number
+): Promise<{ entityId: number; editions: EditionVariant[] }> {
+  const [self] = await db
+    .select({ id: entities.id, parentId: entities.parentId, edition: entities.edition })
+    .from(entities)
+    .where(eq(entities.id, entityId))
+    .limit(1);
+  if (!self || self.edition === null) return { entityId, editions: [] };
+  const anchorId = self.parentId ?? self.id;
+  const rows = await db
+    .select({ id: entities.id, edition: entities.edition, tier: entities.tier, pactId: pacts.id })
+    .from(entities)
+    .leftJoin(
+      pacts,
+      and(eq(pacts.entityId, entities.id), eq(pacts.guildId, guildId), eq(pacts.userId, userId))
+    )
+    .where(
+      and(
+        eq(entities.status, "ACTIVE"),
+        sql`(${entities.id} = ${anchorId} OR ${entities.parentId} = ${anchorId})`,
+        sql`${entities.edition} IS NOT NULL`
+      )
+    );
+  const editions: EditionVariant[] = rows
+    .map((r) => ({
+      id: r.id,
+      edition: r.edition as EntityEdition,
+      tier: r.tier,
+      owned: r.pactId !== null,
+    }))
+    .sort((a, b) => ENTITY_EDITIONS.indexOf(a.edition) - ENTITY_EDITIONS.indexOf(b.edition));
+  if (editions.length <= 1) return { entityId, editions: [] };
+  const owned = editions.filter((e) => e.owned);
+  const chosen = owned.length > 0 ? owned[owned.length - 1] : editions[0];
+  return { entityId: chosen.id, editions };
 }
 
 /** Posicao (base 1) do pacto na ordem padrao do Panteao do dono. */

@@ -26,5 +26,14 @@ export default tseslint.config(
   {
     files: ["**/*.js", "**/*.mjs"],
     languageOptions: { sourceType: "module", globals: { process: "readonly", console: "readonly" } },
+  },
+  {
+    // Scripts utilitários em CommonJS (ex.: src/scripts/exportCatalog.cjs).
+    files: ["**/*.cjs"],
+    languageOptions: {
+      sourceType: "commonjs",
+      globals: { require: "readonly", module: "writable", process: "readonly", console: "readonly" },
+    },
+    rules: { "@typescript-eslint/no-require-imports": "off" },
   }
 );

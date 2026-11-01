@@ -190,6 +190,8 @@ export function resolveCardEmbedColor(view: {
   name: string;
   franchise?: string | null;
   tier?: EntityTier;
+  /** Edicao da carta: edicoes usam a cor do proprio tier (as tres ficam distintas no embed). */
+  edition?: string | null;
   variant?: CardVariant;
   ownerEmbedColor?: number;
 }): number {
@@ -197,6 +199,7 @@ export function resolveCardEmbedColor(view: {
   if (view.variant && view.variant !== "STANDARD") {
     return VARIANT_PALETTES[view.variant].embed;
   }
+  if (view.edition && view.tier) return TIER_COLORS[view.tier];
   if (view.franchise) {
     const fLower = view.franchise.toLowerCase().trim();
     if (FRANCHISE_COLORS[fLower]) return FRANCHISE_COLORS[fLower];
