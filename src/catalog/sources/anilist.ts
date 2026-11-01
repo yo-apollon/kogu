@@ -35,7 +35,7 @@ export const ANILIST_HOST = "graphql.anilist.co";
 /** Ritmo conservador: o limite publico do AniList e 30 req/min (90 quando estavel). */
 export const ANILIST_RATE_PER_MIN = 25;
 
-const ANILIST_USER_AGENT = "ArqonBot/2.0 (Discord gacha bot; AniList catalog sync)";
+const ANILIST_USER_AGENT = "KoguBot/2.0 (Discord gacha bot; AniList catalog sync)";
 const MAX_PER_PAGE = 50;
 /** `Media.characters` e uma conexao aninhada: mantemos paginas pequenas. */
 const CHARACTERS_PAGE_SIZE = 25;

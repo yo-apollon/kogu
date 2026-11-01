@@ -1,5 +1,5 @@
 /**
- * Bootstrap do bot Arqon (v2).
+ * Bootstrap do bot Kogu (v2).
  *
  * ATENCAO: diferente do bot antigo (SQLite local + Redis opcional), este processo EXIGE
  * `DATABASE_URL` (PostgreSQL) e sobe um KV: Redis real com `REDIS_URL`, ou MemoryStore apenas
@@ -30,7 +30,7 @@ async function main(): Promise<void> {
 
   if (!env.DATABASE_URL) {
     logger.fatal(
-      "DATABASE_URL ausente: o Arqon v2 exige PostgreSQL (veja .env.example e `npm run db:migrate`)."
+      "DATABASE_URL ausente: o Kogu v2 exige PostgreSQL (veja .env.example e `npm run db:migrate`)."
     );
     process.exit(1);
   }
@@ -70,7 +70,7 @@ async function main(): Promise<void> {
   });
 
   client.once(Events.ClientReady, (ready) => {
-    logger.info({ tag: ready.user.tag, guilds: ready.guilds.cache.size }, "Arqon online");
+    logger.info({ tag: ready.user.tag, guilds: ready.guilds.cache.size }, "Kogu online");
     ready.user.setPresence({
       activities: [
         { name: `o Cosmos Dimensional | ${env.DEFAULT_PREFIX}help`, type: ActivityType.Watching },
@@ -161,6 +161,6 @@ async function main(): Promise<void> {
 }
 
 main().catch((err: unknown) => {
-  logger.fatal({ err }, "falha ao iniciar o Arqon");
+  logger.fatal({ err }, "falha ao iniciar o Kogu");
   void shutdown("bootstrap-failure", { code: 1, drainTimeoutMs: 0 });
 });

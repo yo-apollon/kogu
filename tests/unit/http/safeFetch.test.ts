@@ -96,7 +96,7 @@ describe("safeFetchImage", () => {
     expect(r.finalUrl).toBe(URL_OK);
     const init = fetchImpl.mock.calls[0][1]!;
     expect(init.redirect).toBe("manual");
-    expect((init.headers as Record<string, string>)["user-agent"]).toMatch(/Arqon/);
+    expect((init.headers as Record<string, string>)["user-agent"]).toMatch(/Kogu/);
   });
 
   it("bloqueia http (nao-https)", async () => {

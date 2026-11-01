@@ -2,7 +2,7 @@
  * Mapa central de emojis. Todo emoji exibido ao usuario deve vir daqui, para
  * permitir trocar por emojis customizados do servidor sem editar os comandos.
  *
- * Override: variavel de ambiente `ARQON_EMOJIS` (JSON `{"aether":"<:aether:123>"}`)
+ * Override: variavel de ambiente `KOGU_EMOJIS` (ou legada `ARQON_EMOJIS`) (JSON `{"aether":"<:aether:123>"}`)
  * ou `setEmojiOverrides({...})` em runtime/testes.
  */
 import type { CardVariant } from "../config/gacha.js";
@@ -87,7 +87,7 @@ function isEmojiKey(key: string): key is EmojiKey {
 }
 
 function loadEnvOverrides(): Partial<Record<EmojiKey, string>> {
-  const raw = process.env.ARQON_EMOJIS;
+  const raw = process.env.KOGU_EMOJIS ?? process.env.ARQON_EMOJIS;
   if (!raw) return {};
   try {
     const parsed: unknown = JSON.parse(raw);

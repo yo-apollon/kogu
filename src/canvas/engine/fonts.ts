@@ -27,10 +27,10 @@ let status: FontsStatus | null = null;
 
 /**
  * Resolve assets/fonts. src/canvas/engine e dist/canvas/engine ficam na mesma profundidade,
- * entao `../../../assets` serve em dev (tsx) e em producao. ARQON_ASSETS_DIR sobrescreve.
+ * entao `../../../assets` serve em dev (tsx) e em producao. KOGU_ASSETS_DIR sobrescreve.
  */
 export function resolveAssetsDir(): string {
-  const override = process.env.ARQON_ASSETS_DIR;
+  const override = process.env.KOGU_ASSETS_DIR ?? process.env.ARQON_ASSETS_DIR;
   if (override) return path.resolve(override);
   const here = path.dirname(fileURLToPath(import.meta.url));
   return path.resolve(here, "../../../assets");

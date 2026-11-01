@@ -1,4 +1,4 @@
-# Arqon: guia para agentes
+# Kogu: guia para agentes
 
 Bot de Discord de gacha e colecionismo (clone próprio do Mudae) mais uma dashboard web. Este arquivo vale para qualquer agente ou ferramenta (Claude Code, Antigravity, outras). Leia também `docs/ROADMAP.md` (o que falta) e `docs/dashboard-plan.md` (plano da dashboard).
 

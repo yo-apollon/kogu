@@ -1,6 +1,6 @@
-# Arqon Dashboard
+# Kogu Dashboard
 
-Dashboard web do bot Arqon (Next.js 16 App Router, React 19, TypeScript estrito, Tailwind v4). Fica em `dashboard/` do monorepo informal; o bot vive na raiz. Deploy: Vercel com Root Directory `dashboard`, Node 22.
+Dashboard web do bot Kogu (Next.js 16 App Router, React 19, TypeScript estrito, Tailwind v4). Fica em `dashboard/` do monorepo informal; o bot vive na raiz. Deploy: Vercel com Root Directory `dashboard`, Node 22.
 
 Plano completo: `../docs/dashboard-plan.md`.
 

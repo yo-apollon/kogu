@@ -1,4 +1,4 @@
-# Plano da dashboard Arqon (Next.js na Vercel + Neon)
+# Plano da dashboard Kogu (Next.js na Vercel + Neon)
 
 Plano elaborado pelo agente de planejamento (Opus). Executado por agentes Sonnet em fases com arquivos exclusivos.
 

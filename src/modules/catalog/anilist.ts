@@ -68,7 +68,7 @@ query ($search: String, $perPage: Int) {
 }`;
 
 const SEARCH_PER_PAGE = 5;
-const USER_AGENT = "ArqonBot/2.0 (Discord gacha bot; AniList character import)";
+const USER_AGENT = "KoguBot/2.0 (Discord gacha bot; AniList character import)";
 /** Minimo de similaridade (trigramas) para aceitar um resultado cujos tokens nao contem a busca. */
 const MIN_SIMILARITY = 0.35;
 

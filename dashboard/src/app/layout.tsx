@@ -9,8 +9,8 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "sw
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono", display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: "Arqon", template: "%s | Arqon" },
-  description: "Dashboard do bot Arqon: panteao, economia e administracao do servidor.",
+  title: { default: "Kogu", template: "%s | Kogu" },
+  description: "Dashboard do bot Kogu: panteao, economia e administracao do servidor.",
 };
 
 export const viewport: Viewport = {

@@ -1,6 +1,6 @@
-# Especificação do site público do Arqon (inspirada na estrutura do mudae.net)
+# Especificação do site público do Kogu (inspirada na estrutura do mudae.net)
 
-Este documento descreve a estrutura e o comportamento das páginas públicas do mudae.net, observadas em 31/10/2026, e como reproduzir as mesmas ideias no site do Arqon. É uma descrição de funcionalidade em palavras próprias. Não copie código, textos, logotipos, imagens, nomes de seções palavra por palavra nem o visual exato do site deles: o Arqon usa a sua própria identidade (design system em `dashboard/src/components` e tokens em `dashboard/src/styles/tokens.css`).
+Este documento descreve a estrutura e o comportamento das páginas públicas do mudae.net, observadas em 31/10/2026, e como reproduzir as mesmas ideias no site do Kogu. É uma descrição de funcionalidade em palavras próprias. Não copie código, textos, logotipos, imagens, nomes de seções palavra por palavra nem o visual exato do site deles: o Kogu usa a sua própria identidade (design system em `dashboard/src/components` e tokens em `dashboard/src/styles/tokens.css`).
 
 Limites da observação: só páginas públicas, sem login. Não vi as áreas logadas nem o corpo principal da página de personagem (o conteúdo capturado dela foi só o painel de contribuições). Onde isso afeta algo, está marcado como "a confirmar".
 

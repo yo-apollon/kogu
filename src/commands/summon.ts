@@ -182,7 +182,7 @@ export async function handleSummonCommand(
     ownerName,
   });
 
-  const attachment = new AttachmentBuilder(cardBuffer, { name: "arqon-card.png" });
+  const attachment = new AttachmentBuilder(cardBuffer, { name: "kogu-card.png" });
 
   // Cores do Embed Lateral segundo a Raridade da Carta
   const embedColors: Record<string, number> = {
@@ -235,7 +235,7 @@ export async function handleSummonCommand(
       iconURL: message.author.displayAvatarURL(),
     })
     .setDescription(desc)
-    .setImage("attachment://arqon-card.png")
+    .setImage("attachment://kogu-card.png")
     .setColor(existingPact ? 0x2b2d31 : 0xe03b54); // Tom característico vermelho/bordô estilo Mudae se livre
 
   if (existingPact) {

@@ -309,7 +309,7 @@ export async function handleMessage(message: Message) {
   // 19. CENTRAL DE AJUDA ($help / $ajuda)
   if (commandName === "help" || commandName === "ajuda" || commandName === "comandos") {
     const embed = new EmbedBuilder()
-      .setTitle("🌌 Central Dimensional — Comandos do Arqon")
+      .setTitle("✨ Central Dimensional — Comandos do Kogu")
       .setColor("#5865F2")
       .addFields(
         {
@@ -353,7 +353,7 @@ export async function handleMessage(message: Message) {
           inline: false,
         }
       )
-      .setFooter({ text: "Arqon RPG Dimensional • Prefixo: $" });
+      .setFooter({ text: "Kogu • Multiverse Gacha & RPG • Prefixo: $" });
 
     return message.reply({ embeds: [embed] });
   }

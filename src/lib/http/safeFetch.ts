@@ -39,7 +39,7 @@ export class SafeFetchError extends Error {
 }
 
 export const JSON_MAX_BYTES = 5 * 1024 * 1024;
-export const DEFAULT_USER_AGENT = "ArqonBot/2.0 (Discord gacha bot; safe-fetch)";
+export const DEFAULT_USER_AGENT = "KoguBot/2.0 (Discord gacha bot; safe-fetch)";
 
 export type LookupResult = Array<{ address: string; family?: number }>;
 export type LookupFn = (hostname: string) => Promise<LookupResult>;

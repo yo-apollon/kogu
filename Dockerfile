@@ -1,4 +1,4 @@
-# Multi-stage Dockerfile para Arqon (ARM64 na Oracle Cloud e x86_64)
+# Multi-stage Dockerfile para Kogu (ARM64 na Oracle Cloud e x86_64)
 
 # Etapa 1: Build
 FROM node:22-alpine AS builder

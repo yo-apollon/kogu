@@ -238,7 +238,7 @@ describe("JikanSource.discover", () => {
 
     expect(calls[0].url).toBe(`${JIKAN_BASE_URL}/seasons/now?page=1&limit=25`);
     expect(new URL(calls[0].url).host).toBe("api.jikan.moe");
-    expect(calls[0].headers["user-agent"]).toMatch(/ArqonBot/);
+    expect(calls[0].headers["user-agent"]).toMatch(/KoguBot/);
     expect(calls[0].headers.accept).toBe("application/json");
   });
 

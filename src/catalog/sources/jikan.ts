@@ -34,7 +34,7 @@ export const JIKAN_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
  * Jikan e uma API nao oficial e gratuita do MyAnimeList: identificamos o bot, cacheamos e
  * mantemos o ritmo baixo.
  */
-const JIKAN_USER_AGENT = "ArqonBot/2.0 (Discord gacha bot; Jikan v4 catalog sync; cached)";
+const JIKAN_USER_AGENT = "KoguBot/2.0 (Discord gacha bot; Jikan v4 catalog sync; cached)";
 const MAX_PER_PAGE = 25;
 const DEFAULT_MAX_PAGES = 20;
 const DEFAULT_CHARACTER_LIMIT = 25;

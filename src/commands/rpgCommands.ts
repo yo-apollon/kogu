@@ -97,7 +97,7 @@ export async function handleInfoCommand(message: Message, args: string[]) {
     ownerName,
   });
 
-  const attachment = new AttachmentBuilder(cardBuffer, { name: "arqon-info.png" });
+  const attachment = new AttachmentBuilder(cardBuffer, { name: "kogu-info.png" });
 
   const genderSymbol = found.gender === "FEMALE" ? "♀" : found.gender === "MALE" ? "♂" : "⚧";
   const claimRank = found.popularityRank && found.popularityRank < 99999 ? `#${found.popularityRank}` : `#1`;
@@ -129,7 +129,7 @@ export async function handleInfoCommand(message: Message, args: string[]) {
       iconURL: message.author.displayAvatarURL(),
     })
     .setDescription(desc)
-    .setImage("attachment://arqon-info.png")
+    .setImage("attachment://kogu-info.png")
     .setColor(0xe03b54);
 
   if (existingPact) {
@@ -455,7 +455,7 @@ export async function handleTopCommand(message: Message, commandName: string) {
     .join("\n");
 
   const embed = new EmbedBuilder()
-    .setTitle("🌌 Top 15 Entidades Mais Valiosas (Catálogo Arqon)")
+    .setTitle("🌌 Top 15 Entidades Mais Valiosas (Catálogo Kogu)")
     .setDescription(desc)
     .setColor("#5865F2")
     .setFooter({ text: "Use $im <nome> para ver a carta completa de qualquer personagem!" });

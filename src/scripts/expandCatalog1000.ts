@@ -882,7 +882,7 @@ function insertCurated(db: Database.Database, existingSlugs: Set<string>): { wea
 
 async function main() {
   console.log("🌌 ========================================================");
-  console.log("🌌 ARQON: EXPANSÃO DO CATÁLOGO DE ENTIDADES (META: ~1000+)");
+  console.log("🌌 KOGU: EXPANSÃO DO CATÁLOGO DE ENTIDADES (META: ~1000+)");
   console.log("🌌 ========================================================");
 
   const db = new Database(SQLITE_PATH);

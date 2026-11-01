@@ -1,4 +1,4 @@
-# Arqon: o que falta fazer
+# Kogu: o que falta fazer
 
 Estado em 25/10/2026. O bot (v2) roda localmente com Postgres embutido (`npm run dev:local`). A dashboard tem esqueleto, autenticação, camada de dados e design system, mas ainda nenhuma aba de conteúdo. O plano detalhado da dashboard está em `docs/dashboard-plan.md`.
 

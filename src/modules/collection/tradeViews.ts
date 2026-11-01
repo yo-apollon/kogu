@@ -189,7 +189,7 @@ export function buildTradeEmbed(session: TradeSession): EmbedBuilder {
   );
 
   embed.setFooter({
-    text: `Arqon ᛫ Expira em 90s ᛫ Ambos precisam confirmar`,
+    text: `Kogu ᛫ Expira em 90s ᛫ Ambos precisam confirmar`,
   });
 
   return embed;

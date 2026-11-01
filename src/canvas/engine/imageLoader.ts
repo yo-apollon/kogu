@@ -67,7 +67,7 @@ export class ImageLoader {
 
   constructor(opts: ImageLoaderOptions = {}) {
     this.fetcher = opts.fetcher ?? createSafeImageFetcher({ allowAnyPublicHost: true });
-    this.dir = opts.cacheDir === false ? null : path.resolve(opts.cacheDir ?? process.env.ARQON_IMAGE_CACHE_DIR ?? path.join(process.cwd(), ".cache", "img"));
+    this.dir = opts.cacheDir === false ? null : path.resolve(opts.cacheDir ?? process.env.KOGU_IMAGE_CACHE_DIR ?? process.env.ARQON_IMAGE_CACHE_DIR ?? path.join(process.cwd(), ".cache", "img"));
     this.negativeTtlMs = opts.negativeTtlMs ?? 60_000;
     this.bytes = new LRUCache<string, Buffer>({
       maxSize: opts.memoryMaxBytes ?? 100 * 1024 * 1024,

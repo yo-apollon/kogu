@@ -255,7 +255,7 @@ describe("AniListSource.discover", () => {
     expect(first.url).toBe(new URL(ANILIST_URL).href); // safeFetch normaliza via URL.href
     expect(first.method).toBe("POST");
     expect(first.headers["content-type"]).toBe("application/json");
-    expect(first.headers["user-agent"]).toMatch(/ArqonBot/);
+    expect(first.headers["user-agent"]).toMatch(/KoguBot/);
     expect(first.query).toContain("Page(page: $page, perPage: $perPage)");
     expect(first.variables).toMatchObject({ page: 1, type: "ANIME", sort: ["TRENDING_DESC"] });
   });

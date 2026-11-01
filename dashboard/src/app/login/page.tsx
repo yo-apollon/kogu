@@ -19,7 +19,7 @@ export default async function LoginPage({
 
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center gap-6 px-4 text-center">
-      <h1 className="text-3xl font-semibold tracking-tight">Entrar no Arqon</h1>
+      <h1 className="text-3xl font-semibold tracking-tight">Entrar no Kogu</h1>
       <p className="text-[var(--muted)]">
         Use sua conta do Discord para ver seu panteao e administrar seus servidores.
       </p>
