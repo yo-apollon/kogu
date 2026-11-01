@@ -42,8 +42,8 @@ describe("progression module commands", () => {
 		expect(byName.get("blacktea")?.aliases).toContain("bt");
 	});
 
-	it("exports the progression component handler under namespace 'pg'", () => {
-		expect(PROGRESSION_NS).toBe("pg");
-		expect(progressionComponentHandler.namespace).toBe("pg");
+	it("exports the progression component handler under namespace 'prg'", () => {
+		expect(PROGRESSION_NS).toBe("prg");
+		expect(progressionComponentHandler.namespace).toBe("prg");
 	});
 });

@@ -33,7 +33,7 @@ import {
   transferAether,
 } from "./service.js";
 
-export const PROGRESSION_NS = "pg";
+export const PROGRESSION_NS = "prg";
 
 function slashBase(name: string, ptDesc: string, enDesc: string): SlashCommandBuilder {
   return new SlashCommandBuilder()
