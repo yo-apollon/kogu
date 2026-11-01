@@ -97,10 +97,10 @@ describe("buildHelpGroups", () => {
 
   it("descricao vem de help.commands.* no idioma, com fallback local e vazio quando nao ha", () => {
     expect(describeCommand(cmd("import", "catalog"), "pt-BR")).toBe(
-      "Importa um personagem do AniList para o catálogo."
+      "Importa um personagem do multiverso para o catálogo."
     );
     expect(describeCommand(cmd("import", "catalog"), "en-US")).toBe(
-      "Imports a character from AniList into the catalog."
+      "Imports a character from the multiverse into the catalog."
     );
     // ping e catalog ainda nao estao nos locales: fallback local
     expect(describeCommand(cmd("ping", "help"), "pt-BR")).toBe("Mostra a latência do bot.");
@@ -116,35 +116,38 @@ describe("views", () => {
       buildHelpGroups(sample, "pt-BR", "$").flatMap((g) => g.entries.map((e) => [e.name, e]))
     );
     expect(commandLine(entries.import, "pt-BR")).toBe(
-      "`$import ($add, $importar)` — Importa um personagem do AniList para o catálogo."
+      "`$import ($add, $importar)` — Importa um personagem do multiverso para o catálogo."
     );
     expect(commandLine(entries.setvip, "pt-BR")).toMatch(/^`\$setvip` — .+ 🔒$/);
     expect(commandLine(entries.misterio, "pt-BR")).toBe("`$misterio`");
   });
 
-  it("rodape com prefixo e atribuicao do TMDB (pt-BR exportada do adapter; en-US oficial)", () => {
+  it("rodape limpo com prefixo do Kogu sem poluicao de APIs", () => {
     const pt = helpFooter("pt-BR", "!");
     expect(pt).toContain("Prefixo: !");
-    expect(pt).toContain("AniList");
-    expect(pt).toContain("IGDB");
-    expect(pt).toContain("TMDB");
-    expect(pt).toContain(TMDB_ATTRIBUTION);
+    expect(pt).toContain("Kogu");
+    expect(pt).not.toContain("TMDB");
+    expect(pt).not.toContain("AniList");
+    expect(pt).not.toContain("IGDB");
     const en = helpFooter("en-US", "$");
-    expect(en).toContain(tmdbAttribution("en-US"));
-    expect(en).toContain("not endorsed or certified by TMDB");
+    expect(en).toContain("Prefix: $");
+    expect(en).toContain("Kogu");
+    expect(en).not.toContain("TMDB");
     expect(pt.length).toBeLessThanOrEqual(2048);
   });
 
-  it("visao geral lista as categorias e a quantidade; toda tela leva o rodape de atribuicao", () => {
+  it("visao geral lista as categorias e possui visual rico do Kogu", () => {
     const groups = buildHelpGroups(sample, "pt-BR", "$");
     const overview = embedJson(overviewEmbed(groups, "pt-BR", "$"));
-    expect(overview.title).toBe("🌌 Central Dimensional — Comandos do Arqon");
-    expect(overview.description).toContain("🎲 Roleta de Invocação** — 2 comandos");
+    expect(overview.title).toBe("✨ Central Dimensional — Comandos do Kogu");
+    expect(overview.description).toContain("Multiverso Kogu");
     expect(overview.description).toContain("Escolha uma categoria no menu");
-    expect(overview.footer.text).toContain(TMDB_ATTRIBUTION);
+    expect(overview.footer.text).toContain("Kogu");
+    expect(overview.footer.text).not.toContain("TMDB");
     for (const g of groups) {
       for (const e of categoryEmbeds(g, "pt-BR", "$")) {
-        expect(embedJson(e).footer.text).toContain(TMDB_ATTRIBUTION);
+        expect(embedJson(e).footer.text).not.toContain("TMDB");
+        expect(embedJson(e).footer.text).toContain("Kogu");
       }
     }
   });

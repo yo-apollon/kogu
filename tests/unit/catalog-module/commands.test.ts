@@ -1,4 +1,4 @@
-﻿import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("../../../src/infra/redis/client.js", async () => {
   const { FakeKV } = await import("../ui/helpers.js");
@@ -123,7 +123,7 @@ describe("registro do modulo", () => {
       ["id2", 1, true],
     ]);
     // descricao pt-BR vem do locale, en-US localizada
-    expect(byName.import.description).toBe("Importa um personagem do AniList para o catálogo.");
+    expect(byName.import.description).toBe("Importa um personagem do multiverso para o catálogo.");
     expect((byName.import.description_localizations as any)["en-US"]).toContain("Imports a character");
   });
 });
@@ -201,7 +201,7 @@ describe("$import", () => {
     vi.mocked(svc.importCharacter).mockRejectedValue(new CatalogApiError("down"));
     const { ctx, sent } = makeCtx({ args: { query: "Killua" } });
     await importCommand.execute(ctx);
-    expect(textOf(sent.at(-1))).toContain("Erro ao consultar a API do AniList");
+    expect(textOf(sent.at(-1))).toContain("Erro ao sincronizar com o multiverso");
     expect(svc.refundVipImport).toHaveBeenCalledTimes(1);
   });
 

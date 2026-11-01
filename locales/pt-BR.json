@@ -288,7 +288,7 @@
     "title": "🌠 Lista de Desejos de {user} ({count}/{max})",
     "line": "{rank}. {icon} **{name}** — *{franchise}* (💠 {aether})",
     "footer": "Use {prefix}sw <nome> para definir seu Desejo Estelar (Starwish)!",
-    "not_found": "❌ Personagem **\"{query}\"** não encontrado. Use `{prefix}import {query}` para trazê-lo do AniList!",
+    "not_found": "❌ Personagem **\"{query}\"** não encontrado no catálogo. Use `{prefix}import {query}` para invocá-lo do multiverso!",
     "removed": "🗑️ **{entity}** foi removido da sua Lista de Desejos.",
     "added": "⭐ **Adicionado à Lista de Desejos!** Você receberá um alerta especial quando **{entity}** (*{franchise}*) aparecer nas rolagens!",
     "starwish_added": "🌟 **Desejo Estelar Definido!** Você receberá um alerta especial quando **{entity}** (*{franchise}*) aparecer nas rolagens!",
@@ -337,8 +337,8 @@
     "settings_advanced_value": "• **Intervalo de rolls:** `{interval} min`\n• **Deslocamento do reset:** `{offset} min`\n• **Pactos por janela:** `{pacts}`\n• **Proteção de Éter:** `{aether}s`\n• **Boost de lançamento:** `{boost}`\n• **Conteúdo adulto:** `{adult}`"
   },
   "help": {
-    "title": "🌌 Central Dimensional — Comandos do Arqon",
-    "footer": "Arqon RPG Dimensional • Prefixo: {prefix}",
+    "title": "✨ Central Dimensional — Comandos do Kogu",
+    "footer": "Kogu Multiverse Gacha & RPG • Prefixo: {prefix}",
     "placeholder": "Escolha uma categoria",
     "overview": "Escolha uma categoria no menu abaixo para ver os comandos. Você também pode usar os comandos por barra (`/`).",
     "no_commands": "Nenhum comando nesta categoria.",
@@ -374,7 +374,7 @@
       "wishlist": "Mostra a sua Lista de Desejos.",
       "top": "Mostra o ranking do servidor por Éter ou por pactos.",
       "topserv": "Mostra o ranking do servidor por Éter ou por pactos.",
-      "import": "Importa um personagem do AniList para o catálogo.",
+      "import": "Importa um personagem do multiverso para o catálogo.",
       "suggest": "Sugere um personagem para o catálogo.",
       "suggestlist": "Lista as sugestões pendentes (staff).",
       "approvesuggest": "Aprova uma sugestão e importa o personagem (staff).",
@@ -406,7 +406,7 @@
     "overview_label": "Visão geral",
     "commands_count": "{count} comandos",
     "owner_only": "restrito ao dono do bot",
-    "credits": "Dados: AniList, IGDB e TMDB."
+    "credits": "Kogu Multiverse Gacha & RPG"
   },
   "catalog": {
     "universe": {
@@ -431,14 +431,14 @@
       "MYTHIC": "Mítico"
     },
     "default_universe": "Universo Dimensional",
-    "top_title": "🌌 Top {count} Entidades Mais Valiosas (Catálogo Arqon)",
+    "top_title": "🌌 Top {count} Cartas Mais Valiosas (Catálogo Kogu)",
     "top_line": "**#{rank}** **{name}** (*{franchise}*) — 💠 **{value} Éter**",
     "top_footer": "Use {prefix}im <nome> para ver a carta completa de qualquer personagem!",
     "import_usage": "✨ Digite o nome do personagem para importar! Exemplo: `{prefix}import Killua Zoldyck`",
     "import_restricted": "🔒 **Acesso Restrito:** a importação direta (`{prefix}import`) é exclusiva para a **Equipe / Criador** e membros **VIP / Booster**.\n💡 Usuários podem enviar para aprovação usando: `{prefix}suggest {query}`!",
     "import_vip_limit": "⏳ **Limite Diário VIP Atingido ({max}/{max})!** Membros VIP podem importar até {max} personagens por dia. Seu limite recarregará amanhã.",
-    "import_api_error": "❌ Erro ao consultar a API do AniList. Tente novamente em instantes.",
-    "import_not_found": "❌ Nenhum personagem encontrado no AniList para **\"{query}\"**.",
+    "import_api_error": "❌ Erro ao sincronizar com o multiverso. Tente novamente em instantes.",
+    "import_not_found": "❌ Nenhum personagem encontrado no multiverso para **\"{query}\"**.",
     "import_success": "✨ **{name}** (*{franchise}*) foi importado com sucesso para o Panteão Dimensional com valor **💠 {aether} Éter**!",
     "import_error": "❌ Ocorreu um erro ao importar o personagem.",
     "suggest_usage": "💡 Digite o nome do personagem que deseja sugerir. Exemplo: `{prefix}suggest Eren Yeager`",

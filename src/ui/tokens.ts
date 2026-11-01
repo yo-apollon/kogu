@@ -77,8 +77,8 @@ export const STATE_COLORS: Record<UiState, number> = {
   info: 0x5865f2,
 };
 
-/** Cor de marca, usada quando nenhum estado se aplica. */
-export const BRAND_COLOR = 0x5865f2;
+/** Cor de marca, usada quando nenhum estado se aplica (Kogu Violet). */
+export const BRAND_COLOR = 0x7c3aed;
 
 export function colorForVariant(variant: CardVariant | string | null | undefined): number {
   const palette = variant ? VARIANT_PALETTES[variant as CardVariant] : undefined;

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { BRAND_COLOR } from "../../../src/ui/tokens.js";
 import { discordRelative, discordTime } from "../../../src/lib/time.js";
 import type { MemberSnapshot, PantheonSummary } from "../../../src/modules/economy/extra.js";
 import { emptyRelicLevels, RELIC_KEYS } from "../../../src/modules/economy/relics.js";
@@ -303,7 +304,7 @@ describe("perfil", () => {
     const j = json(embed);
     expect(j.thumbnail.url).toBe("https://cdn/avatar.png");
     expect(allText(embed)).toContain("Nenhuma entidade ainda");
-    expect(j.color).toBe(0x5865f2);
+    expect(j.color).toBe(BRAND_COLOR);
   });
 
   it("secoes do painel: Visao geral e Reliquias (somente leitura, com a cor do jogador)", async () => {
@@ -319,8 +320,8 @@ describe("perfil", () => {
   it("parseEmbedColor", () => {
     expect(parseEmbedColor("#5865F2")).toBe(0x5865f2);
     expect(parseEmbedColor("00ff00")).toBe(0x00ff00);
-    expect(parseEmbedColor("#xyz")).toBe(0x5865f2);
-    expect(parseEmbedColor(null)).toBe(0x5865f2);
+    expect(parseEmbedColor("#xyz")).toBe(BRAND_COLOR);
+    expect(parseEmbedColor(null)).toBe(BRAND_COLOR);
   });
 });
 

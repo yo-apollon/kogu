@@ -288,7 +288,7 @@
     "title": "🌠 {user}'s Wishlist ({count}/{max})",
     "line": "{rank}. {icon} **{name}** — *{franchise}* (💠 {aether})",
     "footer": "Use {prefix}sw <name> to set your Starwish!",
-    "not_found": "❌ Character **\"{query}\"** not found. Use `{prefix}import {query}` to bring them from AniList!",
+    "not_found": "❌ Character **\"{query}\"** not found in the catalog. Use `{prefix}import {query}` to bring them from the multiverse!",
     "removed": "🗑️ **{entity}** was removed from your Wishlist.",
     "added": "⭐ **Added to the Wishlist!** You will get a special alert when **{entity}** (*{franchise}*) shows up in the rolls!",
     "starwish_added": "🌟 **Starwish Set!** You will get a special alert when **{entity}** (*{franchise}*) shows up in the rolls!",
@@ -337,8 +337,8 @@
     "settings_advanced_value": "• **Roll interval:** `{interval} min`\n• **Reset offset:** `{offset} min`\n• **Pacts per window:** `{pacts}`\n• **Aether protection:** `{aether}s`\n• **Release boost:** `{boost}`\n• **Adult content:** `{adult}`"
   },
   "help": {
-    "title": "🌌 Dimensional Hub — Arqon Commands",
-    "footer": "Arqon Dimensional RPG • Prefix: {prefix}",
+    "title": "✨ Dimensional Hub — Kogu Commands",
+    "footer": "Kogu Multiverse Gacha & RPG • Prefix: {prefix}",
     "placeholder": "Choose a category",
     "overview": "Pick a category in the menu below to see its commands. You can also use slash (`/`) commands.",
     "no_commands": "No commands in this category.",
@@ -374,7 +374,7 @@
       "wishlist": "Shows your Wishlist.",
       "top": "Shows the server ranking by Aether or by pacts.",
       "topserv": "Shows the server ranking by Aether or by pacts.",
-      "import": "Imports a character from AniList into the catalog.",
+      "import": "Imports a character from the multiverse into the catalog.",
       "suggest": "Suggests a character for the catalog.",
       "suggestlist": "Lists pending suggestions (staff).",
       "approvesuggest": "Approves a suggestion and imports the character (staff).",
@@ -406,7 +406,7 @@
     "overview_label": "Overview",
     "commands_count": "{count} commands",
     "owner_only": "bot owner only",
-    "credits": "Data: AniList, IGDB and TMDB."
+    "credits": "Kogu Multiverse Gacha & RPG"
   },
   "catalog": {
     "universe": {
@@ -431,14 +431,14 @@
       "MYTHIC": "Mythic"
     },
     "default_universe": "Dimensional Universe",
-    "top_title": "🌌 Top {count} Most Valuable Entities (Arqon Catalog)",
+    "top_title": "🌌 Top {count} Most Valuable Cards (Kogu Catalog)",
     "top_line": "**#{rank}** **{name}** (*{franchise}*) — 💠 **{value} Aether**",
     "top_footer": "Use {prefix}im <name> to see the full card of any character!",
     "import_usage": "✨ Type the name of the character to import! Example: `{prefix}import Killua Zoldyck`",
     "import_restricted": "🔒 **Restricted Access:** direct import (`{prefix}import`) is exclusive to the **Staff / Creator** and **VIP / Booster** members.\n💡 Users can submit for approval using: `{prefix}suggest {query}`!",
     "import_vip_limit": "⏳ **Daily VIP Limit Reached ({max}/{max})!** VIP members can import up to {max} characters per day. Your limit resets tomorrow.",
-    "import_api_error": "❌ Error querying the AniList API. Please try again in a moment.",
-    "import_not_found": "❌ No character found on AniList for **\"{query}\"**.",
+    "import_api_error": "❌ Error querying the multiverse network. Please try again in a moment.",
+    "import_not_found": "❌ No character found in the multiverse for **\"{query}\"**.",
     "import_success": "✨ **{name}** (*{franchise}*) was successfully imported into the Dimensional Pantheon worth **💠 {aether} Aether**!",
     "import_error": "❌ An error occurred while importing the character.",
     "suggest_usage": "💡 Type the name of the character you want to suggest. Example: `{prefix}suggest Eren Yeager`",

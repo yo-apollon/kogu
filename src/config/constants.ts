@@ -1,5 +1,5 @@
-export const BOT_NAME = "Arqon";
-export const EMBED_FOOTER = "Arqon RPG Dimensional";
+export const BOT_NAME = "Kogu";
+export const EMBED_FOOTER = "Kogu • Multiverse Gacha & RPG";
 
 /** Hosts permitidos para baixar imagens de cartas. */
 export const IMAGE_HOST_ALLOWLIST = [
