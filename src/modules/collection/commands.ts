@@ -62,6 +62,7 @@ import {
   type SortMarryCriteria,
 } from "./service.js";
 import {
+  buildInfoActionRows,
   buildInfoView,
   buildPantheonEmbed,
   cardRenderInput,
@@ -450,7 +451,20 @@ export const infoCommand: CommandDefinition<typeof infoArgs> = {
               .join(" · "),
           })
         : undefined;
-    await ctx.reply({ content, embeds: [embed], files });
+
+    const images = await getEntityImages(entityId);
+    const currEdIdx = Math.max(0, edition.editions.findIndex((e) => e.id === entityId));
+    const rows = buildInfoActionRows({
+      entityId,
+      editions: edition.editions,
+      currentEditionIndex: currEdIdx,
+      images,
+      currentImageIndex: 0,
+      userId: ctx.user.id,
+      locale: ctx.locale,
+    });
+
+    await ctx.reply({ content, embeds: [embed], files, components: rows });
   },
 };
 

@@ -2,9 +2,10 @@
  * Views do Panteao: embeds e textos puros (sem I/O). O chamador monta o paginador, renderiza a arte
  * e envia.
  */
-import type { EmbedBuilder } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type EmbedBuilder } from "discord.js";
 import type { RenderCardInput } from "../../canvas/index.js";
 import { EDITION_LABEL, type EntityEdition } from "../../config/gacha.js";
+import { encodeCustomId } from "../../core/customId.js";
 import { t } from "../../i18n/index.js";
 import { baseEmbed } from "../../ui/embeds.js";
 import { emoji, variantEmoji } from "../../ui/emojis.js";
@@ -13,7 +14,9 @@ import { BRAND_COLOR, resolveCardEmbedColor } from "../../ui/tokens.js";
 import type { SummonView } from "../../ui/summonEmbed.js";
 import { calculateAetherValue, pactAetherValue } from "../summon/variants.js";
 import type { PantheonDisplay, PantheonQuery } from "./flags.js";
-import type { EntityHit, EntityInfo, OwnPactChoice, PantheonPage, PantheonRow } from "./service.js";
+import type { EditionVariant, EntityHit, EntityInfo, OwnPactChoice, PantheonPage, PantheonRow } from "./service.js";
+
+export const COLLECTION_NAMESPACE = "col";
 
 /** Nome seguro para markdown, com limite de tamanho. */
 export function safeText(value: string, max = 60): string {
@@ -202,4 +205,115 @@ export function entityChoice(hit: EntityHit): AutocompleteChoice {
 export function pactChoice(pact: OwnPactChoice): AutocompleteChoice {
   const label = pact.series ? `${pact.name} · ${pact.series}` : pact.name;
   return { name: truncate(label, 100), value: `pact:${pact.pactId}` };
+}
+
+// ---------------------------------------------------------------------------
+// Botões de Variações e Edições do $im / $info
+// ---------------------------------------------------------------------------
+
+export interface BuildInfoActionRowsOptions {
+  entityId: number;
+  editions: EditionVariant[];
+  currentEditionIndex: number;
+  images: Array<{ id: number; url: string; isPrimary: boolean }>;
+  currentImageIndex: number;
+  userId: string;
+  locale: string;
+}
+
+export function buildInfoActionRows(opts: BuildInfoActionRowsOptions): ActionRowBuilder<ButtonBuilder>[] {
+  const rows: ActionRowBuilder<ButtonBuilder>[] = [];
+  const { entityId, editions, currentEditionIndex, images, currentImageIndex, userId, locale } = opts;
+
+  // 1. Linha de Edições da Carta (Básica, Épica, Mítica, etc.)
+  if (editions.length > 1) {
+    const edButtons: ButtonBuilder[] = [];
+
+    if (editions.length <= 3) {
+      const prevEdIdx = currentEditionIndex > 0 ? currentEditionIndex - 1 : editions.length - 1;
+      const prevEd = editions[prevEdIdx]!;
+      edButtons.push(
+        new ButtonBuilder()
+          .setCustomId(encodeCustomId(COLLECTION_NAMESPACE, "im_ed", prevEd.id, 0, userId))
+          .setLabel("◀")
+          .setStyle(ButtonStyle.Secondary)
+      );
+
+      for (let i = 0; i < editions.length; i++) {
+        const ed = editions[i]!;
+        const isCurrent = i === currentEditionIndex;
+        let shortLabel = t(EDITION_LABEL[ed.edition], locale);
+        if (ed.edition === "BASIC") shortLabel = "🔹 Básica";
+        else if (ed.edition === "EPIC") shortLabel = "⭐ Épica";
+        else if (ed.edition === "MYTHIC") shortLabel = "👑 Mítica";
+
+        if (ed.owned) shortLabel += " ✅";
+
+        edButtons.push(
+          new ButtonBuilder()
+            .setCustomId(encodeCustomId(COLLECTION_NAMESPACE, "im_ed", ed.id, 0, userId))
+            .setLabel(shortLabel)
+            .setStyle(isCurrent ? ButtonStyle.Primary : ed.owned ? ButtonStyle.Success : ButtonStyle.Secondary)
+            .setDisabled(isCurrent)
+        );
+      }
+
+      const nextEdIdx = currentEditionIndex < editions.length - 1 ? currentEditionIndex + 1 : 0;
+      const nextEd = editions[nextEdIdx]!;
+      edButtons.push(
+        new ButtonBuilder()
+          .setCustomId(encodeCustomId(COLLECTION_NAMESPACE, "im_ed", nextEd.id, 0, userId))
+          .setLabel("▶")
+          .setStyle(ButtonStyle.Secondary)
+      );
+    } else {
+      const prevEdIdx = currentEditionIndex > 0 ? currentEditionIndex - 1 : editions.length - 1;
+      const nextEdIdx = currentEditionIndex < editions.length - 1 ? currentEditionIndex + 1 : 0;
+      const curEd = editions[currentEditionIndex]!;
+
+      edButtons.push(
+        new ButtonBuilder()
+          .setCustomId(encodeCustomId(COLLECTION_NAMESPACE, "im_ed", editions[prevEdIdx]!.id, 0, userId))
+          .setLabel("◀ Anterior")
+          .setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder()
+          .setCustomId(encodeCustomId(COLLECTION_NAMESPACE, "im_cnt", curEd.id, 0, userId))
+          .setLabel(`🃏 Versão ${currentEditionIndex + 1}/${editions.length}${curEd.owned ? " ✅" : ""}`)
+          .setStyle(ButtonStyle.Primary)
+          .setDisabled(true),
+        new ButtonBuilder()
+          .setCustomId(encodeCustomId(COLLECTION_NAMESPACE, "im_ed", editions[nextEdIdx]!.id, 0, userId))
+          .setLabel("Próxima ▶")
+          .setStyle(ButtonStyle.Secondary)
+      );
+    }
+
+    rows.push(new ActionRowBuilder<ButtonBuilder>().addComponents(edButtons));
+  }
+
+  // 2. Linha de Artes/Fotos Alternativas da Carta
+  if (images.length > 1) {
+    const prevImg = currentImageIndex > 0 ? currentImageIndex - 1 : images.length - 1;
+    const nextImg = currentImageIndex < images.length - 1 ? currentImageIndex + 1 : 0;
+
+    const imgRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      new ButtonBuilder()
+        .setCustomId(encodeCustomId(COLLECTION_NAMESPACE, "im_img", entityId, prevImg, userId))
+        .setLabel("◀ Foto")
+        .setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder()
+        .setCustomId(encodeCustomId(COLLECTION_NAMESPACE, "im_cnt", entityId, currentImageIndex, userId))
+        .setLabel(`🖼️ Foto #${currentImageIndex + 1}/${images.length}`)
+        .setStyle(ButtonStyle.Secondary)
+        .setDisabled(true),
+      new ButtonBuilder()
+        .setCustomId(encodeCustomId(COLLECTION_NAMESPACE, "im_img", entityId, nextImg, userId))
+        .setLabel("Foto ▶")
+        .setStyle(ButtonStyle.Secondary)
+    );
+
+    rows.push(imgRow);
+  }
+
+  return rows;
 }

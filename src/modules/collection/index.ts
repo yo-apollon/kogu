@@ -9,7 +9,8 @@
  */
 import type { ComponentHandler } from "../../core/contracts.js";
 import { tradeComponent } from "./tradeViews.js";
+import { collectionComponent } from "./components.js";
 
 export { commands, registrations } from "./commands.js";
 
-export const components: ComponentHandler[] = [tradeComponent];
+export const components: ComponentHandler[] = [tradeComponent, collectionComponent];

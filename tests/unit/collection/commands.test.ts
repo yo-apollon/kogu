@@ -35,6 +35,7 @@ const svc = vi.hoisted(() => ({
   setPactCustomImage: vi.fn(),
   dissolveOwnPact: vi.fn(),
   resolveEditionForInfo: vi.fn(),
+  getEntityImages: vi.fn(),
 }));
 vi.mock("../../../src/modules/collection/service.js", async (importOriginal) => ({
   ...(await importOriginal<typeof import("../../../src/modules/collection/service.js")>()),
@@ -176,6 +177,7 @@ beforeEach(() => {
   kvHolder.kv = new MemoryStore();
   // Sem edicoes por padrao: o $im usa a entidade encontrada.
   svc.resolveEditionForInfo.mockImplementation(async (_g: string, _u: string, id: number) => ({ entityId: id, editions: [] }));
+  svc.getEntityImages.mockResolvedValue([]);
   safeFetchMock.safeFetchImage.mockResolvedValue({ buffer: Buffer.from("png"), contentType: "image/png" });
   canvasMock.renderCardInPool.mockResolvedValue(Buffer.from("webp"));
   confirmMock.confirm.mockImplementation(async (o: any) => {
@@ -236,7 +238,7 @@ describe("registro: todo alias do messageHandler legado resolve", () => {
   it("exporta os mesmos comandos em commands e registrations; componentes de trade", () => {
     expect(registrations.map((r) => r.cmd)).toEqual(commands);
     expect(registrations.filter((r) => r.matcher)).toHaveLength(1);
-    expect(components.map((c) => c.namespace)).toEqual(["tr"]);
+    expect(components.map((c) => c.namespace)).toEqual(["tr", "col"]);
     expect(commands.map((c) => c.name).sort()).toEqual(
       [
         "alias",
@@ -504,6 +506,65 @@ describe("$im / $info / /info", () => {
     expect(svc.resolveEditionForInfo).not.toHaveBeenCalled();
     expect(svc.getEntityInfo).toHaveBeenCalledWith("g1", 8);
     expect(payloadOf(m2).content).toBeUndefined();
+  });
+
+  it("edicoes e variacoes: gera botoes interativos col:im_ed e col:im_img para navegacao", async () => {
+    svc.findEntityId.mockResolvedValue(7);
+    svc.resolveEditionForInfo.mockResolvedValue({
+      entityId: 7,
+      editions: [
+        { id: 7, edition: "BASIC", tier: "COMMON", owned: true },
+        { id: 8, edition: "EPIC", tier: "EPIC", owned: false },
+        { id: 9, edition: "MYTHIC", tier: "MYTHIC", owned: false },
+      ],
+    });
+    svc.getEntityImages.mockResolvedValue([
+      { id: 101, url: "https://example.com/art1.png", isPrimary: true },
+      { id: 102, url: "https://example.com/art2.png", isPrimary: false },
+    ]);
+    svc.getEntityInfo.mockResolvedValue({ ...entityInfo(), id: 7, tier: "COMMON", edition: "BASIC" });
+
+    const m = await run("$im Zero Two");
+    const payload = payloadOf(m);
+    expect(payload.components).toHaveLength(2); // Row 1 = edições, Row 2 = fotos
+    const edButtons = payload.components[0].toJSON().components;
+    expect(edButtons.length).toBe(5); // ◀, Básica, Épica, Mítica, ▶
+    expect(edButtons[0].custom_id).toContain("col:im_ed");
+
+    const imgButtons = payload.components[1].toJSON().components;
+    expect(imgButtons.length).toBe(3); // ◀ Foto, Foto #1/2, Foto ▶
+    expect(imgButtons[0].custom_id).toContain("col:im_img");
+  });
+
+  it("collectionComponent: processa mudanca de edicao im_ed e edita o reply com deferUpdate", async () => {
+    const colHandler = components.find((c) => c.namespace === "col")!;
+    expect(colHandler).toBeDefined();
+
+    svc.getEntityInfo.mockResolvedValue({ ...entityInfo(), id: 8, tier: "EPIC", edition: "EPIC" });
+    svc.resolveEditionForInfo.mockResolvedValue({
+      entityId: 8,
+      editions: [
+        { id: 7, edition: "BASIC", tier: "COMMON", owned: false },
+        { id: 8, edition: "EPIC", tier: "EPIC", owned: true },
+      ],
+    });
+    svc.getEntityImages.mockResolvedValue([]);
+
+    const interaction = {
+      isButton: () => true,
+      guildId: "g1",
+      user: { id: ME },
+      deferUpdate: vi.fn(async () => {}),
+      editReply: vi.fn(async () => {}),
+    } as any;
+
+    await colHandler.handle(interaction, ["im_ed", "8", "0", ME]);
+    expect(interaction.deferUpdate).toHaveBeenCalledTimes(1);
+    expect(svc.getEntityInfo).toHaveBeenCalledWith("g1", 8);
+    expect(interaction.editReply).toHaveBeenCalledTimes(1);
+    const replyArg = interaction.editReply.mock.calls[0][0];
+    expect(replyArg.embeds).toBeDefined();
+    expect(replyArg.components).toBeDefined();
   });
 
   it("carta com dono: usa o valor do pacto, mostra dono e posicao", async () => {
