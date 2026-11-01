@@ -1235,6 +1235,8 @@
         <button class="cat-btn" onclick="setCategoryFilter('MANGA', this)">Manga</button>
         <button class="cat-btn" onclick="setCategoryFilter('GAMES', this)">Games</button>
         <button class="cat-btn" onclick="setCategoryFilter('MANHWA', this)">Manhwa</button>
+        <button class="cat-btn" onclick="setCategoryFilter('SPORTS', this)">🥊 UFC & Esportes</button>
+        <button class="cat-btn" onclick="setCategoryFilter('MUSIC', this)">🎵 Música</button>
         <button class="cat-btn" onclick="setCategoryFilter('CINEMA', this)">Cinema & Séries</button>
       </div>
 
@@ -1330,9 +1332,9 @@
           <div class="section-sublinks">
             <a href="javascript:void(0)" class="active" onclick="filterSlider('all', this)">All</a>
             <a href="javascript:void(0)" onclick="filterSlider('ANIME', this)">Anime</a>
-            <a href="javascript:void(0)" onclick="filterSlider('MANHWA', this)">Manhwa</a>
+            <a href="javascript:void(0)" onclick="filterSlider('SPORTS', this)">🥊 UFC/Esportes</a>
+            <a href="javascript:void(0)" onclick="filterSlider('MUSIC', this)">🎵 Música</a>
             <a href="javascript:void(0)" onclick="filterSlider('GAMES', this)">Games</a>
-            <a href="javascript:void(0)" onclick="filterSlider('CINEMA', this)">Cinema</a>
           </div>
         </div>
 
@@ -1747,7 +1749,13 @@
         }
 
         // Categoria superior
-        if (currentCategory !== 'all') {
+        if (currentCategory === 'SPORTS') {
+          const isSport = c.seriesTitle.includes('UFC') || c.seriesTitle.includes('Futebol') || c.seriesTitle.includes('NBA') || c.seriesTitle.includes('MMA');
+          if (!isSport) return false;
+        } else if (currentCategory === 'MUSIC') {
+          const isMusic = c.seriesTitle.includes('Música') || c.seriesTitle.includes('K-Pop') || c.seriesTitle.includes('BTS') || c.seriesTitle.includes('BLACKPINK') || c.seriesTitle.includes('Ado');
+          if (!isMusic) return false;
+        } else if (currentCategory !== 'all') {
           if (c.universe !== currentCategory) return false;
         }
 
@@ -1888,6 +1896,12 @@
 
       if (universe === 'all') {
         renderPopularSlider(catalog);
+      } else if (universe === 'SPORTS') {
+        const filtered = catalog.filter(c => c.seriesTitle.includes('UFC') || c.seriesTitle.includes('Futebol') || c.seriesTitle.includes('NBA'));
+        renderPopularSlider(filtered);
+      } else if (universe === 'MUSIC') {
+        const filtered = catalog.filter(c => c.seriesTitle.includes('Música') || c.seriesTitle.includes('K-Pop') || c.seriesTitle.includes('BTS'));
+        renderPopularSlider(filtered);
       } else {
         const filtered = catalog.filter(c => c.universe === universe);
         renderPopularSlider(filtered);
