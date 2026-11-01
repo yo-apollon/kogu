@@ -18,6 +18,8 @@ describe("progression module commands", () => {
 			"infokeys",
 			"arena",
 			"slot",
+			"blackjack",
+			"coinflip",
 			"blacktea",
 			"greentea",
 			"redtea",
@@ -39,6 +41,8 @@ describe("progression module commands", () => {
 		expect(byName.get("ktower")?.aliases).toContain("tower");
 		expect(byName.get("kl")?.aliases).toContain("lootbox");
 		expect(byName.get("slot")?.aliases).toContain("pokemon");
+		expect(byName.get("blackjack")?.aliases).toContain("bj");
+		expect(byName.get("coinflip")?.aliases).toContain("cf");
 		expect(byName.get("blacktea")?.aliases).toContain("bt");
 	});
 

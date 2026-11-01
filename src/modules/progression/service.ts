@@ -461,6 +461,7 @@ export interface ArenaFighter {
   spd: number;
   hp: number;
   keys: number;
+  imageUrl?: string | null;
 }
 
 export interface ArenaDuelResult {
@@ -470,6 +471,18 @@ export interface ArenaDuelResult {
   winnerCard: string;
   rounds: number;
   rewardAether: number;
+  log: string[];
+  finalHpA: number;
+  finalHpB: number;
+}
+
+export function renderHpBar(current: number, max: number, size = 10): string {
+  const safeMax = Math.max(1, max);
+  const ratio = Math.max(0, Math.min(1, current / safeMax));
+  const filled = Math.round(ratio * size);
+  const empty = size - filled;
+  const bar = "▰".repeat(filled) + "▱".repeat(empty);
+  return `\`[${bar}]\` **${Math.max(0, current)}/${safeMax} HP**`;
 }
 
 async function loadBestFighter(guildId: string, userId: string): Promise<ArenaFighter | null> {
@@ -481,9 +494,11 @@ async function loadBestFighter(guildId: string, userId: string): Promise<ArenaFi
       spd: entities.baseSpd,
       hp: entities.baseHp,
       keys: pacts.awakeningKeys,
+      imageUrl: entityImages.url,
     })
     .from(pacts)
     .innerJoin(entities, eq(entities.id, pacts.entityId))
+    .leftJoin(entityImages, and(eq(entityImages.entityId, entities.id), eq(entityImages.isPrimary, true)))
     .where(and(eq(pacts.guildId, guildId), eq(pacts.userId, userId)))
     .orderBy(desc(pacts.isSoulmate), desc(entities.baseAether), desc(pacts.awakeningKeys))
     .limit(1);
@@ -498,6 +513,7 @@ async function loadBestFighter(guildId: string, userId: string): Promise<ArenaFi
     spd: Math.round(row.spd * mult),
     hp: Math.round(row.hp * mult),
     keys: row.keys,
+    imageUrl: row.imageUrl,
   };
 }
 
@@ -515,6 +531,7 @@ export async function runArenaBattle(
       spd: 50,
       hp: 220,
       keys: 1,
+      imageUrl: null,
     };
 
   const fighterB =
@@ -526,25 +543,35 @@ export async function runArenaBattle(
       spd: 48,
       hp: 200,
       keys: 1,
+      imageUrl: "https://yo-apollon.github.io/kogu/assets/kogu_avatar_animated.gif",
     };
 
-  let hpA = fighterA.hp;
-  let hpB = fighterB.hp;
+  const maxHpA = fighterA.hp;
+  const maxHpB = fighterB.hp;
+  let hpA = maxHpA;
+  let hpB = maxHpB;
   let rounds = 0;
+  const log: string[] = [];
 
-  while (hpA > 0 && hpB > 0 && rounds < 10) {
+  while (hpA > 0 && hpB > 0 && rounds < 5) {
     rounds++;
-    const dmgAtoB = Math.max(15, fighterA.atk - Math.floor(fighterB.def * 0.4));
-    const dmgBtoA = Math.max(12, fighterB.atk - Math.floor(fighterA.def * 0.4));
+    const isCritA = Math.random() < 0.28;
+    const isCritB = Math.random() < 0.28;
+    const dmgAtoB = Math.max(22, Math.round((fighterA.atk - Math.floor(fighterB.def * 0.35)) * (isCritA ? 1.45 : 1)));
+    const dmgBtoA = Math.max(18, Math.round((fighterB.atk - Math.floor(fighterA.def * 0.35)) * (isCritB ? 1.45 : 1)));
 
     if (fighterA.spd >= fighterB.spd) {
-      hpB -= dmgAtoB;
+      hpB = Math.max(0, hpB - dmgAtoB);
+      log.push(`⚔️ **T${rounds}:** **${fighterA.cardName}** golpeou causando **-${dmgAtoB} HP**${isCritA ? " 💥 *(Crítico!)*" : ""}`);
       if (hpB <= 0) break;
-      hpA -= dmgBtoA;
+      hpA = Math.max(0, hpA - dmgBtoA);
+      log.push(`🛡️ **T${rounds}:** **${fighterB.cardName}** revidou causando **-${dmgBtoA} HP**${isCritB ? " ⚡ *(Crítico!)*" : ""}`);
     } else {
-      hpA -= dmgBtoA;
+      hpA = Math.max(0, hpA - dmgBtoA);
+      log.push(`⚔️ **T${rounds}:** **${fighterB.cardName}** atacou causando **-${dmgBtoA} HP**${isCritB ? " 💥 *(Crítico!)*" : ""}`);
       if (hpA <= 0) break;
-      hpB -= dmgAtoB;
+      hpB = Math.max(0, hpB - dmgAtoB);
+      log.push(`🛡️ **T${rounds}:** **${fighterA.cardName}** contra-atacou causando **-${dmgAtoB} HP**${isCritA ? " ⚡ *(Crítico!)*" : ""}`);
     }
   }
 
@@ -563,6 +590,9 @@ export async function runArenaBattle(
     winnerCard,
     rounds,
     rewardAether: ARENA_WIN_REWARD,
+    log,
+    finalHpA: hpA,
+    finalHpB: hpB,
   };
 }
 
@@ -822,7 +852,7 @@ export async function calculateCosmicFate(
   guildId: string,
   userA: string,
   userB: string
-): Promise<{ score: number; verdict: string }> {
+): Promise<{ score: number; verdict: string; cardA?: string; cardB?: string }> {
   const today = new Date().toISOString().slice(0, 10);
   const combined = [userA, userB].sort().join(":") + ":" + today;
   let hash = 0;
@@ -832,6 +862,23 @@ export async function calculateCosmicFate(
   }
   const score = Math.abs(hash) % 101; // 0 a 100
 
+  // Tenta carregar a carta favorita ou de maior Éter de cada um
+  const [leadA] = await db
+    .select({ name: entities.name })
+    .from(pacts)
+    .innerJoin(entities, eq(entities.id, pacts.entityId))
+    .where(and(eq(pacts.guildId, guildId), eq(pacts.userId, userA)))
+    .orderBy(desc(pacts.isSoulmate), desc(entities.baseAether))
+    .limit(1);
+
+  const [leadB] = await db
+    .select({ name: entities.name })
+    .from(pacts)
+    .innerJoin(entities, eq(entities.id, pacts.entityId))
+    .where(and(eq(pacts.guildId, guildId), eq(pacts.userId, userB)))
+    .orderBy(desc(pacts.isSoulmate), desc(entities.baseAether))
+    .limit(1);
+
   let verdict = "";
   if (score >= 90) verdict = "💖 Alma Gêmea Cósmica! Alinhamento astral perfeito e harmonia divina!";
   else if (score >= 70) verdict = "✨ Grande Sintonia Dimensional! Vocês formam uma dupla lendária!";
@@ -839,5 +886,345 @@ export async function calculateCosmicFate(
   else if (score >= 30) verdict = "⚡ Tensão Astral! Pequenas faíscas cósmicas e divergências de gostos.";
   else verdict = "💥 Incompatibilidade Caótica! Distantes como galáxias opostas no vazio!";
 
-  return { score, verdict };
+  return { score, verdict, cardA: leadA?.name, cardB: leadB?.name };
+}
+
+/* ------------------------------------------------------------------ */
+/* Disparo Dimensional / Aether Beam ($beam)                          */
+/* ------------------------------------------------------------------ */
+
+export interface BeamResult {
+  powerWatts: string;
+  tierName: string;
+  impactStatus: string;
+  shardAether: number;
+  color: number;
+}
+
+export function generateAetherBeam(hasTarget: boolean, targetName?: string): BeamResult {
+  const tiers = [
+    { name: "Hipernova Dimensional", minGW: 1200, maxGW: 3200, color: 0x06b6d4 },
+    { name: "Quasar Cósmico", minGW: 3600, maxGW: 8500, color: 0x8b5cf6 },
+    { name: "Singularidade Astral", minGW: 9000, maxGW: 19500, color: 0xec4899 },
+    { name: "Colapso do Vazio Ômega", minGW: 22000, maxGW: 75000, color: 0xfacc15 },
+  ];
+  const tier = tiers[Math.floor(Math.random() * tiers.length)]!;
+  const gw = (tier.minGW + Math.floor(Math.random() * (tier.maxGW - tier.minGW))).toLocaleString("pt-BR");
+
+  const targetImpacts = [
+    `💥 **Impacto Direto Total!** A guarda de **${targetName}** colapsou diante da torrente cósmica!`,
+    `⚡ **Impacto Crítico Devastador!** **${targetName}** tentou usar um teletransporte astral, mas o feixe desintegrou o escudo!`,
+    `🛡️ **Resistência Mística!** **${targetName}** defendeu o núcleo do golpe com um artefato épico, espalhando radiação astral nos arredores!`,
+  ];
+
+  const voidImpacts = [
+    `🌌 **Fenda Gravitacional Aberta!** O tecido da realidade estalou e rachaduras luminescentes surgiram no multiverso!`,
+    `✨ **Ressonância Dimensional!** A explosão de partículas astrais iluminou todo o cosmos com pura energia violeta!`,
+    `💥 **Detonação de Antimatéria!** Uma micro-supernova detonou na atmosfera dimensional gerando ondas de choque de Éter!`,
+  ];
+
+  const impactStatus = hasTarget && targetName
+    ? targetImpacts[Math.floor(Math.random() * targetImpacts.length)]!
+    : voidImpacts[Math.floor(Math.random() * voidImpacts.length)]!;
+
+  const shardAether = 75 + Math.floor(Math.random() * 126); // 75..200 Éter
+
+  return {
+    powerWatts: `${gw} GigaWatts de Éter`,
+    tierName: tier.name,
+    impactStatus,
+    shardAether,
+    color: tier.color,
+  };
+}
+
+/* ------------------------------------------------------------------ */
+/* Cassino Dimensional: Blackjack 21 ($bj / $blackjack)               */
+/* ------------------------------------------------------------------ */
+
+export interface PlayingCard {
+  suit: string;
+  rank: string;
+  value: number;
+}
+
+export interface BlackjackGame {
+  sessionId: string;
+  guildId: string;
+  userId: string;
+  username: string;
+  bet: number;
+  playerCards: PlayingCard[];
+  dealerCards: PlayingCard[];
+  playerScore: number;
+  dealerScore: number;
+  gameOver: boolean;
+  status: "playing" | "player_blackjack" | "player_bust" | "dealer_bust" | "player_win" | "dealer_win" | "push";
+  rewardAether: number;
+}
+
+const SUITS = ["♠️", "♥️", "♦️", "♣️"];
+const RANKS = [
+  { rank: "A", val: 11 },
+  { rank: "2", val: 2 },
+  { rank: "3", val: 3 },
+  { rank: "4", val: 4 },
+  { rank: "5", val: 5 },
+  { rank: "6", val: 6 },
+  { rank: "7", val: 7 },
+  { rank: "8", val: 8 },
+  { rank: "9", val: 9 },
+  { rank: "10", val: 10 },
+  { rank: "J", val: 10 },
+  { rank: "Q", val: 10 },
+  { rank: "K", val: 10 },
+];
+
+function drawCard(): PlayingCard {
+  const suit = SUITS[Math.floor(Math.random() * SUITS.length)]!;
+  const r = RANKS[Math.floor(Math.random() * RANKS.length)]!;
+  return { suit, rank: r.rank, value: r.val };
+}
+
+export function calcScore(cards: PlayingCard[]): number {
+  let sum = 0;
+  let aces = 0;
+  for (const c of cards) {
+    sum += c.value;
+    if (c.rank === "A") aces++;
+  }
+  while (sum > 21 && aces > 0) {
+    sum -= 10;
+    aces--;
+  }
+  return sum;
+}
+
+export function formatCards(cards: PlayingCard[], hideSecond = false): string {
+  if (hideSecond && cards.length >= 2) {
+    return `\`[ ${cards[0]!.suit} ${cards[0]!.rank} ]\` \`[ 🎴 ? ]\``;
+  }
+  return cards.map((c) => `\`[ ${c.suit} ${c.rank} ]\``).join(" ");
+}
+
+export async function startBlackjack(
+  guildId: string,
+  userId: string,
+  username: string,
+  bet: number
+): Promise<BlackjackGame> {
+  const kv = await getKV();
+  const [member] = await db
+    .select({ balance: guildMembers.aetherBalance })
+    .from(guildMembers)
+    .where(and(eq(guildMembers.guildId, guildId), eq(guildMembers.userId, userId)))
+    .limit(1);
+
+  const balance = member?.balance ?? 0;
+  if (balance < bet) {
+    throw new UserError("progression.insufficient_aether");
+  }
+
+  // Debita aposta inicial
+  await db
+    .update(guildMembers)
+    .set({ aetherBalance: sql`${guildMembers.aetherBalance} - ${bet}` })
+    .where(and(eq(guildMembers.guildId, guildId), eq(guildMembers.userId, userId)));
+
+  const pCards = [drawCard(), drawCard()];
+  const dCards = [drawCard(), drawCard()];
+  const pScore = calcScore(pCards);
+  const dScore = calcScore(dCards);
+
+  const sessionId = `${userId}:${Date.now().toString(36)}`;
+  let game: BlackjackGame = {
+    sessionId,
+    guildId,
+    userId,
+    username,
+    bet,
+    playerCards: pCards,
+    dealerCards: dCards,
+    playerScore: pScore,
+    dealerScore: dScore,
+    gameOver: false,
+    status: "playing",
+    rewardAether: 0,
+  };
+
+  if (pScore === 21) {
+    game.gameOver = true;
+    if (dScore === 21) {
+      game.status = "push";
+      game.rewardAether = bet;
+      await credit(guildId, userId, bet, { username });
+    } else {
+      game.status = "player_blackjack";
+      const prize = Math.round(bet * 2.5);
+      game.rewardAether = prize;
+      await credit(guildId, userId, prize, { username });
+    }
+  }
+
+  if (!game.gameOver) {
+    await kv.set(`bj:${sessionId}`, JSON.stringify(game), { px: 180_000 });
+  }
+
+  return game;
+}
+
+export async function hitBlackjack(sessionId: string): Promise<BlackjackGame> {
+  const kv = await getKV();
+  const raw = await kv.get(`bj:${sessionId}`);
+  if (!raw) throw new UserError("progression.game_expired");
+  const game: BlackjackGame = JSON.parse(raw);
+  if (game.gameOver) return game;
+
+  game.playerCards.push(drawCard());
+  game.playerScore = calcScore(game.playerCards);
+
+  if (game.playerScore > 21) {
+    game.gameOver = true;
+    game.status = "player_bust";
+    game.rewardAether = 0;
+    await kv.del(`bj:${sessionId}`);
+    return game;
+  }
+
+  if (game.playerScore === 21) {
+    return standBlackjack(sessionId);
+  }
+
+  await kv.set(`bj:${sessionId}`, JSON.stringify(game), { px: 180_000 });
+  return game;
+}
+
+export async function standBlackjack(sessionId: string): Promise<BlackjackGame> {
+  const kv = await getKV();
+  const raw = await kv.get(`bj:${sessionId}`);
+  if (!raw) throw new UserError("progression.game_expired");
+  const game: BlackjackGame = JSON.parse(raw);
+  if (game.gameOver) return game;
+
+  game.gameOver = true;
+  await kv.del(`bj:${sessionId}`);
+
+  // Dealer joga
+  while (calcScore(game.dealerCards) < 17) {
+    game.dealerCards.push(drawCard());
+  }
+  game.dealerScore = calcScore(game.dealerCards);
+
+  if (game.dealerScore > 21) {
+    game.status = "dealer_bust";
+    game.rewardAether = game.bet * 2;
+    await credit(game.guildId, game.userId, game.rewardAether, { username: game.username });
+  } else if (game.playerScore > game.dealerScore) {
+    game.status = "player_win";
+    game.rewardAether = game.bet * 2;
+    await credit(game.guildId, game.userId, game.rewardAether, { username: game.username });
+  } else if (game.playerScore === game.dealerScore) {
+    game.status = "push";
+    game.rewardAether = game.bet;
+    await credit(game.guildId, game.userId, game.rewardAether, { username: game.username });
+  } else {
+    game.status = "dealer_win";
+    game.rewardAether = 0;
+  }
+
+  return game;
+}
+
+export async function doubleBlackjack(sessionId: string): Promise<BlackjackGame> {
+  const kv = await getKV();
+  const raw = await kv.get(`bj:${sessionId}`);
+  if (!raw) throw new UserError("progression.game_expired");
+  const game: BlackjackGame = JSON.parse(raw);
+  if (game.gameOver) return game;
+
+  const [member] = await db
+    .select({ balance: guildMembers.aetherBalance })
+    .from(guildMembers)
+    .where(and(eq(guildMembers.guildId, game.guildId), eq(guildMembers.userId, game.userId)))
+    .limit(1);
+
+  if ((member?.balance ?? 0) < game.bet) {
+    throw new UserError("progression.insufficient_aether");
+  }
+
+  await db
+    .update(guildMembers)
+    .set({ aetherBalance: sql`${guildMembers.aetherBalance} - ${game.bet}` })
+    .where(and(eq(guildMembers.guildId, game.guildId), eq(guildMembers.userId, game.userId)));
+
+  game.bet *= 2;
+  game.playerCards.push(drawCard());
+  game.playerScore = calcScore(game.playerCards);
+
+  if (game.playerScore > 21) {
+    game.gameOver = true;
+    game.status = "player_bust";
+    game.rewardAether = 0;
+    await kv.del(`bj:${sessionId}`);
+    return game;
+  }
+
+  await kv.set(`bj:${sessionId}`, JSON.stringify(game), { px: 180_000 });
+  return standBlackjack(sessionId);
+}
+
+/* ------------------------------------------------------------------ */
+/* Cara ou Coroa Astral ($coinflip / $cf)                             */
+/* ------------------------------------------------------------------ */
+
+export interface CoinflipResult {
+  won: boolean;
+  choice: "cara" | "coroa";
+  flipped: "cara" | "coroa";
+  bet: number;
+  payout: number;
+  newBalance: number;
+}
+
+export async function runCoinflip(
+  guildId: string,
+  userId: string,
+  username: string,
+  bet: number,
+  choice: "cara" | "coroa"
+): Promise<CoinflipResult> {
+  const [member] = await db
+    .select({ balance: guildMembers.aetherBalance })
+    .from(guildMembers)
+    .where(and(eq(guildMembers.guildId, guildId), eq(guildMembers.userId, userId)))
+    .limit(1);
+
+  if ((member?.balance ?? 0) < bet) {
+    throw new UserError("progression.insufficient_aether");
+  }
+
+  const flipped: "cara" | "coroa" = Math.random() < 0.5 ? "cara" : "coroa";
+  const won = choice === flipped;
+  const payout = won ? bet * 2 : 0;
+
+  let newBalance = member?.balance ?? 0;
+  if (won) {
+    newBalance = await credit(guildId, userId, bet, { username });
+  } else {
+    const [debited] = await db
+      .update(guildMembers)
+      .set({ aetherBalance: sql`${guildMembers.aetherBalance} - ${bet}` })
+      .where(and(eq(guildMembers.guildId, guildId), eq(guildMembers.userId, userId)))
+      .returning({ balance: guildMembers.aetherBalance });
+    newBalance = debited?.balance ?? 0;
+  }
+
+  return {
+    won,
+    choice,
+    flipped,
+    bet,
+    payout,
+    newBalance,
+  };
 }

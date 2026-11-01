@@ -20,15 +20,23 @@ import {
   calculateCosmicFate,
   claimTutorialRewards,
   destroyTower,
+  doubleBlackjack,
+  formatCards,
+  generateAetherBeam,
   generateQuizQuestion,
   get42BallAnswer,
   getRandomQuote,
   getTowerState,
+  hitBlackjack,
   LOOTBOX_COST,
   openLootbox,
   pickTeaChallenge,
+  renderHpBar,
   runArenaBattle,
+  runCoinflip,
   spinSlotMachine,
+  standBlackjack,
+  startBlackjack,
   TOWER_PERKS,
   transferAether,
 } from "./service.js";
@@ -65,6 +73,8 @@ function mapProgressionError(err: unknown, prefix: string): string | null {
       return `⚠️ Você não pode transferir Éter para si mesmo.`;
     case "progression.invalid_give_amount":
       return `⚠️ Informe um usuário e uma quantia válida entre **10** e **1.000.000** (ex.: \`${prefix}givekakera @usuario 500\`).`;
+    case "progression.game_expired":
+      return `⏳ Esta sessão de jogo expirou. Inicie uma nova rodada!`;
     default:
       return null;
   }
@@ -481,21 +491,39 @@ export const arenaCommand: AnyCommand = {
     const battle = await runArenaBattle(ctx.guild.id, ctx.user.id, oppId);
 
     const oppLabel = oppId ? `<@${oppId}>` : "🛡️ Guardião do Obelisco";
+    const won = battle.winnerId === ctx.user.id;
     const winLabel = battle.winnerId === "guardian" ? "🛡️ Guardião do Obelisco" : `<@${battle.winnerId}>`;
 
+    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      new ButtonBuilder()
+        .setCustomId(`${PROGRESSION_NS}:arena_again:${ctx.user.id}:${oppId ?? "none"}`)
+        .setLabel("⚔️ Lutar Novamente")
+        .setStyle(ButtonStyle.Danger)
+    );
+
     const embed = new EmbedBuilder()
-      .setColor(0xef4444)
-      .setTitle("⚔️ Arena Dimensional — Combate Encerrado!")
+      .setColor(won ? 0x22c55e : 0xef4444)
+      .setTitle(`⚔️ Arena Dimensional — ${won ? "Vitória Épica!" : "Derrota no Combate!"}`)
       .setDescription(
-        `🔹 **<@${ctx.user.id}>** convocou **${battle.fighterA.cardName}** *(ATK ${battle.fighterA.atk} · DEF ${battle.fighterA.def} · SPD ${battle.fighterA.spd} · HP ${battle.fighterA.hp})*\n` +
-          `🔸 **${oppLabel}** convocou **${battle.fighterB.cardName}** *(ATK ${battle.fighterB.atk} · DEF ${battle.fighterB.def} · SPD ${battle.fighterB.spd} · HP ${battle.fighterB.hp})*\n\n` +
-          `⚡ Após **${battle.rounds} turnos** de embate dimensional:\n` +
+        `### ⚔️ Confronto de Campeões\n` +
+          `🔹 **<@${ctx.user.id}>** convocou **${battle.fighterA.cardName}**\n` +
+          `${renderHpBar(battle.finalHpA, battle.fighterA.hp)} *(ATK ${battle.fighterA.atk} · DEF ${battle.fighterA.def} · SPD ${battle.fighterA.spd})*\n\n` +
+          `🔸 **${oppLabel}** convocou **${battle.fighterB.cardName}**\n` +
+          `${renderHpBar(battle.finalHpB, battle.fighterB.hp)} *(ATK ${battle.fighterB.atk} · DEF ${battle.fighterB.def} · SPD ${battle.fighterB.spd})*\n\n` +
+          `📜 **Relatório do Combate:**\n` +
+          battle.log.map((l) => `▸ ${l}`).join("\n") +
+          `\n\n` +
           `🏆 **Vencedor:** ${winLabel} com **${battle.winnerCard}**!\n` +
-          `🎁 **Recompensa de Vitória:** **+${battle.rewardAether}** ${emoji("aether")}`
+          `🎁 **Recompensa:** **+${formatNumber(battle.rewardAether, ctx.locale)}** ${emoji("aether")}`
       );
+
+    if (battle.fighterA.imageUrl) {
+      embed.setThumbnail(battle.fighterA.imageUrl);
+    }
 
     await ctx.reply({
       embeds: [embed],
+      components: [row],
       allowedMentions: { parse: [], users: oppId ? [oppId] : [] },
     });
   },
@@ -518,20 +546,28 @@ export const slotCommand: AnyCommand = {
         ? `✨ **PAR ENCONTRADO! FAMILIAR CAPTURADO!**`
         : `🎰 **Oráculo Girado — Recompensa de Consolação!**`;
 
+    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      new ButtonBuilder()
+        .setCustomId(`${PROGRESSION_NS}:slot_spin:${ctx.user.id}`)
+        .setLabel("🎰 Girar Novamente (50 Éter)")
+        .setStyle(ButtonStyle.Primary)
+    );
+
     const embed = new EmbedBuilder()
       .setColor(res.isJackpot ? 0xfacc15 : res.won ? 0x22c55e : 0x6366f1)
       .setTitle("🎰 Oráculo de Familiares — Pokéslot Dimensional")
       .setDescription(
-        `### ╔═══════════════╗\n` +
-          `### ║  ${r1.emoji}  │  ${r2.emoji}  │  ${r3.emoji}  ║\n` +
-          `### ╚═══════════════╝\n\n` +
+        `### ╔═══════════════════╗\n` +
+          `### ║   ${r1.emoji}   │   ${r2.emoji}   │   ${r3.emoji}   ║\n` +
+          `### ╚═══════════════════╝\n\n` +
           `${headline}\n` +
-          (res.won ? `🐾 **Criatura:** **${res.capturedName}**\n` : "") +
-          `💠 **Prêmio:** **+${formatNumber(res.aetherReward, ctx.locale)}** ${emoji("aether")}\n` +
-          `💰 **Saldo Atual:** **${formatNumber(res.newBalance, ctx.locale)}** ${emoji("aether")}`
+          (res.won ? `🐾 **Criatura Rara:** **${res.capturedName}**\n` : "") +
+          `💠 **Prêmio Coletado:** **+${formatNumber(res.aetherReward, ctx.locale)}** ${emoji("aether")}\n` +
+          `💰 **Seu Saldo:** **${formatNumber(res.newBalance, ctx.locale)}** ${emoji("aether")}\n\n` +
+          `*Multiplicadores: Trinca = Jackpot (x8) · Par = Familiar (x2.5) · Consolação (x0.3)*`
       );
 
-    await ctx.reply({ embeds: [embed] });
+    await ctx.reply({ embeds: [embed], components: [row] });
   },
 };
 
@@ -743,18 +779,27 @@ export const fateCommand: AnyCommand = {
     const targetUser = await ctx.guild.client.users.fetch(targetId).catch(() => null);
     const targetName = targetUser?.displayName ?? targetUser?.username ?? "Espírito Astral";
 
-    const { score, verdict } = await calculateCosmicFate(ctx.guild.id, ctx.user.id, targetId);
+    const { score, verdict, cardA, cardB } = await calculateCosmicFate(ctx.guild.id, ctx.user.id, targetId);
+
+    const filled = Math.round(score / 10);
+    const empty = 10 - filled;
+    const bar = "▰".repeat(filled) + "▱".repeat(empty);
 
     const embed = new EmbedBuilder()
       .setColor(score >= 70 ? 0xec4899 : score >= 40 ? 0x8b5cf6 : 0x64748b)
-      .setTitle(`🔮 Oráculo de Afinidade Cósmica — $fate`)
+      .setTitle(`🔮 Oráculo de Afinidade Cósmica — Lovemeter`)
       .setDescription(
-        `Calculando a ressonância das cartas dimensionais entre:\n` +
+        `Conexão astral entre as almas e cartas dimensionais:\n` +
           `**${ctx.user.displayName ?? ctx.user.username}** ⚡ **${targetName}**\n\n` +
-          `### 💖 Afinidade Astral: **${score}%**\n` +
-          `\`${"█".repeat(Math.round(score / 10))}${"░".repeat(10 - Math.round(score / 10))}\`\n\n` +
+          `### 💖 Sincronia Astral: **${score}%**\n` +
+          `\`[${bar}]\`\n\n` +
+          (cardA && cardB ? `🃏 **Guardiões Espirituais:** **${cardA}** ✦ **${cardB}**\n\n` : "") +
           `📜 **Veredito das Estrelas:**\n${verdict}`
       );
+
+    if (targetUser?.displayAvatarURL()) {
+      embed.setThumbnail(targetUser.displayAvatarURL());
+    }
 
     await ctx.reply({ embeds: [embed] });
   },
@@ -816,27 +861,194 @@ export const beamCommand: AnyCommand = {
     const targetUser = targetId ? await ctx.guild.client.users.fetch(targetId).catch(() => null) : null;
     const targetName = targetUser?.displayName ?? targetUser?.username;
 
-    const targetText = targetName
-      ? `diretamente contra **${targetName}**!`
-      : `contra o tecido do multiverso!`;
+    const beam = generateAetherBeam(!!targetId, targetName);
+
+    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      new ButtonBuilder()
+        .setCustomId(`${PROGRESSION_NS}:beam_absorb:${beam.shardAether}:${ctx.user.id}`)
+        .setLabel(`💎 Coletar Fragmento Cósmico (+${beam.shardAether} Éter)`)
+        .setStyle(ButtonStyle.Success)
+    );
 
     const embed = new EmbedBuilder()
-      .setColor(0x06b6d4)
+      .setColor(beam.color)
       .setTitle("⚡ DISPARO DIMENSIONAL — AETHER BEAM!")
       .setDescription(
-        `**${ctx.user.displayName ?? ctx.user.username}** concentrou toda a sua energia astral e disparou um feixe supermassivo de Éter ${targetText}\n\n` +
-          `\`\`\`\n` +
-          ` (•_•)       ( •_•)>⌐■-■       (⌐■_■)\n` +
-          `  <) )╯         / )              \\ \\ \n` +
-          `   / \\         / \\               / \\\n` +
-          `═══════════════════════════════════════════════════════💥\n` +
-          `>>> ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓💥💥\n` +
-          `═══════════════════════════════════════════════════════💥\n` +
-          `\`\`\`\n` +
-          `O impacto causou uma fenda temporal no servidor gerando ondas de pura energia cósmica!`
+        `💥 **Artilheiro:** <@${ctx.user.id}>\n` +
+          (targetName ? `🎯 **Alvo Marcado:** **${targetName}**\n` : `🎯 **Alvo:** Tecido do Multiverso Espaço-Temporal\n`) +
+          `\n` +
+          `⚡ **Classificação do Disparo:** \`${beam.tierName}\`\n` +
+          `🔋 **Potência de Saída:** \`${beam.powerWatts} GW (Gigawatts)\`\n\n` +
+          `${beam.impactStatus}\n\n` +
+          `💎 **Fenda Energética:**\n` +
+          `A detonação expeliu **+${beam.shardAether}** ${emoji("aether")} no canal! Qualquer jogador pode clicar no botão abaixo para absorver o fragmento!`
+      )
+      .setImage("https://yo-apollon.github.io/kogu/assets/kogu_banner_animated.gif");
+
+    await ctx.reply({ embeds: [embed], components: [row] });
+  },
+};
+
+const blackjackArgs = z.object({
+  bet: z.number().int().min(10).max(50000).default(50),
+});
+
+export const blackjackCommand: AnyCommand = {
+  name: "blackjack",
+  aliases: ["bj", "21"],
+  category: "economy",
+  descriptionKey: "help.commands.blackjack",
+  args: blackjackArgs,
+  parseArgs: (tokens) => {
+    const bet = parseInt(tokens[0] ?? "50", 10);
+    return { bet: isNaN(bet) ? 50 : Math.max(10, Math.min(50000, bet)) };
+  },
+  cooldownMs: 3000,
+  slash: () =>
+    slashBase("blackjack", "Joga uma partida de 21 / Blackjack apostando Éter!", "Plays a 21 / Blackjack match betting Aether!")
+      .addIntegerOption((o) => o.setName("bet").setDescription("Valor da aposta em Éter (padrão: 50)").setMinValue(10).setMaxValue(50000).setRequired(false)),
+  slashArgs: (i) => ({ bet: i.options.getInteger("bet") ?? 50 }),
+  async execute(ctx: CommandContext<z.infer<typeof blackjackArgs>>) {
+    const bet = ctx.args?.bet ?? 50;
+    try {
+      const game = await startBlackjack(ctx.guild.id, ctx.user.id, ctx.user.username, bet);
+      const isOver = game.gameOver;
+
+      const embed = new EmbedBuilder()
+        .setColor(isOver ? (game.status === "player_win" ? 0x22c55e : game.status === "push" ? 0xfacc15 : 0xef4444) : 0x3b82f6)
+        .setTitle("🃏 Cassino Astral — 21 / Blackjack")
+        .setDescription(
+          `👤 **Sua Mão:** ${formatCards(game.playerCards)} *(Total: **${game.playerScore}**)*\n` +
+            `🤖 **Mão do Dealer:** ${formatCards(game.dealerCards, !isOver)} ${isOver ? `*(Total: **${game.dealerScore}**)*` : ""}\n\n` +
+            `💰 **Aposta:** **${formatNumber(game.bet, ctx.locale)}** ${emoji("aether")}\n\n` +
+            (isOver
+              ? game.status === "player_win"
+                ? `🎉 **BLACKJACK / VITÓRIA!** Você recebeu **+${formatNumber(game.rewardAether, ctx.locale)}** ${emoji("aether")}!`
+                : game.status === "dealer_bust"
+                  ? `💥 **DEALER ESTOUROU!** Você recebeu **+${formatNumber(game.rewardAether, ctx.locale)}** ${emoji("aether")}!`
+                  : game.status === "push"
+                    ? `⚖️ **EMPATE!** Sua aposta de **${formatNumber(game.rewardAether, ctx.locale)}** ${emoji("aether")} foi devolvida.`
+                    : `💀 **DERROTA!** Você perdeu **${formatNumber(game.bet, ctx.locale)}** ${emoji("aether")}.`
+              : `Escolha sua jogada nos botões abaixo:`)
+        );
+
+      if (!isOver) {
+        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+          new ButtonBuilder()
+            .setCustomId(`${PROGRESSION_NS}:bj_hit:${game.sessionId}:${ctx.user.id}`)
+            .setLabel("🃏 Pedir Carta (Hit)")
+            .setStyle(ButtonStyle.Primary),
+          new ButtonBuilder()
+            .setCustomId(`${PROGRESSION_NS}:bj_stand:${game.sessionId}:${ctx.user.id}`)
+            .setLabel("✋ Parar (Stand)")
+            .setStyle(ButtonStyle.Secondary),
+          new ButtonBuilder()
+            .setCustomId(`${PROGRESSION_NS}:bj_double:${game.sessionId}:${ctx.user.id}`)
+            .setLabel("💰 Dobrar (Double)")
+            .setStyle(ButtonStyle.Success)
+        );
+        await ctx.reply({ embeds: [embed], components: [row] });
+      } else {
+        await ctx.reply({ embeds: [embed] });
+      }
+    } catch (err) {
+      const msg = mapProgressionError(err, ctx.guildConfig.prefix);
+      if (msg) {
+        await ctx.reply({ content: msg, ephemeral: true });
+        return;
+      }
+      throw err;
+    }
+  },
+};
+
+const coinflipArgs = z.object({
+  bet: z.number().int().min(10).max(50000).default(50),
+  choice: z.enum(["cara", "coroa"]).optional(),
+});
+
+export const coinflipCommand: AnyCommand = {
+  name: "coinflip",
+  aliases: ["cf", "moeda", "flip"],
+  category: "economy",
+  descriptionKey: "help.commands.coinflip",
+  args: coinflipArgs,
+  parseArgs: (tokens) => {
+    let bet = 50;
+    let choice: "cara" | "coroa" | undefined;
+    for (const t of tokens) {
+      const lower = t.toLowerCase();
+      if (lower === "cara" || lower === "coroa") {
+        choice = lower;
+      } else {
+        const parsed = parseInt(t, 10);
+        if (!isNaN(parsed)) bet = Math.max(10, Math.min(50000, parsed));
+      }
+    }
+    return { bet, choice };
+  },
+  cooldownMs: 2000,
+  slash: () =>
+    slashBase("coinflip", "Joga Cara ou Coroa apostando Éter!", "Plays Coinflip betting Aether!")
+      .addIntegerOption((o) => o.setName("bet").setDescription("Valor da aposta em Éter (padrão: 50)").setMinValue(10).setMaxValue(50000).setRequired(false))
+      .addStringOption((o) => o.setName("choice").setDescription("Cara ou Coroa").addChoices({ name: "Cara", value: "cara" }, { name: "Coroa", value: "coroa" }).setRequired(false)),
+  slashArgs: (i) => ({
+    bet: i.options.getInteger("bet") ?? 50,
+    choice: (i.options.getString("choice") as "cara" | "coroa") ?? undefined,
+  }),
+  async execute(ctx: CommandContext<z.infer<typeof coinflipArgs>>) {
+    const bet = ctx.args?.bet ?? 50;
+    const choice = ctx.args?.choice;
+
+    if (!choice) {
+      const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder()
+          .setCustomId(`${PROGRESSION_NS}:cf_pick:${ctx.user.id}:${bet}:cara`)
+          .setLabel("🪙 Escolher Cara")
+          .setStyle(ButtonStyle.Primary),
+        new ButtonBuilder()
+          .setCustomId(`${PROGRESSION_NS}:cf_pick:${ctx.user.id}:${bet}:coroa`)
+          .setLabel("👑 Escolher Coroa")
+          .setStyle(ButtonStyle.Secondary)
       );
 
-    await ctx.reply({ embeds: [embed] });
+      const embed = new EmbedBuilder()
+        .setColor(0xfacc15)
+        .setTitle("🪙 Cara ou Coroa Astral — Escolha seu Lado!")
+        .setDescription(
+          `Aposta atual: **${formatNumber(bet, ctx.locale)}** ${emoji("aether")}\n\n` +
+            `Clique em **Cara** ou **Coroa** para lançar a moeda estelar!\n` +
+            `*Se acertar, dobra sua aposta (+${formatNumber(bet * 2, ctx.locale)} Éter)!*`
+        );
+
+      await ctx.reply({ embeds: [embed], components: [row] });
+      return;
+    }
+
+    try {
+      const res = await runCoinflip(ctx.guild.id, ctx.user.id, ctx.user.username, bet, choice);
+      const icon = res.flipped === "cara" ? "🪙" : "👑";
+      const embed = new EmbedBuilder()
+        .setColor(res.won ? 0x22c55e : 0xef4444)
+        .setTitle(`🪙 Cara ou Coroa Astral — Deu ${res.flipped.toUpperCase()}! ${icon}`)
+        .setDescription(
+          `👤 **Sua Escolha:** **${choice.toUpperCase()}**\n` +
+            `🎲 **Resultado:** **${res.flipped.toUpperCase()}**\n\n` +
+            (res.won
+              ? `🎉 **VITÓRIA!** Você dobrou sua aposta e faturou **+${formatNumber(res.payout, ctx.locale)}** ${emoji("aether")}!\n`
+              : `💀 **DERROTA!** A moeda estelar caiu contra você. Você perdeu **${formatNumber(bet, ctx.locale)}** ${emoji("aether")}.\n`) +
+            `💰 **Saldo Atual:** **${formatNumber(res.newBalance, ctx.locale)}** ${emoji("aether")}`
+        );
+
+      await ctx.reply({ embeds: [embed] });
+    } catch (err) {
+      const msg = mapProgressionError(err, ctx.guildConfig.prefix);
+      if (msg) {
+        await ctx.reply({ content: msg, ephemeral: true });
+        return;
+      }
+      throw err;
+    }
   },
 };
 
@@ -934,6 +1146,231 @@ export const progressionComponentHandler: ComponentHandler = {
       return;
     }
 
+    if (action === "beam_absorb") {
+      const shard = parseInt(arg1 ?? "100", 10) || 100;
+      const newBal = await credit(guildId, interaction.user.id, shard, {
+        username: interaction.user.username,
+      });
+
+      const disabledRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder()
+          .setCustomId(`${PROGRESSION_NS}:beam_absorbed:${interaction.user.id}`)
+          .setLabel(`✅ Coletado por @${interaction.user.displayName ?? interaction.user.username} (+${shard} Éter)`)
+          .setStyle(ButtonStyle.Secondary)
+          .setDisabled(true)
+      );
+
+      await interaction.update({
+        content: `✨ <@${interaction.user.id}> absorveu a fenda cósmica e coletou **+${shard}** ${emoji("aether")} Éter! *(Saldo: **${formatNumber(newBal, "pt-BR")}**)*`,
+        components: [disabledRow],
+      });
+      return;
+    }
+
+    if (action === "slot_spin") {
+      if (interaction.user.id !== arg1) {
+        await interaction.reply({
+          content: "⛔ Apenas o jogador que invocou esta máquina caça-níqueis pode girar novamente.",
+          flags: MessageFlags.Ephemeral,
+        });
+        return;
+      }
+
+      try {
+        const res = await spinSlotMachine(guildId, interaction.user.id, interaction.user.username);
+        const [r1, r2, r3] = res.reels;
+        const headline = res.isJackpot
+          ? `🎉 **JACKPOT DIMENSIONAL! TRINCA PERFEITA!**`
+          : res.won
+            ? `✨ **PAR ENCONTRADO! FAMILIAR CAPTURADO!**`
+            : `🎰 **Oráculo Girado — Recompensa de Consolação!**`;
+
+        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+          new ButtonBuilder()
+            .setCustomId(`${PROGRESSION_NS}:slot_spin:${interaction.user.id}`)
+            .setLabel("🎰 Girar Novamente (50 Éter)")
+            .setStyle(ButtonStyle.Primary)
+        );
+
+        const embed = new EmbedBuilder()
+          .setColor(res.isJackpot ? 0xfacc15 : res.won ? 0x22c55e : 0x6366f1)
+          .setTitle("🎰 Oráculo de Familiares — Pokéslot Dimensional")
+          .setDescription(
+            `### ╔═══════════════════╗\n` +
+              `### ║   ${r1.emoji}   │   ${r2.emoji}   │   ${r3.emoji}   ║\n` +
+              `### ╚═══════════════════╝\n\n` +
+              `${headline}\n` +
+              (res.won ? `🐾 **Criatura Rara:** **${res.capturedName}**\n` : "") +
+              `💠 **Prêmio Coletado:** **+${formatNumber(res.aetherReward, "pt-BR")}** ${emoji("aether")}\n` +
+              `💰 **Seu Saldo:** **${formatNumber(res.newBalance, "pt-BR")}** ${emoji("aether")}\n\n` +
+              `*Multiplicadores: Trinca = Jackpot (x8) · Par = Familiar (x2.5) · Consolação (x0.3)*`
+          );
+
+        await interaction.update({ embeds: [embed], components: [row] });
+      } catch (err) {
+        const msg = mapProgressionError(err, "$") ?? "⚠️ Não foi possível girar o Pokéslot.";
+        await interaction.reply({ content: msg, flags: MessageFlags.Ephemeral });
+      }
+      return;
+    }
+
+    if (action === "arena_again") {
+      const originalUserId = arg1;
+      const oppIdStr = parts[2];
+      if (interaction.user.id !== originalUserId) {
+        await interaction.reply({
+          content: "⛔ Apenas o duelista que desafiou a Arena pode solicitar revanche imediata.",
+          flags: MessageFlags.Ephemeral,
+        });
+        return;
+      }
+
+      try {
+        const oppId = oppIdStr === "none" ? undefined : oppIdStr;
+        const battle = await runArenaBattle(guildId, interaction.user.id, oppId);
+        const oppLabel = oppId ? `<@${oppId}>` : "🛡️ Guardião do Obelisco";
+        const won = battle.winnerId === interaction.user.id;
+        const winLabel = battle.winnerId === "guardian" ? "🛡️ Guardião do Obelisco" : `<@${battle.winnerId}>`;
+
+        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+          new ButtonBuilder()
+            .setCustomId(`${PROGRESSION_NS}:arena_again:${interaction.user.id}:${oppId ?? "none"}`)
+            .setLabel("⚔️ Lutar Novamente")
+            .setStyle(ButtonStyle.Danger)
+        );
+
+        const embed = new EmbedBuilder()
+          .setColor(won ? 0x22c55e : 0xef4444)
+          .setTitle(`⚔️ Arena Dimensional — ${won ? "Vitória Épica!" : "Derrota no Combate!"}`)
+          .setDescription(
+            `### ⚔️ Confronto de Campeões\n` +
+              `🔹 **<@${interaction.user.id}>** convocou **${battle.fighterA.cardName}**\n` +
+              `${renderHpBar(battle.finalHpA, battle.fighterA.hp)} *(ATK ${battle.fighterA.atk} · DEF ${battle.fighterA.def} · SPD ${battle.fighterA.spd})*\n\n` +
+              `🔸 **${oppLabel}** convocou **${battle.fighterB.cardName}**\n` +
+              `${renderHpBar(battle.finalHpB, battle.fighterB.hp)} *(ATK ${battle.fighterB.atk} · DEF ${battle.fighterB.def} · SPD ${battle.fighterB.spd})*\n\n` +
+              `📜 **Relatório do Combate:**\n` +
+              battle.log.map((l) => `▸ ${l}`).join("\n") +
+              `\n\n` +
+              `🏆 **Vencedor:** ${winLabel} com **${battle.winnerCard}**!\n` +
+              `🎁 **Recompensa:** **+${formatNumber(battle.rewardAether, "pt-BR")}** ${emoji("aether")}`
+          );
+
+        if (battle.fighterA.imageUrl) {
+          embed.setThumbnail(battle.fighterA.imageUrl);
+        }
+
+        await interaction.update({ embeds: [embed], components: [row] });
+      } catch (err) {
+        const msg = mapProgressionError(err, "$") ?? "⚠️ Não foi possível realizar a batalha.";
+        await interaction.reply({ content: msg, flags: MessageFlags.Ephemeral });
+      }
+      return;
+    }
+
+    if (action === "bj_hit" || action === "bj_stand" || action === "bj_double") {
+      const sessionId = arg1;
+      const ownerId = parts[2];
+      if (interaction.user.id !== ownerId) {
+        await interaction.reply({
+          content: "⛔ Esta mesa de Blackjack pertence a outro jogador.",
+          flags: MessageFlags.Ephemeral,
+        });
+        return;
+      }
+
+      try {
+        let game =
+          action === "bj_hit"
+            ? await hitBlackjack(sessionId)
+            : action === "bj_stand"
+              ? await standBlackjack(sessionId)
+              : await doubleBlackjack(sessionId);
+
+        const isOver = game.gameOver;
+        const embed = new EmbedBuilder()
+          .setColor(isOver ? (game.status === "player_win" ? 0x22c55e : game.status === "push" ? 0xfacc15 : 0xef4444) : 0x3b82f6)
+          .setTitle("🃏 Cassino Astral — 21 / Blackjack")
+          .setDescription(
+            `👤 **Sua Mão:** ${formatCards(game.playerCards)} *(Total: **${game.playerScore}**)*\n` +
+              `🤖 **Mão do Dealer:** ${formatCards(game.dealerCards, !isOver)} ${isOver ? `*(Total: **${game.dealerScore}**)*` : ""}\n\n` +
+              `💰 **Aposta:** **${formatNumber(game.bet, "pt-BR")}** ${emoji("aether")}\n\n` +
+              (isOver
+                ? game.status === "player_win"
+                  ? `🎉 **VITÓRIA!** Você recebeu **+${formatNumber(game.rewardAether, "pt-BR")}** ${emoji("aether")}!`
+                  : game.status === "dealer_bust"
+                    ? `💥 **DEALER ESTOUROU!** Você recebeu **+${formatNumber(game.rewardAether, "pt-BR")}** ${emoji("aether")}!`
+                    : game.status === "push"
+                      ? `⚖️ **EMPATE!** Sua aposta de **${formatNumber(game.rewardAether, "pt-BR")}** ${emoji("aether")} foi devolvida.`
+                      : `💀 **DERROTA!** Você perdeu **${formatNumber(game.bet, "pt-BR")}** ${emoji("aether")}.`
+                : `Escolha sua próxima jogada:`)
+          );
+
+        if (!isOver) {
+          const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+            new ButtonBuilder()
+              .setCustomId(`${PROGRESSION_NS}:bj_hit:${game.sessionId}:${interaction.user.id}`)
+              .setLabel("🃏 Pedir Carta (Hit)")
+              .setStyle(ButtonStyle.Primary),
+            new ButtonBuilder()
+              .setCustomId(`${PROGRESSION_NS}:bj_stand:${game.sessionId}:${interaction.user.id}`)
+              .setLabel("✋ Parar (Stand)")
+              .setStyle(ButtonStyle.Secondary)
+          );
+          if (game.playerCards.length === 2) {
+            row.addComponents(
+              new ButtonBuilder()
+                .setCustomId(`${PROGRESSION_NS}:bj_double:${game.sessionId}:${interaction.user.id}`)
+                .setLabel("💰 Dobrar (Double)")
+                .setStyle(ButtonStyle.Success)
+            );
+          }
+          await interaction.update({ embeds: [embed], components: [row] });
+        } else {
+          await interaction.update({ embeds: [embed], components: [] });
+        }
+      } catch (err) {
+        const msg = mapProgressionError(err, "$") ?? "⚠️ Não foi possível processar a jogada.";
+        await interaction.reply({ content: msg, flags: MessageFlags.Ephemeral });
+      }
+      return;
+    }
+
+    if (action === "cf_pick") {
+      const ownerId = arg1;
+      const bet = parseInt(parts[2] ?? "50", 10) || 50;
+      const choice = parts[3] as "cara" | "coroa";
+
+      if (interaction.user.id !== ownerId) {
+        await interaction.reply({
+          content: "⛔ Apenas o jogador que invocou a Moeda Astral pode escolher o lado.",
+          flags: MessageFlags.Ephemeral,
+        });
+        return;
+      }
+
+      try {
+        const res = await runCoinflip(guildId, interaction.user.id, interaction.user.username, bet, choice);
+        const icon = res.flipped === "cara" ? "🪙" : "👑";
+        const embed = new EmbedBuilder()
+          .setColor(res.won ? 0x22c55e : 0xef4444)
+          .setTitle(`🪙 Cara ou Coroa Astral — Deu ${res.flipped.toUpperCase()}! ${icon}`)
+          .setDescription(
+            `👤 **Sua Escolha:** **${choice.toUpperCase()}**\n` +
+              `🎲 **Resultado:** **${res.flipped.toUpperCase()}**\n\n` +
+              (res.won
+                ? `🎉 **VITÓRIA!** Você dobrou sua aposta e faturou **+${formatNumber(res.payout, "pt-BR")}** ${emoji("aether")}!\n`
+                : `💀 **DERROTA!** A moeda estelar caiu contra você. Você perdeu **${formatNumber(bet, "pt-BR")}** ${emoji("aether")}.\n`) +
+              `💰 **Saldo Atual:** **${formatNumber(res.newBalance, "pt-BR")}** ${emoji("aether")}`
+          );
+
+        await interaction.update({ embeds: [embed], components: [] });
+      } catch (err) {
+        const msg = mapProgressionError(err, "$") ?? "⚠️ Não foi possível lançar a moeda.";
+        await interaction.reply({ content: msg, flags: MessageFlags.Ephemeral });
+      }
+      return;
+    }
+
     if (action === "tea" || action === "quiz") {
       const isCorrect = arg1 === "1";
       const reward = action === "tea" ? 200 : 150;
@@ -969,6 +1406,8 @@ export const commands: AnyCommand[] = [
   infoKeysCommand,
   arenaCommand,
   slotCommand,
+  blackjackCommand,
+  coinflipCommand,
   blackTeaCommand,
   greenTeaCommand,
   redTeaCommand,
