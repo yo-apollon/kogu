@@ -658,8 +658,10 @@ export async function spinSlotMachine(
   guildId: string,
   userId: string,
   username?: string,
+  bet: number = SLOT_COST,
   rng: () => number = Math.random
 ): Promise<SlotResult> {
+  const actualBet = Math.max(10, Math.min(10000, Math.floor(bet) || SLOT_COST));
   await ensureMember(db, { guildId, userId, username });
   const [member] = await db
     .select({ balance: guildMembers.aetherBalance })
@@ -668,14 +670,14 @@ export async function spinSlotMachine(
     .limit(1);
 
   const balance = member?.balance ?? 0;
-  if (balance < SLOT_COST) {
+  if (balance < actualBet) {
     throw new UserError("progression.insufficient_aether");
   }
 
-  // Cobra o custo do giro (50 Éter)
+  // Cobra o custo do giro (actualBet Éter)
   await db
     .update(guildMembers)
-    .set({ aetherBalance: sql`${guildMembers.aetherBalance} - ${SLOT_COST}` })
+    .set({ aetherBalance: sql`${guildMembers.aetherBalance} - ${actualBet}` })
     .where(and(eq(guildMembers.guildId, guildId), eq(guildMembers.userId, userId)));
 
   const pick = () => FAMILIARS[Math.floor(rng() * FAMILIARS.length)] ?? FAMILIARS[0];
@@ -689,16 +691,17 @@ export async function spinSlotMachine(
   const isShiny = won && rng() < 0.12;
 
   const matched = r1.emoji === r2.emoji ? r1 : r2.emoji === r3.emoji ? r2 : r1;
+  const multiplier = actualBet / SLOT_COST;
   let aetherReward = 0;
   if (isJackpot) {
-    aetherReward = Math.round(matched.reward * 2.5 * (isShiny ? 2 : 1));
+    aetherReward = Math.round(matched.reward * 2.5 * (isShiny ? 2 : 1) * multiplier);
   } else if (isPair) {
-    aetherReward = Math.round(matched.reward * 0.8 * (isShiny ? 1.5 : 1));
+    aetherReward = Math.round(matched.reward * 0.8 * (isShiny ? 1.5 : 1) * multiplier);
   } else {
-    aetherReward = 0; // Derrota total: perdeu os 50 Éter!
+    aetherReward = 0; // Derrota total: perdeu o Éter apostado!
   }
 
-  let newBalance = balance - SLOT_COST;
+  let newBalance = balance - actualBet;
   if (aetherReward > 0) {
     newBalance = await credit(guildId, userId, aetherReward, { username });
   }
@@ -722,8 +725,8 @@ export async function spinSlotMachine(
     isShiny,
     capturedName: won ? `${matched.emoji} ${matched.namePt}${isShiny ? " ✨" : ""}` : "",
     aetherReward,
-    cost: SLOT_COST,
-    netProfit: aetherReward - SLOT_COST,
+    cost: actualBet,
+    netProfit: aetherReward - actualBet,
     newBalance,
   };
 }

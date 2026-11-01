@@ -39,6 +39,9 @@ import {
   startBlackjack,
   TOWER_PERKS,
   transferAether,
+  type BlackjackGame,
+  type CoinflipResult,
+  type SlotResult,
 } from "./service.js";
 
 export const PROGRESSION_NS = "prg";
@@ -531,61 +534,102 @@ export const arenaCommand: AnyCommand = {
   },
 };
 
+export function renderSlotEmbed(res: SlotResult, locale: string = "pt-BR"): EmbedBuilder {
+  const [r1, r2, r3] = res.reels;
+  const embed = new EmbedBuilder();
+
+  if (res.won) {
+    const headline = res.isJackpot
+      ? `🎉 **JACKPOT DIMENSIONAL! TRINCA PERFEITA!**`
+      : `✨ **PAR ENCONTRADO! FAMILIAR CAPTURADO!**`;
+
+    embed
+      .setColor(res.isJackpot ? 0xfacc15 : 0x22c55e)
+      .setTitle(res.isJackpot ? "🎰 JACKPOT DIMENSIONAL! 🌟" : "🎰 Oráculo de Familiares — Captura com Sucesso!")
+      .setDescription(
+        `### ╔═══════════════════╗\n` +
+          `### ║   ${r1.emoji}   │   ${r2.emoji}   │   ${r3.emoji}   ║\n` +
+          `### ╚═══════════════════╝\n\n` +
+          `${headline}\n` +
+          `🐾 **Criatura:** **${res.capturedName}**\n` +
+          `💠 **Prêmio Coletado:** **+${formatNumber(res.aetherReward, locale)}** ${emoji("aether")} *(Lucro Líquido: **+${formatNumber(res.netProfit, locale)}**)*\n` +
+          `💰 **Seu Saldo:** **${formatNumber(res.newBalance, locale)}** ${emoji("aether")}\n\n` +
+          `*Multiplicadores: Trinca = Jackpot (x5+) · Par = Familiar (x1.6+)*`
+      );
+  } else {
+    embed
+      .setColor(0xef4444)
+      .setTitle("🎰 Oráculo de Familiares — Nenhuma Combinação!")
+      .setDescription(
+        `### ╔═══════════════════╗\n` +
+          `### ║   ${r1.emoji}   │   ${r2.emoji}   │   ${r3.emoji}   ║\n` +
+          `### ╚═══════════════════╝\n\n` +
+          `💀 **NENHUM PAR ENCONTRADO!**\n` +
+          `As energias astrais se dissiparam e nenhuma criatura atendeu ao chamado.\n` +
+          `Você perdeu **-${formatNumber(res.cost, locale)}** ${emoji("aether")} nesta rodada!\n\n` +
+          `💰 **Seu Saldo Atual:** **${formatNumber(res.newBalance, locale)}** ${emoji("aether")}\n\n` +
+          `*Tente novamente para alinhar os astros e capturar Familiares Raros!*`
+      );
+  }
+  return embed;
+}
+
+export function buildSlotRow(userId: string, bet: number): ActionRowBuilder<ButtonBuilder> {
+  const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+    new ButtonBuilder()
+      .setCustomId(`${PROGRESSION_NS}:slot_spin:${userId}:${bet}`)
+      .setLabel(`🎰 Girar Novamente (${formatNumber(bet, "pt-BR")} Éter)`)
+      .setStyle(ButtonStyle.Primary),
+    new ButtonBuilder()
+      .setCustomId(`${PROGRESSION_NS}:slot_spin:${userId}:${Math.min(10000, bet * 2)}`)
+      .setLabel(`💰 Dobrar (${formatNumber(Math.min(10000, bet * 2), "pt-BR")} Éter)`)
+      .setStyle(ButtonStyle.Success)
+  );
+  if (bet > 50) {
+    row.addComponents(
+      new ButtonBuilder()
+        .setCustomId(`${PROGRESSION_NS}:slot_spin:${userId}:50`)
+        .setLabel("🪙 Mínima (50 Éter)")
+        .setStyle(ButtonStyle.Secondary)
+    );
+  }
+  return row;
+}
+
+const slotArgs = z.object({
+  bet: z.number().int().min(10).max(10000).default(50),
+});
+
 export const slotCommand: AnyCommand = {
   name: "slot",
   aliases: ["pokemon", "pokeslot", "cassino", "familiar", "pokedex"],
   category: "economy",
   descriptionKey: "help.commands.slot",
   cooldownMs: 4000,
-  slash: () => slashBase("slot", "Gira o Oráculo de Familiares (Pokéslot) para capturar criaturas e ganhar Éter!", "Spins the Familiar Slot Machine to capture creatures and win Aether!"),
-  async execute(ctx: CommandContext) {
-    const res = await spinSlotMachine(ctx.guild.id, ctx.user.id, ctx.user.username);
-    const [r1, r2, r3] = res.reels;
-
-    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-      new ButtonBuilder()
-        .setCustomId(`${PROGRESSION_NS}:slot_spin:${ctx.user.id}`)
-        .setLabel("🎰 Girar Novamente (50 Éter)")
-        .setStyle(ButtonStyle.Primary)
-    );
-
-    const embed = new EmbedBuilder();
-
-    if (res.won) {
-      const headline = res.isJackpot
-        ? `🎉 **JACKPOT DIMENSIONAL! TRINCA PERFEITA!**`
-        : `✨ **PAR ENCONTRADO! FAMILIAR CAPTURADO!**`;
-
-      embed
-        .setColor(res.isJackpot ? 0xfacc15 : 0x22c55e)
-        .setTitle(res.isJackpot ? "🎰 JACKPOT DIMENSIONAL! 🌟" : "🎰 Oráculo de Familiares — Captura com Sucesso!")
-        .setDescription(
-          `### ╔═══════════════════╗\n` +
-            `### ║   ${r1.emoji}   │   ${r2.emoji}   │   ${r3.emoji}   ║\n` +
-            `### ╚═══════════════════╝\n\n` +
-            `${headline}\n` +
-            `🐾 **Criatura:** **${res.capturedName}**\n` +
-            `💠 **Prêmio Coletado:** **+${formatNumber(res.aetherReward, ctx.locale)}** ${emoji("aether")} *(Lucro Líquido: **+${formatNumber(res.netProfit, ctx.locale)}**)*\n` +
-            `💰 **Seu Saldo:** **${formatNumber(res.newBalance, ctx.locale)}** ${emoji("aether")}\n\n` +
-            `*Multiplicadores: Trinca = Jackpot (x5+) · Par = Familiar (x1.6+)*`
-        );
-    } else {
-      embed
-        .setColor(0xef4444)
-        .setTitle("🎰 Oráculo de Familiares — Nenhuma Combinação!")
-        .setDescription(
-          `### ╔═══════════════════╗\n` +
-            `### ║   ${r1.emoji}   │   ${r2.emoji}   │   ${r3.emoji}   ║\n` +
-            `### ╚═══════════════════╝\n\n` +
-            `💀 **NENHUM PAR ENCONTRADO!**\n` +
-            `As energias astrais se dissiparam e nenhuma criatura atendeu ao chamado.\n` +
-            `Você perdeu **-${formatNumber(res.cost, ctx.locale)}** ${emoji("aether")} nesta rodada!\n\n` +
-            `💰 **Seu Saldo Atual:** **${formatNumber(res.newBalance, ctx.locale)}** ${emoji("aether")}\n\n` +
-            `*Tente novamente para alinhar os astros e capturar Familiares Raros!*`
-        );
+  args: slotArgs,
+  parseArgs: (tokens) => {
+    const bet = parseInt(tokens[0] ?? "50", 10);
+    return { bet: isNaN(bet) ? 50 : Math.max(10, Math.min(10000, bet)) };
+  },
+  slash: () =>
+    slashBase("slot", "Gira o Oráculo de Familiares (Pokéslot) para capturar criaturas e ganhar Éter!", "Spins the Familiar Slot Machine to capture creatures and win Aether!")
+      .addIntegerOption((o) => o.setName("bet").setDescription("Valor da aposta em Éter (padrão: 50)").setMinValue(10).setMaxValue(10000).setRequired(false)),
+  slashArgs: (i) => ({ bet: i.options.getInteger("bet") ?? 50 }),
+  async execute(ctx: CommandContext<z.infer<typeof slotArgs>>) {
+    const bet = ctx.args?.bet ?? 50;
+    try {
+      const res = await spinSlotMachine(ctx.guild.id, ctx.user.id, ctx.user.username, bet);
+      const embed = renderSlotEmbed(res, ctx.locale);
+      const row = buildSlotRow(ctx.user.id, bet);
+      await ctx.reply({ embeds: [embed], components: [row] });
+    } catch (err) {
+      const msg = mapProgressionError(err, ctx.guildConfig.prefix);
+      if (msg) {
+        await ctx.reply({ content: msg, ephemeral: true });
+        return;
+      }
+      throw err;
     }
-
-    await ctx.reply({ embeds: [embed], components: [row] });
   },
 };
 
@@ -779,7 +823,14 @@ export const pokeDuelCommand: AnyCommand = {
             : `💀 Seu lutador foi superado. Tente novamente ou consiga familiares mais fortes em \`${p}slot\`!`)
       );
 
-    await ctx.reply({ embeds: [embed] });
+    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      new ButtonBuilder()
+        .setCustomId(`${PROGRESSION_NS}:pokeduel_again:${ctx.user.id}:${opponentId ?? "none"}`)
+        .setLabel("⚔️ Duelo Novamente")
+        .setStyle(ButtonStyle.Primary)
+    );
+
+    await ctx.reply({ embeds: [embed], components: [row] });
   },
 };
 
@@ -843,7 +894,14 @@ export const ball42Command: AnyCommand = {
           `🎱 **Resposta Dimensional:**\n${answer}`
       );
 
-    await ctx.reply({ embeds: [embed] });
+    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      new ButtonBuilder()
+        .setCustomId(`${PROGRESSION_NS}:ball42_again:${ctx.user.id}`)
+        .setLabel("🔮 Perguntar Novamente")
+        .setStyle(ButtonStyle.Primary)
+    );
+
+    await ctx.reply({ embeds: [embed], components: [row] });
   },
 };
 
@@ -861,7 +919,14 @@ export const quoteCommand: AnyCommand = {
       .setTitle(`📜 Frases Lendárias — ${q.series}`)
       .setDescription(`*"${q.quote}"*\n\n— **${q.character}**`);
 
-    await ctx.reply({ embeds: [embed] });
+    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      new ButtonBuilder()
+        .setCustomId(`${PROGRESSION_NS}:quote_again:${ctx.user.id}`)
+        .setLabel("📜 Nova Frase Lendária")
+        .setStyle(ButtonStyle.Secondary)
+    );
+
+    await ctx.reply({ embeds: [embed], components: [row] });
   },
 };
 
@@ -907,6 +972,88 @@ export const beamCommand: AnyCommand = {
   },
 };
 
+export function renderBlackjackEmbed(game: BlackjackGame, isOver: boolean, locale: string = "pt-BR"): EmbedBuilder {
+  const isWon = game.status === "player_win" || game.status === "player_blackjack";
+  const color = isOver
+    ? isWon
+      ? 0x22c55e
+      : game.status === "push"
+        ? 0xfacc15
+        : 0xef4444
+    : 0x3b82f6;
+
+  let outcomeText = "Escolha sua jogada nos botões abaixo:";
+  if (isOver) {
+    if (game.status === "player_blackjack") {
+      outcomeText = `🎉 **BLACKJACK NATURAL!** Você recebeu **+${formatNumber(game.rewardAether, locale)}** ${emoji("aether")} *(Pagamento 3:2)*!`;
+    } else if (game.status === "player_win") {
+      outcomeText = `🎉 **VITÓRIA!** Você venceu o Dealer e recebeu **+${formatNumber(game.rewardAether, locale)}** ${emoji("aether")}!`;
+    } else if (game.status === "dealer_bust") {
+      outcomeText = `💥 **DEALER ESTOUROU!** Você recebeu **+${formatNumber(game.rewardAether, locale)}** ${emoji("aether")}!`;
+    } else if (game.status === "push") {
+      outcomeText = `⚖️ **EMPATE (PUSH)!** Sua aposta de **${formatNumber(game.rewardAether, locale)}** ${emoji("aether")} foi devolvida.`;
+    } else if (game.status === "player_bust") {
+      outcomeText = `💥 **VOCÊ ESTOUROU!** Passou de 21 e perdeu **${formatNumber(game.bet, locale)}** ${emoji("aether")}.`;
+    } else {
+      outcomeText = `💀 **DERROTA!** O Dealer superou sua mão. Você perdeu **${formatNumber(game.bet, locale)}** ${emoji("aether")}.`;
+    }
+  }
+
+  return new EmbedBuilder()
+    .setColor(color)
+    .setTitle("🃏 Cassino Astral — 21 / Blackjack")
+    .setDescription(
+      `👤 **Sua Mão:** ${formatCards(game.playerCards)} *(Total: **${game.playerScore}**)*\n` +
+        `🤖 **Mão do Dealer:** ${formatCards(game.dealerCards, !isOver)} ${isOver ? `*(Total: **${game.dealerScore}**)*` : ""}\n\n` +
+        `💰 **Aposta:** **${formatNumber(game.bet, locale)}** ${emoji("aether")}\n\n` +
+        outcomeText
+    );
+}
+
+export function buildBlackjackPlayingRow(sessionId: string, userId: string, canDouble: boolean): ActionRowBuilder<ButtonBuilder> {
+  const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+    new ButtonBuilder()
+      .setCustomId(`${PROGRESSION_NS}:bj_hit:${sessionId}:${userId}`)
+      .setLabel("🃏 Pedir Carta (Hit)")
+      .setStyle(ButtonStyle.Primary),
+    new ButtonBuilder()
+      .setCustomId(`${PROGRESSION_NS}:bj_stand:${sessionId}:${userId}`)
+      .setLabel("✋ Parar (Stand)")
+      .setStyle(ButtonStyle.Secondary)
+  );
+  if (canDouble) {
+    row.addComponents(
+      new ButtonBuilder()
+        .setCustomId(`${PROGRESSION_NS}:bj_double:${sessionId}:${userId}`)
+        .setLabel("💰 Dobrar (Double)")
+        .setStyle(ButtonStyle.Success)
+    );
+  }
+  return row;
+}
+
+export function buildBlackjackReplayRow(userId: string, bet: number): ActionRowBuilder<ButtonBuilder> {
+  const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+    new ButtonBuilder()
+      .setCustomId(`${PROGRESSION_NS}:bj_again:${bet}:${userId}`)
+      .setLabel(`🔁 Jogar Novamente (${formatNumber(bet, "pt-BR")} Éter)`)
+      .setStyle(ButtonStyle.Primary),
+    new ButtonBuilder()
+      .setCustomId(`${PROGRESSION_NS}:bj_again:${Math.min(50000, bet * 2)}:${userId}`)
+      .setLabel(`💰 Dobrar (${formatNumber(Math.min(50000, bet * 2), "pt-BR")} Éter)`)
+      .setStyle(ButtonStyle.Success)
+  );
+  if (bet > 50) {
+    row.addComponents(
+      new ButtonBuilder()
+        .setCustomId(`${PROGRESSION_NS}:bj_again:50:${userId}`)
+        .setLabel("🪙 Mínima (50 Éter)")
+        .setStyle(ButtonStyle.Secondary)
+    );
+  }
+  return row;
+}
+
 const blackjackArgs = z.object({
   bet: z.number().int().min(10).max(50000).default(50),
 });
@@ -931,43 +1078,14 @@ export const blackjackCommand: AnyCommand = {
     try {
       const game = await startBlackjack(ctx.guild.id, ctx.user.id, ctx.user.username, bet);
       const isOver = game.gameOver;
-
-      const embed = new EmbedBuilder()
-        .setColor(isOver ? (game.status === "player_win" ? 0x22c55e : game.status === "push" ? 0xfacc15 : 0xef4444) : 0x3b82f6)
-        .setTitle("🃏 Cassino Astral — 21 / Blackjack")
-        .setDescription(
-          `👤 **Sua Mão:** ${formatCards(game.playerCards)} *(Total: **${game.playerScore}**)*\n` +
-            `🤖 **Mão do Dealer:** ${formatCards(game.dealerCards, !isOver)} ${isOver ? `*(Total: **${game.dealerScore}**)*` : ""}\n\n` +
-            `💰 **Aposta:** **${formatNumber(game.bet, ctx.locale)}** ${emoji("aether")}\n\n` +
-            (isOver
-              ? game.status === "player_win"
-                ? `🎉 **BLACKJACK / VITÓRIA!** Você recebeu **+${formatNumber(game.rewardAether, ctx.locale)}** ${emoji("aether")}!`
-                : game.status === "dealer_bust"
-                  ? `💥 **DEALER ESTOUROU!** Você recebeu **+${formatNumber(game.rewardAether, ctx.locale)}** ${emoji("aether")}!`
-                  : game.status === "push"
-                    ? `⚖️ **EMPATE!** Sua aposta de **${formatNumber(game.rewardAether, ctx.locale)}** ${emoji("aether")} foi devolvida.`
-                    : `💀 **DERROTA!** Você perdeu **${formatNumber(game.bet, ctx.locale)}** ${emoji("aether")}.`
-              : `Escolha sua jogada nos botões abaixo:`)
-        );
+      const embed = renderBlackjackEmbed(game, isOver, ctx.locale);
 
       if (!isOver) {
-        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-          new ButtonBuilder()
-            .setCustomId(`${PROGRESSION_NS}:bj_hit:${game.sessionId}:${ctx.user.id}`)
-            .setLabel("🃏 Pedir Carta (Hit)")
-            .setStyle(ButtonStyle.Primary),
-          new ButtonBuilder()
-            .setCustomId(`${PROGRESSION_NS}:bj_stand:${game.sessionId}:${ctx.user.id}`)
-            .setLabel("✋ Parar (Stand)")
-            .setStyle(ButtonStyle.Secondary),
-          new ButtonBuilder()
-            .setCustomId(`${PROGRESSION_NS}:bj_double:${game.sessionId}:${ctx.user.id}`)
-            .setLabel("💰 Dobrar (Double)")
-            .setStyle(ButtonStyle.Success)
-        );
+        const row = buildBlackjackPlayingRow(game.sessionId, ctx.user.id, game.playerCards.length === 2);
         await ctx.reply({ embeds: [embed], components: [row] });
       } else {
-        await ctx.reply({ embeds: [embed] });
+        const replayRow = buildBlackjackReplayRow(ctx.user.id, game.bet);
+        await ctx.reply({ embeds: [embed], components: [replayRow] });
       }
     } catch (err) {
       const msg = mapProgressionError(err, ctx.guildConfig.prefix);
@@ -979,6 +1097,47 @@ export const blackjackCommand: AnyCommand = {
     }
   },
 };
+
+export function renderCoinflipEmbed(res: CoinflipResult, locale: string = "pt-BR"): EmbedBuilder {
+  const icon = res.flipped === "cara" ? "🪙" : "👑";
+  return new EmbedBuilder()
+    .setColor(res.won ? 0x22c55e : 0xef4444)
+    .setTitle(`🪙 Cara ou Coroa Astral — Deu ${res.flipped.toUpperCase()}! ${icon}`)
+    .setDescription(
+      `👤 **Sua Escolha:** **${res.choice.toUpperCase()}**\n` +
+        `🎲 **Resultado:** **${res.flipped.toUpperCase()}**\n\n` +
+        (res.won
+          ? `🎉 **VITÓRIA!** Você dobrou sua aposta e faturou **+${formatNumber(res.payout, locale)}** ${emoji("aether")}!\n`
+          : `💀 **DERROTA!** A moeda estelar caiu contra você. Você perdeu **${formatNumber(res.bet, locale)}** ${emoji("aether")}.\n`) +
+        `💰 **Saldo Atual:** **${formatNumber(res.newBalance, locale)}** ${emoji("aether")}`
+    );
+}
+
+export function buildCoinflipReplayRow(userId: string, bet: number, choice: "cara" | "coroa"): ActionRowBuilder<ButtonBuilder> {
+  const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+    new ButtonBuilder()
+      .setCustomId(`${PROGRESSION_NS}:cf_replay:${userId}:${bet}:cara`)
+      .setLabel(`🪙 Jogar Cara (${formatNumber(bet, "pt-BR")})`)
+      .setStyle(choice === "cara" ? ButtonStyle.Primary : ButtonStyle.Secondary),
+    new ButtonBuilder()
+      .setCustomId(`${PROGRESSION_NS}:cf_replay:${userId}:${bet}:coroa`)
+      .setLabel(`👑 Jogar Coroa (${formatNumber(bet, "pt-BR")})`)
+      .setStyle(choice === "coroa" ? ButtonStyle.Primary : ButtonStyle.Secondary),
+    new ButtonBuilder()
+      .setCustomId(`${PROGRESSION_NS}:cf_replay:${userId}:${Math.min(50000, bet * 2)}:${choice}`)
+      .setLabel(`💰 Dobrar (${formatNumber(Math.min(50000, bet * 2), "pt-BR")})`)
+      .setStyle(ButtonStyle.Success)
+  );
+  if (bet > 50) {
+    row.addComponents(
+      new ButtonBuilder()
+        .setCustomId(`${PROGRESSION_NS}:cf_replay:${userId}:50:${choice}`)
+        .setLabel("🪙 Mínima (50)")
+        .setStyle(ButtonStyle.Secondary)
+    );
+  }
+  return row;
+}
 
 const coinflipArgs = z.object({
   bet: z.number().int().min(10).max(50000).default(50),
@@ -1045,20 +1204,9 @@ export const coinflipCommand: AnyCommand = {
 
     try {
       const res = await runCoinflip(ctx.guild.id, ctx.user.id, ctx.user.username, bet, choice);
-      const icon = res.flipped === "cara" ? "🪙" : "👑";
-      const embed = new EmbedBuilder()
-        .setColor(res.won ? 0x22c55e : 0xef4444)
-        .setTitle(`🪙 Cara ou Coroa Astral — Deu ${res.flipped.toUpperCase()}! ${icon}`)
-        .setDescription(
-          `👤 **Sua Escolha:** **${choice.toUpperCase()}**\n` +
-            `🎲 **Resultado:** **${res.flipped.toUpperCase()}**\n\n` +
-            (res.won
-              ? `🎉 **VITÓRIA!** Você dobrou sua aposta e faturou **+${formatNumber(res.payout, ctx.locale)}** ${emoji("aether")}!\n`
-              : `💀 **DERROTA!** A moeda estelar caiu contra você. Você perdeu **${formatNumber(bet, ctx.locale)}** ${emoji("aether")}.\n`) +
-            `💰 **Saldo Atual:** **${formatNumber(res.newBalance, ctx.locale)}** ${emoji("aether")}`
-        );
-
-      await ctx.reply({ embeds: [embed] });
+      const embed = renderCoinflipEmbed(res, ctx.locale);
+      const replayRow = buildCoinflipReplayRow(ctx.user.id, bet, choice);
+      await ctx.reply({ embeds: [embed], components: [replayRow] });
     } catch (err) {
       const msg = mapProgressionError(err, ctx.guildConfig.prefix);
       if (msg) {
@@ -1193,53 +1341,12 @@ export const progressionComponentHandler: ComponentHandler = {
         });
         return;
       }
+      const bet = parseInt(parts[2] ?? "50", 10) || 50;
 
       try {
-        const res = await spinSlotMachine(guildId, interaction.user.id, interaction.user.username);
-        const [r1, r2, r3] = res.reels;
-        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-          new ButtonBuilder()
-            .setCustomId(`${PROGRESSION_NS}:slot_spin:${interaction.user.id}`)
-            .setLabel("🎰 Girar Novamente (50 Éter)")
-            .setStyle(ButtonStyle.Primary)
-        );
-
-        const embed = new EmbedBuilder();
-
-        if (res.won) {
-          const headline = res.isJackpot
-            ? `🎉 **JACKPOT DIMENSIONAL! TRINCA PERFEITA!**`
-            : `✨ **PAR ENCONTRADO! FAMILIAR CAPTURADO!**`;
-
-          embed
-            .setColor(res.isJackpot ? 0xfacc15 : 0x22c55e)
-            .setTitle(res.isJackpot ? "🎰 JACKPOT DIMENSIONAL! 🌟" : "🎰 Oráculo de Familiares — Captura com Sucesso!")
-            .setDescription(
-              `### ╔═══════════════════╗\n` +
-                `### ║   ${r1.emoji}   │   ${r2.emoji}   │   ${r3.emoji}   ║\n` +
-                `### ╚═══════════════════╝\n\n` +
-                `${headline}\n` +
-                `🐾 **Criatura:** **${res.capturedName}**\n` +
-                `💠 **Prêmio Coletado:** **+${formatNumber(res.aetherReward, "pt-BR")}** ${emoji("aether")} *(Lucro Líquido: **+${formatNumber(res.netProfit, "pt-BR")}**)*\n` +
-                `💰 **Seu Saldo:** **${formatNumber(res.newBalance, "pt-BR")}** ${emoji("aether")}\n\n` +
-                `*Multiplicadores: Trinca = Jackpot (x5+) · Par = Familiar (x1.6+)*`
-            );
-        } else {
-          embed
-            .setColor(0xef4444)
-            .setTitle("🎰 Oráculo de Familiares — Nenhuma Combinação!")
-            .setDescription(
-              `### ╔═══════════════════╗\n` +
-                `### ║   ${r1.emoji}   │   ${r2.emoji}   │   ${r3.emoji}   ║\n` +
-                `### ╚═══════════════════╝\n\n` +
-                `💀 **NENHUM PAR ENCONTRADO!**\n` +
-                `As energias astrais se dissiparam e nenhuma criatura atendeu ao chamado.\n` +
-                `Você perdeu **-${formatNumber(res.cost, "pt-BR")}** ${emoji("aether")} nesta rodada!\n\n` +
-                `💰 **Seu Saldo Atual:** **${formatNumber(res.newBalance, "pt-BR")}** ${emoji("aether")}\n\n` +
-                `*Tente novamente para alinhar os astros e capturar Familiares Raros!*`
-            );
-        }
-
+        const res = await spinSlotMachine(guildId, interaction.user.id, interaction.user.username, bet);
+        const embed = renderSlotEmbed(res, "pt-BR");
+        const row = buildSlotRow(interaction.user.id, bet);
         await interaction.update({ embeds: [embed], components: [row] });
       } catch (err) {
         const msg = mapProgressionError(err, "$") ?? "⚠️ Não foi possível girar o Pokéslot.";
@@ -1303,6 +1410,49 @@ export const progressionComponentHandler: ComponentHandler = {
       return;
     }
 
+    if (action === "pokeduel_again") {
+      const originalUserId = arg1;
+      const oppIdStr = parts[2];
+      if (interaction.user.id !== originalUserId) {
+        await interaction.reply({
+          content: "⛔ Apenas o duelista que iniciou a batalha pode solicitar revanche.",
+          flags: MessageFlags.Ephemeral,
+        });
+        return;
+      }
+
+      try {
+        const oppId = oppIdStr === "none" ? undefined : oppIdStr;
+        const res = await runArenaBattle(guildId, interaction.user.id, oppId);
+        const won = res.winnerId === interaction.user.id;
+        const embed = new EmbedBuilder()
+          .setColor(won ? 0x10b981 : 0xef4444)
+          .setTitle(`⚔️ Duelo de Familiares do Cassino — ${won ? "Vitória!" : "Derrota!"}`)
+          .setDescription(
+            `**${interaction.user.displayName ?? interaction.user.username}** enviou seu **${res.fighterA.cardName}** para a batalha!\n\n` +
+              `▸ **Seu Lutador:** ATK ${res.fighterA.atk} • DEF ${res.fighterA.def} • SPD ${res.fighterA.spd} • HP ${res.fighterA.hp}\n` +
+              `▸ **Adversário:** ${res.fighterB.cardName} (ATK ${res.fighterB.atk} • DEF ${res.fighterB.def} • SPD ${res.fighterB.spd} • HP ${res.fighterB.hp})\n\n` +
+              `Duração: **${res.rounds}** rounds de combate intenso!\n` +
+              (won
+                ? `🏆 **Você venceu a partida e faturou +${res.rewardAether} ${emoji("aether")} Éter!**`
+                : `💀 Seu lutador foi superado. Tente novamente ou consiga familiares mais fortes em \`$slot\`!`)
+          );
+
+        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+          new ButtonBuilder()
+            .setCustomId(`${PROGRESSION_NS}:pokeduel_again:${interaction.user.id}:${oppId ?? "none"}`)
+            .setLabel("⚔️ Duelo Novamente")
+            .setStyle(ButtonStyle.Primary)
+        );
+
+        await interaction.update({ embeds: [embed], components: [row] });
+      } catch (err) {
+        const msg = mapProgressionError(err, "$") ?? "⚠️ Não foi possível realizar o duelo.";
+        await interaction.reply({ content: msg, flags: MessageFlags.Ephemeral });
+      }
+      return;
+    }
+
     if (action === "bj_hit" || action === "bj_stand" || action === "bj_double") {
       const sessionId = arg1;
       const ownerId = parts[2];
@@ -1323,46 +1473,14 @@ export const progressionComponentHandler: ComponentHandler = {
               : await doubleBlackjack(sessionId);
 
         const isOver = game.gameOver;
-        const embed = new EmbedBuilder()
-          .setColor(isOver ? (game.status === "player_win" ? 0x22c55e : game.status === "push" ? 0xfacc15 : 0xef4444) : 0x3b82f6)
-          .setTitle("🃏 Cassino Astral — 21 / Blackjack")
-          .setDescription(
-            `👤 **Sua Mão:** ${formatCards(game.playerCards)} *(Total: **${game.playerScore}**)*\n` +
-              `🤖 **Mão do Dealer:** ${formatCards(game.dealerCards, !isOver)} ${isOver ? `*(Total: **${game.dealerScore}**)*` : ""}\n\n` +
-              `💰 **Aposta:** **${formatNumber(game.bet, "pt-BR")}** ${emoji("aether")}\n\n` +
-              (isOver
-                ? game.status === "player_win"
-                  ? `🎉 **VITÓRIA!** Você recebeu **+${formatNumber(game.rewardAether, "pt-BR")}** ${emoji("aether")}!`
-                  : game.status === "dealer_bust"
-                    ? `💥 **DEALER ESTOUROU!** Você recebeu **+${formatNumber(game.rewardAether, "pt-BR")}** ${emoji("aether")}!`
-                    : game.status === "push"
-                      ? `⚖️ **EMPATE!** Sua aposta de **${formatNumber(game.rewardAether, "pt-BR")}** ${emoji("aether")} foi devolvida.`
-                      : `💀 **DERROTA!** Você perdeu **${formatNumber(game.bet, "pt-BR")}** ${emoji("aether")}.`
-                : `Escolha sua próxima jogada:`)
-          );
+        const embed = renderBlackjackEmbed(game, isOver, "pt-BR");
 
         if (!isOver) {
-          const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-            new ButtonBuilder()
-              .setCustomId(`${PROGRESSION_NS}:bj_hit:${game.sessionId}:${interaction.user.id}`)
-              .setLabel("🃏 Pedir Carta (Hit)")
-              .setStyle(ButtonStyle.Primary),
-            new ButtonBuilder()
-              .setCustomId(`${PROGRESSION_NS}:bj_stand:${game.sessionId}:${interaction.user.id}`)
-              .setLabel("✋ Parar (Stand)")
-              .setStyle(ButtonStyle.Secondary)
-          );
-          if (game.playerCards.length === 2) {
-            row.addComponents(
-              new ButtonBuilder()
-                .setCustomId(`${PROGRESSION_NS}:bj_double:${game.sessionId}:${interaction.user.id}`)
-                .setLabel("💰 Dobrar (Double)")
-                .setStyle(ButtonStyle.Success)
-            );
-          }
+          const row = buildBlackjackPlayingRow(game.sessionId, interaction.user.id, game.playerCards.length === 2);
           await interaction.update({ embeds: [embed], components: [row] });
         } else {
-          await interaction.update({ embeds: [embed], components: [] });
+          const replayRow = buildBlackjackReplayRow(interaction.user.id, game.bet);
+          await interaction.update({ embeds: [embed], components: [replayRow] });
         }
       } catch (err) {
         const msg = mapProgressionError(err, "$") ?? "⚠️ Não foi possível processar a jogada.";
@@ -1371,14 +1489,44 @@ export const progressionComponentHandler: ComponentHandler = {
       return;
     }
 
-    if (action === "cf_pick") {
+    if (action === "bj_again") {
+      const bet = parseInt(arg1 ?? "50", 10) || 50;
+      const ownerId = parts[2];
+      if (interaction.user.id !== ownerId) {
+        await interaction.reply({
+          content: "⛔ Esta mesa de Blackjack pertence a outro jogador.",
+          flags: MessageFlags.Ephemeral,
+        });
+        return;
+      }
+
+      try {
+        const game = await startBlackjack(guildId, interaction.user.id, interaction.user.username, bet);
+        const isOver = game.gameOver;
+        const embed = renderBlackjackEmbed(game, isOver, "pt-BR");
+
+        if (!isOver) {
+          const row = buildBlackjackPlayingRow(game.sessionId, interaction.user.id, game.playerCards.length === 2);
+          await interaction.update({ embeds: [embed], components: [row] });
+        } else {
+          const replayRow = buildBlackjackReplayRow(interaction.user.id, game.bet);
+          await interaction.update({ embeds: [embed], components: [replayRow] });
+        }
+      } catch (err) {
+        const msg = mapProgressionError(err, "$") ?? "⚠️ Não foi possível iniciar uma nova rodada de Blackjack.";
+        await interaction.reply({ content: msg, flags: MessageFlags.Ephemeral });
+      }
+      return;
+    }
+
+    if (action === "cf_pick" || action === "cf_replay") {
       const ownerId = arg1;
       const bet = parseInt(parts[2] ?? "50", 10) || 50;
       const choice = parts[3] as "cara" | "coroa";
 
       if (interaction.user.id !== ownerId) {
         await interaction.reply({
-          content: "⛔ Apenas o jogador que invocou a Moeda Astral pode escolher o lado.",
+          content: "⛔ Apenas o jogador que invocou a Moeda Astral pode jogar.",
           flags: MessageFlags.Ephemeral,
         });
         return;
@@ -1386,20 +1534,9 @@ export const progressionComponentHandler: ComponentHandler = {
 
       try {
         const res = await runCoinflip(guildId, interaction.user.id, interaction.user.username, bet, choice);
-        const icon = res.flipped === "cara" ? "🪙" : "👑";
-        const embed = new EmbedBuilder()
-          .setColor(res.won ? 0x22c55e : 0xef4444)
-          .setTitle(`🪙 Cara ou Coroa Astral — Deu ${res.flipped.toUpperCase()}! ${icon}`)
-          .setDescription(
-            `👤 **Sua Escolha:** **${choice.toUpperCase()}**\n` +
-              `🎲 **Resultado:** **${res.flipped.toUpperCase()}**\n\n` +
-              (res.won
-                ? `🎉 **VITÓRIA!** Você dobrou sua aposta e faturou **+${formatNumber(res.payout, "pt-BR")}** ${emoji("aether")}!\n`
-                : `💀 **DERROTA!** A moeda estelar caiu contra você. Você perdeu **${formatNumber(bet, "pt-BR")}** ${emoji("aether")}.\n`) +
-              `💰 **Saldo Atual:** **${formatNumber(res.newBalance, "pt-BR")}** ${emoji("aether")}`
-          );
-
-        await interaction.update({ embeds: [embed], components: [] });
+        const embed = renderCoinflipEmbed(res, "pt-BR");
+        const replayRow = buildCoinflipReplayRow(interaction.user.id, bet, choice);
+        await interaction.update({ embeds: [embed], components: [replayRow] });
       } catch (err) {
         const msg = mapProgressionError(err, "$") ?? "⚠️ Não foi possível lançar a moeda.";
         await interaction.reply({ content: msg, flags: MessageFlags.Ephemeral });
@@ -1407,9 +1544,61 @@ export const progressionComponentHandler: ComponentHandler = {
       return;
     }
 
-    if (action === "tea" || action === "quiz") {
+    if (action === "quiz") {
       const isCorrect = arg1 === "1";
-      const reward = action === "tea" ? 200 : 150;
+      const reward = 150;
+      if (!isCorrect) {
+        await interaction.reply({
+          content: "❌ Resposta incorreta! Tente na próxima pergunta!",
+          flags: MessageFlags.Ephemeral,
+        });
+        return;
+      }
+
+      const newBalance = await credit(guildId, interaction.user.id, reward, {
+        username: interaction.user.username,
+      });
+      const nextRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder()
+          .setCustomId(`${PROGRESSION_NS}:quiz_next:${interaction.user.id}`)
+          .setLabel("🧠 Próxima Pergunta")
+          .setStyle(ButtonStyle.Primary)
+      );
+      await interaction.update({
+        content: `🏆 <@${interaction.user.id}> acertou primeiro e ganhou **+${reward}** ${emoji("aether")}! *(Saldo: **${formatNumber(newBalance, "pt-BR")}**)*`,
+        components: [nextRow],
+      });
+      return;
+    }
+
+    if (action === "quiz_next") {
+      const q = await generateQuizQuestion();
+      const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        ...q.options.map((opt, idx) =>
+          new ButtonBuilder()
+            .setCustomId(`${PROGRESSION_NS}:quiz:${idx === q.correctIndex ? "1" : "0"}:${idx}`)
+            .setLabel(opt.slice(0, 80))
+            .setStyle(ButtonStyle.Primary)
+        )
+      );
+
+      const embed = new EmbedBuilder()
+        .setColor(0x3b82f6)
+        .setTitle("🧠 Quiz Dimensional — Qual é a Obra/Franquia?")
+        .setDescription(
+          `A qual série, jogo ou franquia pertence o personagem:\n\n` +
+            `## 🌟 **${q.characterName}**\n\n` +
+            `⚡ *Clique na resposta correta para ganhar **+150** ${emoji("aether")}!*`
+        );
+      if (q.imageUrl) embed.setThumbnail(q.imageUrl);
+
+      await interaction.update({ content: null, embeds: [embed], components: [row] });
+      return;
+    }
+
+    if (action === "tea") {
+      const isCorrect = arg1 === "1";
+      const reward = 200;
       if (!isCorrect) {
         await interaction.reply({
           content: "❌ Resposta incorreta! Tente na próxima rodada!",
@@ -1421,10 +1610,77 @@ export const progressionComponentHandler: ComponentHandler = {
       const newBalance = await credit(guildId, interaction.user.id, reward, {
         username: interaction.user.username,
       });
+      const teaRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder()
+          .setCustomId(`${PROGRESSION_NS}:tea_next:standard`)
+          .setLabel("🍵 Nova Rodada de Chá")
+          .setStyle(ButtonStyle.Success)
+      );
       await interaction.update({
         content: `🏆 <@${interaction.user.id}> acertou primeiro e ganhou **+${reward}** ${emoji("aether")}! *(Saldo: **${formatNumber(newBalance, "pt-BR")}**)*`,
-        components: [],
+        components: [teaRow],
       });
+      return;
+    }
+
+    if (action === "tea_next") {
+      const round = pickTeaChallenge();
+      const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        ...round.options.map((word, idx) =>
+          new ButtonBuilder()
+            .setCustomId(`${PROGRESSION_NS}:tea:${idx === round.correctIndex ? "1" : "0"}:${idx}`)
+            .setLabel(word.toUpperCase())
+            .setStyle(ButtonStyle.Secondary)
+        )
+      );
+
+      const embed = new EmbedBuilder()
+        .setColor(0xf97316)
+        .setTitle("🍵 Salão de Chá Dimensional — Blacktea!")
+        .setDescription(
+          `Encontre rapidamente a palavra que contém a sequência exata de letras:\n\n` +
+            `## 🔤 **[ ${round.syllable} ]**\n\n` +
+            `⚡ *O primeiro jogador a clicar na palavra correta ganha **+200** ${emoji("aether")}!*`
+        );
+
+      await interaction.update({ content: null, embeds: [embed], components: [row] });
+      return;
+    }
+
+    if (action === "ball42_again") {
+      const answer = get42BallAnswer();
+      const embed = new EmbedBuilder()
+        .setColor(0x8b5cf6)
+        .setTitle("🔮 Oráculo Multiversal — 42Ball")
+        .setDescription(`🎱 **Resposta Dimensional:**\n${answer}`);
+
+      const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder()
+          .setCustomId(`${PROGRESSION_NS}:ball42_again:${interaction.user.id}`)
+          .setLabel("🔮 Perguntar Novamente")
+          .setStyle(ButtonStyle.Primary)
+      );
+
+      await interaction.update({ embeds: [embed], components: [row] });
+      return;
+    }
+
+    if (action === "quote_again") {
+      const q = getRandomQuote();
+      const embed = new EmbedBuilder()
+        .setColor(0x3b82f6)
+        .setTitle(`📜 Frases Lendárias — ${q.series}`)
+        .setDescription(`*"${q.quote}"*\n\n— **${q.character}**`);
+
+      const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder()
+          .setCustomId(`${PROGRESSION_NS}:quote_again:${interaction.user.id}`)
+          .setLabel("📜 Nova Frase Lendária")
+          .setStyle(ButtonStyle.Secondary)
+      );
+
+      await interaction.update({ embeds: [embed], components: [row] });
+      return;
     }
   },
 };
