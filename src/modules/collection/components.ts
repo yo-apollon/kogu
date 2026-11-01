@@ -51,7 +51,7 @@ export const collectionComponent: ComponentHandler = {
       const info = await getEntityInfo(interaction.guildId, targetEntityId);
       if (!info) return;
 
-      const { editions } = await resolveEditionForInfo(interaction.guildId, interaction.user.id, targetEntityId);
+      const { editions } = await resolveEditionForInfo(interaction.guildId, interaction.user.id, targetEntityId, true);
       const images = await getEntityImages(targetEntityId);
 
       if (images.length > 0) {

@@ -229,19 +229,11 @@ export function buildInfoActionRows(opts: BuildInfoActionRowsOptions): ActionRow
   if (editions.length > 1) {
     const edButtons: ButtonBuilder[] = [];
 
-    if (editions.length <= 3) {
-      const prevEdIdx = currentEditionIndex > 0 ? currentEditionIndex - 1 : editions.length - 1;
-      const prevEd = editions[prevEdIdx]!;
-      edButtons.push(
-        new ButtonBuilder()
-          .setCustomId(encodeCustomId(COLLECTION_NAMESPACE, "im_ed", prevEd.id, 0, userId))
-          .setLabel("◀")
-          .setStyle(ButtonStyle.Secondary)
-      );
-
+    if (editions.length <= 4) {
+      // Botões diretos para cada versão sem setas duplicadas (evita DiscordAPIError 50035)
       for (let i = 0; i < editions.length; i++) {
         const ed = editions[i]!;
-        const isCurrent = i === currentEditionIndex;
+        const isCurrent = ed.id === entityId || i === currentEditionIndex;
         let shortLabel = t(EDITION_LABEL[ed.edition], locale);
         if (ed.edition === "BASIC") shortLabel = "🔹 Básica";
         else if (ed.edition === "EPIC") shortLabel = "⭐ Épica";
@@ -257,15 +249,6 @@ export function buildInfoActionRows(opts: BuildInfoActionRowsOptions): ActionRow
             .setDisabled(isCurrent)
         );
       }
-
-      const nextEdIdx = currentEditionIndex < editions.length - 1 ? currentEditionIndex + 1 : 0;
-      const nextEd = editions[nextEdIdx]!;
-      edButtons.push(
-        new ButtonBuilder()
-          .setCustomId(encodeCustomId(COLLECTION_NAMESPACE, "im_ed", nextEd.id, 0, userId))
-          .setLabel("▶")
-          .setStyle(ButtonStyle.Secondary)
-      );
     } else {
       const prevEdIdx = currentEditionIndex > 0 ? currentEditionIndex - 1 : editions.length - 1;
       const nextEdIdx = currentEditionIndex < editions.length - 1 ? currentEditionIndex + 1 : 0;

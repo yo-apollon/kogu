@@ -528,7 +528,7 @@ describe("$im / $info / /info", () => {
     const payload = payloadOf(m);
     expect(payload.components).toHaveLength(2); // Row 1 = edições, Row 2 = fotos
     const edButtons = payload.components[0].toJSON().components;
-    expect(edButtons.length).toBe(5); // ◀, Básica, Épica, Mítica, ▶
+    expect(edButtons.length).toBe(3); // Básica, Épica, Mítica (sem setas redundantes duplicando custom_id)
     expect(edButtons[0].custom_id).toContain("col:im_ed");
 
     const imgButtons = payload.components[1].toJSON().components;

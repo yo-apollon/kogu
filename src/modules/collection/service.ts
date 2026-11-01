@@ -852,14 +852,15 @@ export interface EditionVariant {
 export async function resolveEditionForInfo(
   guildId: string,
   userId: string,
-  entityId: number
+  entityId: number,
+  exactId: boolean = false
 ): Promise<{ entityId: number; editions: EditionVariant[] }> {
   const [self] = await db
     .select({ id: entities.id, parentId: entities.parentId, edition: entities.edition })
     .from(entities)
     .where(eq(entities.id, entityId))
     .limit(1);
-  if (!self || self.edition === null) return { entityId, editions: [] };
+  if (!self) return { entityId, editions: [] };
   const anchorId = self.parentId ?? self.id;
   const rows = await db
     .select({ id: entities.id, edition: entities.edition, tier: entities.tier, pactId: pacts.id })
@@ -871,22 +872,24 @@ export async function resolveEditionForInfo(
     .where(
       and(
         eq(entities.status, "ACTIVE"),
-        sql`(${entities.id} = ${anchorId} OR ${entities.parentId} = ${anchorId})`,
-        sql`${entities.edition} IS NOT NULL`
+        sql`(${entities.id} = ${anchorId} OR ${entities.parentId} = ${anchorId})`
       )
     );
   const editions: EditionVariant[] = rows
     .map((r) => ({
       id: r.id,
-      edition: r.edition as EntityEdition,
+      edition: (r.edition ?? "BASIC") as EntityEdition,
       tier: r.tier,
       owned: r.pactId !== null,
     }))
     .sort((a, b) => ENTITY_EDITIONS.indexOf(a.edition) - ENTITY_EDITIONS.indexOf(b.edition));
   if (editions.length <= 1) return { entityId, editions: [] };
+  if (exactId) {
+    return { entityId, editions };
+  }
   const owned = editions.filter((e) => e.owned);
   const chosen = owned.length > 0 ? owned[owned.length - 1] : editions[0];
-  return { entityId: chosen.id, editions };
+  return { entityId: chosen?.id ?? entityId, editions };
 }
 
 /** Posicao (base 1) do pacto na ordem padrao do Panteao do dono. */

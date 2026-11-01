@@ -46,6 +46,12 @@ export async function reportError(err: unknown, target: ErrorTarget): Promise<st
       ],
       flags: MessageFlags.Ephemeral,
     } as unknown as ReplyPayload;
+  } else if ((err as any)?.code === 50013) {
+    log.warn({ ...target.meta }, "Permissão insuficiente no Discord (50013) no canal/servidor");
+    payload = {
+      content: "⚠️ O bot Kogu precisa das permissões de **Enviar Mensagens**, **Inserir Links** e **Anexar Arquivos** neste canal. Peça a um administrador para ajustar o cargo do bot.",
+      flags: MessageFlags.Ephemeral,
+    } as unknown as ReplyPayload;
   } else {
     errorId = err instanceof InfraError ? err.errorId : newErrorId();
     log.error({ err, errorId, ...target.meta }, "erro nao tratado");

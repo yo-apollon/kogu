@@ -2109,6 +2109,14 @@
         </p>
 
         <!-- GRID DE MODOS DE ROLL -->
+        <div style="display:flex; justify-content:center; gap:10px; margin-bottom:14px;">
+          <button class="btn-discord" style="background:linear-gradient(135deg, #a855f7, #ec4899); padding:10px 20px; font-weight:800; font-size:0.95rem; box-shadow: 0 4px 18px rgba(168,85,247,0.4);" onclick="simulateMultiRoll(10)">
+            ⚡ Invocação Múltipla 10x ($roll 10x)
+          </button>
+          <button class="btn-inspect" style="padding:10px 16px; font-weight:700;" onclick="switchView('database', true, true)">
+            🔍 Ver Todas as 7.379 Cartas
+          </button>
+        </div>
         <div class="sim-modes-grid">
           <button class="btn-sim-mode mode-all" onclick="simulateRoll('all')">
             <span>🎲</span> $roll (Geral)
@@ -2485,17 +2493,26 @@
     // Helper: Encontra todas as variações/edições irmãs
     function findCharacterEditions(char) {
       if (!char) return [];
-      const rootId = char.anchorId || char.id;
-      const matches = catalog.filter(c => c.id === rootId || c.anchorId === rootId);
-      if (matches.length > 0) {
+      const baseSlug = char.parentSlug || char.slug;
+      if (baseSlug) {
+        const matches = catalog.filter(c => (c.slug === baseSlug || c.parentSlug === baseSlug));
+        if (matches.length > 1) {
+          const order = { 'BASIC': 1, 'EPIC': 2, 'MYTHIC': 3 };
+          matches.sort((a, b) => (order[a.edition || 'BASIC'] || 1) - (order[b.edition || 'BASIC'] || 1));
+          return matches;
+        }
+      }
+      const byName = catalog.filter(c => c.name === char.name && c.universe === char.universe);
+      if (byName.length > 1) {
         const order = { 'BASIC': 1, 'EPIC': 2, 'MYTHIC': 3 };
-        matches.sort((a, b) => (order[a.edition || 'BASIC'] || 1) - (order[b.edition || 'BASIC'] || 1));
-        return matches;
+        byName.sort((a, b) => (order[a.edition || 'BASIC'] || 1) - (order[b.edition || 'BASIC'] || 1));
+        return byName;
       }
       return [char];
     }
 
-    // SPA Hash Router & State Sync
+    // SPA Router & Persistent URL State (Preserva F5 sem resetar)
+    let currentView = 'database';
     const VALID_VIEWS = ['database', 'series', 'simulator', 'top100', 'tower', 'commands'];
     const CATEGORY_HASH_MAP = {
       'ufc': 'UFC',
@@ -2511,37 +2528,98 @@
       'todos': 'all'
     };
 
-    function parseHash() {
-      const hash = (window.location.hash || '').replace(/^#/, '').toLowerCase().trim();
-      if (!hash) return null;
-      if (VALID_VIEWS.includes(hash)) return { view: hash };
-      if (CATEGORY_HASH_MAP[hash]) {
-        return { view: 'database', category: CATEGORY_HASH_MAP[hash] };
+    function getUrlParams() {
+      const hash = (window.location.hash || '').replace(/^#/, '').trim();
+      const search = window.location.search ? window.location.search.replace(/^?/, '') : '';
+
+      let view = '';
+      let cat = '';
+      let q = '';
+      let p = 1;
+      let series = 'all';
+
+      let hashPath = hash;
+      let hashQuery = '';
+      if (hash.includes('?')) {
+        const parts = hash.split('?');
+        hashPath = parts[0];
+        hashQuery = parts[1];
       }
-      return null;
+
+      const qParams = new URLSearchParams(search || hashQuery);
+
+      if (VALID_VIEWS.includes(hashPath)) {
+        view = hashPath;
+      } else if (CATEGORY_HASH_MAP[hashPath]) {
+        view = 'database';
+        cat = CATEGORY_HASH_MAP[hashPath];
+      }
+
+      if (qParams.has('v') && VALID_VIEWS.includes(qParams.get('v'))) {
+        view = qParams.get('v');
+      }
+      if (qParams.has('cat')) {
+        cat = qParams.get('cat');
+      }
+      if (qParams.has('q')) {
+        q = qParams.get('q');
+      }
+      if (qParams.has('p')) {
+        p = parseInt(qParams.get('p'), 10) || 1;
+      }
+      if (qParams.has('series')) {
+        series = qParams.get('series');
+      }
+
+      return {
+        view: view || localStorage.getItem('kogu_active_view') || 'database',
+        cat: cat || localStorage.getItem('kogu_active_category') || 'all',
+        q,
+        p,
+        series
+      };
     }
 
-    function syncFromHashOrStorage() {
-      const hashState = parseHash();
-      let targetView = 'database';
-      let targetCat = 'all';
+    let syncUrlTimer = null;
+    function syncUrl(push = false) {
+      clearTimeout(syncUrlTimer);
+      syncUrlTimer = setTimeout(() => {
+        const view = currentView || 'database';
+        const cat = currentCategory || 'all';
+        const searchInput = document.getElementById('mainSearchInput');
+        const q = (searchInput ? searchInput.value : '').trim();
+        const p = currentPage || 1;
+        const seriesSelect = document.getElementById('seriesFilterSelect');
+        const series = seriesSelect ? seriesSelect.value : 'all';
 
-      if (hashState) {
-        targetView = hashState.view;
-        if (hashState.category) targetCat = hashState.category;
-      } else {
-        targetView = localStorage.getItem('kogu_active_view') || 'database';
-        targetCat = localStorage.getItem('kogu_active_category') || 'all';
-      }
+        const params = new URLSearchParams();
+        if (cat !== 'all') params.set('cat', cat);
+        if (q) params.set('q', q);
+        if (p > 1) params.set('p', String(p));
+        if (series !== 'all') params.set('series', series);
 
-      if (!VALID_VIEWS.includes(targetView)) targetView = 'database';
+        const queryString = params.toString();
+        let newHash = '#' + view;
+        if (queryString) {
+          newHash += '?' + queryString;
+        }
 
-      switchView(targetView, false);
-      setCategoryFilter(targetCat, null, false);
+        try {
+          if (push) {
+            history.pushState(null, '', newHash);
+          } else {
+            history.replaceState(null, '', newHash);
+          }
+        } catch (e) {}
+
+        localStorage.setItem('kogu_active_view', view);
+        localStorage.setItem('kogu_active_category', cat);
+      }, 50);
     }
 
     function switchView(viewName, updateHash = true, doScroll = true) {
       if (!VALID_VIEWS.includes(viewName)) viewName = 'database';
+      currentView = viewName;
 
       document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
@@ -2551,7 +2629,6 @@
       if (target) target.classList.add('active');
       if (btn) btn.classList.add('active');
 
-      // Sincroniza o seletor do topo
       const searchTypeSelect = document.getElementById('searchType');
       if (searchTypeSelect) {
         if (viewName === 'series') searchTypeSelect.value = 'series';
@@ -2559,9 +2636,8 @@
         else searchTypeSelect.value = 'characters';
       }
 
-      localStorage.setItem('kogu_active_view', viewName);
       if (updateHash) {
-        history.replaceState(null, '', '#' + viewName);
+        syncUrl(false);
       }
       if (doScroll) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2575,17 +2651,15 @@
       });
       if (btn) btn.classList.add('active');
 
-      localStorage.setItem('kogu_active_category', cat);
-      if (updateHash && cat !== 'all') {
-        const hashName = Object.keys(CATEGORY_HASH_MAP).find(k => CATEGORY_HASH_MAP[k] === cat) || cat.toLowerCase();
-        history.replaceState(null, '', '#' + hashName);
-      } else if (updateHash && cat === 'all') {
-        const curView = localStorage.getItem('kogu_active_view') || 'database';
-        history.replaceState(null, '', '#' + curView);
+      if (currentView !== 'database') {
+        switchView('database', false, false);
       }
 
       currentPage = 1;
       applyFilters(true);
+      if (updateHash) {
+        syncUrl(false);
+      }
     }
 
     function updateCategoryBadgeCounts() {
@@ -2641,11 +2715,37 @@
       renderSeriesView();
       renderTop100();
 
-      // Sincroniza estado de hash ou storage ao inicializar
-      syncFromHashOrStorage();
+      // Restaura o estado exato da URL / Storage (F5 sem perder nada!)
+      const state = getUrlParams();
+      currentView = state.view;
+      currentCategory = state.cat;
+      currentPage = state.p;
+
+      const searchInput = document.getElementById('mainSearchInput');
+      if (searchInput && state.q) {
+        searchInput.value = state.q;
+        const clearBtn = document.getElementById('searchClearBtn');
+        if (clearBtn) clearBtn.style.display = 'flex';
+      }
+
+      if (state.series && state.series !== 'all') {
+        const seriesSelect = document.getElementById('seriesFilterSelect');
+        if (seriesSelect) seriesSelect.value = state.series;
+      }
+
+      switchView(currentView, false, false);
+      setCategoryFilter(currentCategory, null, false);
 
       window.addEventListener('hashchange', () => {
-        syncFromHashOrStorage();
+        const s = getUrlParams();
+        switchView(s.view, false, false);
+        setCategoryFilter(s.cat, null, false);
+      });
+
+      window.addEventListener('popstate', () => {
+        const s = getUrlParams();
+        switchView(s.view, false, false);
+        setCategoryFilter(s.cat, null, false);
       });
     }
 
@@ -2856,6 +2956,7 @@
       renderTable(pageItems, startIdx);
       renderGrid(pageItems);
       renderPaginationControls(totalPages);
+      syncUrl(false);
     }
 
     function renderPaginationControls(totalPages) {
@@ -2909,6 +3010,7 @@
               <option value="100" ${pageSize === 100 ? 'selected' : ''}>100 / pág</option>
               <option value="250" ${pageSize === 250 ? 'selected' : ''}>250 / pág</option>
               <option value="500" ${pageSize === 500 ? 'selected' : ''}>500 / pág</option>
+              <option value="1000" ${pageSize === 1000 ? 'selected' : ''}>1.000 / Todos</option>
             </select>
           </div>
         `;
@@ -2922,6 +3024,7 @@
     function goToPage(page) {
       currentPage = page;
       applyFilters(false);
+      syncUrl(false);
       const tableWrap = document.getElementById('tableViewWrap');
       if (tableWrap) tableWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -3469,6 +3572,12 @@
         `;
         tbody.appendChild(tr);
       });
+    }
+
+    function simulateMultiRoll(count = 10, mode = 'all') {
+      for (let i = 0; i < count; i++) {
+        simulateRoll(mode);
+      }
     }
 
     function simulateRoll(mode) {
