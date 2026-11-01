@@ -9,7 +9,7 @@
  * Fluxo: env -> KV -> Postgres -> guildConfig -> registry (modulos) -> routers -> health -> shutdown
  * -> login (somente com DISCORD_TOKEN valido; sem token o processo sobe sem gateway e /readyz = 503).
  */
-import { ActivityType, Client, Events, GatewayIntentBits, Partials } from "discord.js";
+import { ActivityType, Client, Events, GatewayIntentBits, Options, Partials } from "discord.js";
 import { getEnv } from "./config/env.js";
 import { isRealDiscordToken } from "./core/deploy.js";
 import { createCommandPipeline } from "./core/context.js";
@@ -67,6 +67,21 @@ async function main(): Promise<void> {
     ],
     partials: [Partials.Message, Partials.Channel, Partials.Reaction],
     allowedMentions: { parse: [] },
+    makeCache: Options.cacheWithLimits({
+      MessageManager: 35,
+      GuildMemberManager: 100,
+      PresenceManager: 0,
+      ReactionManager: 10,
+      ThreadManager: 10,
+      StageInstanceManager: 0,
+      GuildScheduledEventManager: 0,
+    }),
+    sweepers: {
+      messages: {
+        interval: 300,
+        lifetime: 900,
+      },
+    },
   });
 
   client.once(Events.ClientReady, (ready) => {

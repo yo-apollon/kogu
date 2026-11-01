@@ -70,7 +70,11 @@ export class ImageLoader {
     this.dir = opts.cacheDir === false ? null : path.resolve(opts.cacheDir ?? process.env.KOGU_IMAGE_CACHE_DIR ?? process.env.ARQON_IMAGE_CACHE_DIR ?? path.join(process.cwd(), ".cache", "img"));
     this.negativeTtlMs = opts.negativeTtlMs ?? 60_000;
     this.bytes = new LRUCache<string, Buffer>({
-      maxSize: opts.memoryMaxBytes ?? 100 * 1024 * 1024,
+      maxSize:
+        opts.memoryMaxBytes ??
+        (process.env.IMAGE_LOADER_MAX_BYTES
+          ? Number(process.env.IMAGE_LOADER_MAX_BYTES)
+          : 35 * 1024 * 1024),
       sizeCalculation: (b) => Math.max(1, b.length),
     });
     this.decoded = new LRUCache<string, Image>({ max: opts.decodedMax ?? 32 });

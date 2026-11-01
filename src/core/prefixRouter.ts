@@ -45,6 +45,7 @@ export function createPrefixRouter(deps: PrefixRouterDeps): (message: Message) =
   return async (message) => {
     if (message.author.bot || message.system || message.webhookId) return;
     if (!message.guild) return;
+    if (!message.content || message.content.length === 0) return;
     if (lifecycle.isShuttingDown()) return;
 
     const done = lifecycle.beginWork();

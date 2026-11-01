@@ -24,7 +24,7 @@ import type { Middleware } from "../context.js";
 
 const log = childLogger("core:guildConfig");
 
-export const GUILD_CONFIG_LOCAL_TTL_MS = 30_000;
+export const GUILD_CONFIG_LOCAL_TTL_MS = 300_000;
 export const GUILD_CONFIG_KV_TTL_MS = 10 * 60_000;
 const LOCAL_MAX_ENTRIES = 10_000;
 

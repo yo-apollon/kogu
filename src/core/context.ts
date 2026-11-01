@@ -157,12 +157,12 @@ export function createInteractionResponder(interaction: RepliableInteraction): R
         }
         return interaction.followUp(options);
       }
-      return interaction.reply({ ...options, fetchReply: true });
+      return interaction.reply({ ...options, fetchReply: true, withResponse: true });
     },
     async followUp(payload) {
       const options = safeMentions(withEphemeralFlag(toOptions(payload)), false);
       if (!interaction.deferred && !interaction.replied) {
-        return interaction.reply({ ...options, fetchReply: true });
+        return interaction.reply({ ...options, fetchReply: true, withResponse: true });
       }
       return interaction.followUp(options);
     },

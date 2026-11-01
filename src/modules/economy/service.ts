@@ -96,14 +96,39 @@ export interface MemberRef {
   profile?: UserProfile;
 }
 
+interface CachedMember {
+  username?: string;
+  timestamp: number;
+}
+const knownMembers = new Map<string, CachedMember>();
+const MAX_KNOWN_MEMBERS = 20_000;
+const MEMBER_CACHE_TTL_MS = 10 * 60_000; // 10 minutos
+
+export function clearKnownMembersCache(): void {
+  knownMembers.clear();
+}
+
 /**
  * Garante guild, user e guild_members (saldo inicial WELCOME_AETHER so na criacao).
  * Idempotente e seguro sob concorrencia (ON CONFLICT).
+ * Cache em memoria de membros ja validados evita 3 queries SQL por interacao de usuario ativo.
  */
 export async function ensureMember(
   exec: Executor,
   ref: MemberRef
 ): Promise<{ created: boolean }> {
+  const cacheKey = `${ref.guildId}:${ref.userId}`;
+  const cached = knownMembers.get(cacheKey);
+  const now = Date.now();
+
+  if (
+    cached &&
+    now - cached.timestamp < MEMBER_CACHE_TTL_MS &&
+    (!ref.username || cached.username === ref.username)
+  ) {
+    return { created: false };
+  }
+
   await exec.insert(guilds).values({ id: ref.guildId }).onConflictDoNothing();
   await ensureUser(exec, ref.userId, ref.username, ref.profile);
   const rows = await exec
@@ -111,6 +136,17 @@ export async function ensureMember(
     .values({ guildId: ref.guildId, userId: ref.userId, aetherBalance: WELCOME_AETHER })
     .onConflictDoNothing()
     .returning({ userId: guildMembers.userId });
+
+  if (knownMembers.size >= MAX_KNOWN_MEMBERS) {
+    const iter = knownMembers.keys();
+    for (let i = 0; i < 2000; i++) {
+      const next = iter.next();
+      if (next.done) break;
+      knownMembers.delete(next.value);
+    }
+  }
+  knownMembers.set(cacheKey, { username: ref.username, timestamp: now });
+
   return { created: rows.length > 0 };
 }
 

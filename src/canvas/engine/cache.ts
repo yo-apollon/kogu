@@ -20,7 +20,11 @@ export class CardCache {
   readonly stats: CardCacheStats = { hits: 0, misses: 0 };
   private readonly lru: LRUCache<string, Buffer>;
 
-  constructor(maxBytes = 150 * 1024 * 1024) {
+  constructor(
+    maxBytes = process.env.CARD_CACHE_MAX_BYTES
+      ? Number(process.env.CARD_CACHE_MAX_BYTES)
+      : 40 * 1024 * 1024
+  ) {
     this.lru = new LRUCache<string, Buffer>({ maxSize: maxBytes, sizeCalculation: (b) => Math.max(1, b.length) });
   }
 
